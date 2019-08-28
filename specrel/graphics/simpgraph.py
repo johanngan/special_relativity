@@ -102,9 +102,9 @@ class STPlotter(SingleAxisFigureCreator, ABC):
     def show(self):
         raise NotImplementedError
 
-    """Save the plot to a file"""
-    def save(self, filename):
-        self.fig.savefig(filename)
+    """Save the plot to a file."""
+    def save(self, filename, **kwargs):
+        self.fig.savefig(filename, **kwargs)
 
 """Plotter for creating spacetime/worldline diagrams"""
 class WorldlinePlotter(STPlotter):
@@ -304,8 +304,9 @@ class BaseAnimator(ABC):
         plt.show(self.animate())
 
     """Save the animation to a file"""
-    def save(self, filename):
-        self.animate().save(filename, fps=self.fps)
+    def save(self, filename, **kwargs):
+        kwargs.pop('fps', None) # FPS is fixed
+        self.animate().save(filename, fps=self.fps, **kwargs)
 
 """Animator where the frame variable is time, i.e. depicts a sequence evolving
 in time"""
