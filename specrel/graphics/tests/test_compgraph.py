@@ -117,3 +117,62 @@ class MultiTransformAnimatorTests(unittest.TestCase):
         self.assertEqual([list(d) for d in tline.get_data()], [[0, 2], [1, 1]])
         self.assertEqual(pt.get_data(), (4/5, 0))
         self.assertEqual(title.get_text(), '$v = -0.800c$')
+
+class RewinderTests(unittest.TestCase):
+    def setUp(self):
+        trans = geom.Line((1, 1), (0, 0))
+        xlim = (0, 3)
+        tlim = (0, 3)
+        draw_options = {'tlim': tlim, 'xlim': xlim}
+        multi = compg.MultiTimeAnimator(
+            [
+                {
+                    'animator': simpg.WorldlineAnimator,
+                    'transformable': trans,
+                    'draw_options':draw_options,
+                },
+                {
+                    'animator': simpg.ObjectAnimator,
+                    'transformable': trans,
+                    'draw_options': draw_options,
+                }
+            ],
+            fps=1, ct_per_sec=1, tlim=tlim,
+            display_current_time=True, display_current_time_decimals=3,
+            title='Title')
+        self.rew = compg.Rewinder(multi, end_pause=2)
+        self.rew.init_func()
+
+    def test_rewind(self):
+        ax1, ax2 = self.rew.animator.axs
+        fig = self.rew.animator.fig
+
+        self.assertEqual(self.rew._get_frame_list(), [3, 3, 1, 0, 0])
+
+        self.rew.update(3)
+        ln, tline = ax1.lines
+        pt = ax2.lines[0]
+        title = fig.texts[0]
+        self.assertEqual([list(d) for d in ln.get_data()], [[0, 3], [0, 3]])
+        self.assertEqual([list(d) for d in tline.get_data()], [[0, 3], [3, 3]])
+        self.assertEqual(pt.get_data(), (3, 0))
+        self.assertEqual(title.get_text(), 'Title\nTime = 3.000 s')
+
+        self.rew.update(1)
+        ln, tline = ax1.lines
+        pt = ax2.lines[0]
+        title = fig.texts[0]
+        self.assertEqual([list(d) for d in ln.get_data()], [[0, 3], [0, 3]])
+        self.assertEqual([list(d) for d in tline.get_data()], [[0, 3], [1, 1]])
+        self.assertEqual(pt.get_data(), (1, 0))
+        self.assertEqual(title.get_text(),
+            'Rewinding \u25C0 \u25C0\nTime = 1.000 s')
+
+        self.rew.update(0)
+        ln, tline = ax1.lines
+        pt = ax2.lines[0]
+        title = fig.texts[0]
+        self.assertEqual([list(d) for d in ln.get_data()], [[0, 3], [0, 3]])
+        self.assertEqual([list(d) for d in tline.get_data()], [[0, 3], [0, 0]])
+        self.assertEqual(pt.get_data(), (0, 0))
+        self.assertEqual(title.get_text(), 'Title\nTime = 0.000 s')

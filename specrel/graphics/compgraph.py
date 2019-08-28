@@ -264,6 +264,57 @@ class MultiTransformAnimator(MultiAnimator):
     def _val_text(self, val):
         return f'$v = {{:.{self.display_current_decimals}f}}c$'.format(val)
 
+"""Animates the "rewinding" of an animator's animation"""
+class Rewinder(simpg.BaseAnimator):
+    """
+    rewind_rate = The speedup factor for the rewind animation relative to the
+        forward animation
+    rewind_title = The title to override the animation title during the rewind
+        process
+    end_pause = Pause time in seconds to add at the front and back of the
+        animation; meant for adding padding between an animation and a rewind
+        when concatenating animations together
+    """
+    def __init__(self, animator, rewind_rate=2,
+        rewind_title='Rewinding \u25C0 \u25C0', end_pause=1):
+        super().__init__(animator.fig, animator.stepsize, animator.fps,
+            animator.display_current, animator.display_current_decimals,
+            rewind_title, animator.get_frame_lim())
+        self.animator = animator
+        self.rewind_rate = rewind_rate
+        self.end_pause_frames = round(end_pause * self.fps)
+
+    def clear(self):
+        self._cached_anim = None
+
+    def init_func(self):
+        return self.animator.init_func()
+
+    def update(self, frame):
+        old_title = self.animator.title
+        # Temporarily change the title of the animator if actually rewinding
+        frame_lim = self.get_frame_lim()
+        if frame != frame_lim[0] and frame != frame_lim[1]:
+            self.animator.title = self.title
+        artist = self.animator.update(frame)
+        self.animator.title = old_title
+        return artist
+
+    # Run through frames backwards, at rewind_rate times the rate of the
+    # original
+    def _get_frame_list(self):
+        frame_lim = self.get_frame_lim()
+        frame_list = list(range(
+            frame_lim[1], frame_lim[0]-1, -self.rewind_rate))
+        # Explicitly make sure the starting frame is included
+        if frame_lim[0] not in frame_list:
+            frame_list.append(frame_lim[0])
+        # Pause at the start and end
+        # if self.end_pause_frames is 0, -1*[entry] will add an empty list
+        frame_list = (self.end_pause_frames - 1)*frame_list[:1] \
+            + frame_list + (self.end_pause_frames - 1)*frame_list[-1:]
+        return frame_list
+
 """Use FFmpeg's concat demuxer to concatenate input video files and write the
 output to a new file"""
 def concat_demuxer(input_files, output_file):
