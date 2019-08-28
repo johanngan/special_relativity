@@ -410,6 +410,14 @@ def animate_lt(lorentz_transformable,
     title=simpg.graphrc['title'],
     lim_padding=simpg.graphrc['worldline.lim_padding'],
     equal_lim_expand=simpg.graphrc['worldline.equal_lim_expand']):
+    # Attempt to make sure the time value falls within the limits so we don't
+    # get warnings
+    time = simpg.graphrc['anim.transform.time']
+    if tlim[0] is not None and time < tlim[0]:
+        time = tlim[0]
+    elif tlim[1] is not None and time > tlim[1]:
+        time = tlim[1]
+
     animator = simpg.TransformAnimator(
         copy.deepcopy(lorentz_transformable),
         vrel,
@@ -425,6 +433,7 @@ def animate_lt(lorentz_transformable,
         },
         tlim=tlim,
         xlim=xlim,
+        time=time,
         fig=fig,
         ax=ax,
         transition_duration=transition_duration,
