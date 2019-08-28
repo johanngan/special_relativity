@@ -286,7 +286,7 @@ class BaseAnimator(ABC):
     """Get a full list of all frame values to be played in the animation"""
     def _get_frame_list(self):
         frame_lim = self.get_frame_lim()
-        return [f for f in range(frame_lim[0], frame_lim[1]+1)]
+        return list(range(frame_lim[0], frame_lim[1]+1))
 
     """Synthesize an animation"""
     def animate(self):
@@ -390,12 +390,12 @@ class STAnimator(TimeAnimator, STPlotter, ABC):
         ]
         if not self.frame_plotters:
             # Initialize all frame within the limits
-            new_fidx = [idx for idx in range(flims[0], flims[1]+1)]
+            new_fidx = list(range(flims[0], flims[1]+1))
         else:
             # Initialize frames that don't exist yet
             keys = self.frame_plotters.keys()
-            new_fidx = [idx for idx in range(flims[0], min(keys))] \
-                + [idx for idx in range(max(keys)+1, flims[1]+1)]
+            new_fidx = list(range(flims[0], min(keys))) \
+                + list(range(max(keys)+1, flims[1]+1))
         # Initialize the necessary frames
         for idx in new_fidx:
             self._init_frame(idx)
