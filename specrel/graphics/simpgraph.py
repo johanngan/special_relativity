@@ -231,6 +231,7 @@ class BaseAnimator(ABC):
         value in the animation
     display_current_decimals = number of decimal places at which to display the
         current control variable value
+    title = static title to be displayed throughout the animation
     frame_lim = frame index limits
     """
     def __init__(self,
@@ -239,6 +240,7 @@ class BaseAnimator(ABC):
         fps=graphrc['anim.fps'],
         display_current=graphrc['anim.display_current'],
         display_current_decimals=graphrc['anim.display_current_decimals'],
+        title=graphrc['title'],
         frame_lim=(0, 0)):
 
         self.fig = fig
@@ -246,6 +248,7 @@ class BaseAnimator(ABC):
         self.display_current_decimals = display_current_decimals
         self.stepsize = stepsize
         self.fps = fps
+        self.title = title
         self._frame_lim = frame_lim
         # Cached animation if already created previously
         self._cached_anim = None
@@ -320,19 +323,17 @@ class TimeAnimator(BaseAnimator):
         fps=graphrc['anim.fps'],
         display_current_time=graphrc['anim.display_current'],
         display_current_time_decimals=
-            graphrc['anim.display_current_decimals']):
+            graphrc['anim.display_current_decimals'],
+        title=graphrc['title']):
 
         super().__init__(fig, ct_per_sec / fps, fps, display_current_time,
-            display_current_time_decimals)
+            display_current_time_decimals, title)
         # Number of frames corresponding to the desired pause time
         self._pause_frames = round(instant_pause_time * fps)
 
 """TimeAnimator that fulfills the STPlotter interface, and hence can be used
 in the geom draw() methods"""
 class STAnimator(TimeAnimator, STPlotter, ABC):
-    """
-    title = static title to be displayed throughout the animation
-    """
     def __init__(self,
         fig=graphrc['fig'],
         ax=graphrc['ax'],
@@ -348,8 +349,7 @@ class STAnimator(TimeAnimator, STPlotter, ABC):
 
         STPlotter.__init__(self, fig, ax)
         TimeAnimator.__init__(self, self.fig, ct_per_sec, instant_pause_time,
-            fps, display_current_time, display_current_time_decimals)
-        self.title = title
+            fps, display_current_time, display_current_time_decimals, title)
         self.grid = grid
         self.legend = legend
         self.legend_loc = legend_loc
@@ -860,13 +860,12 @@ class TransformAnimator(BaseAnimator, SingleAxisFigureCreator):
         SingleAxisFigureCreator.__init__(self, fig, ax)
         nsteps = round(transition_duration * fps)
         BaseAnimator.__init__(self, self.fig, velocity / nsteps, fps,
-            display_current_velocity, display_current_velocity_decimals,
+            display_current_velocity, display_current_velocity_decimals, title,
             (0, nsteps))
         self.transformable = lorentz_transformable
         self.origin = origin
         self.xlim = xlim
         self.tlim = tlim
-        self.title = title
 
         # Set up the STAnimator
         anim_opts = dict(stanimator_options)

@@ -24,11 +24,10 @@ class MultiAnimator(simpg.FigureCreator, simpg.BaseAnimator):
         display_current=simpg.graphrc['anim.display_current'],
         display_current_decimals=
             simpg.graphrc['anim.display_current_decimals'],
-        frame_lim=(None, None),
-        title=simpg.graphrc['title']):
+        title=simpg.graphrc['title'],
+        frame_lim=(None, None)):
 
         simpg.FigureCreator.__init__(self)
-        self.title = title
         # Make a new figure if necessary
         if fig is None and axs is None:
             # Default to a (1 x n) subplot
@@ -37,7 +36,7 @@ class MultiAnimator(simpg.FigureCreator, simpg.BaseAnimator):
             raise ValueError('Must give both figure and axes, or neither.')
         self.axs = axs
         simpg.BaseAnimator.__init__(self, fig, stepsize, fps, display_current,
-            display_current_decimals, frame_lim)
+            display_current_decimals, title, frame_lim)
 
         # Make sure there's at least one animation
         if n_animations == 0:
@@ -144,7 +143,7 @@ class MultiTimeAnimator(MultiAnimator, simpg.TimeAnimator):
         frame_lim = (self.calc_frame_idx(tlim[0]), self.calc_frame_idx(tlim[1]))
         MultiAnimator.__init__(self, len(animations_params), fig, axs,
             self.stepsize, fps, display_current_time,
-            display_current_time_decimals, frame_lim, title)
+            display_current_time_decimals, title, frame_lim)
 
         # Set up animators and draw the objects
         for params, ax in zip(animations_params, self.axs):
@@ -236,7 +235,7 @@ class MultiTransformAnimator(MultiAnimator):
         nsteps = round(transition_duration * fps)
         super().__init__(len(animations_params), fig, axs, velocity / nsteps,
             fps, display_current_velocity, display_current_velocity_decimals,
-            (None, None), title)
+            title, (None, None))
 
         # Set up animators
         for params, ax in zip(animations_params, self.axs):
