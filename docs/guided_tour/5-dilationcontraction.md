@@ -84,7 +84,7 @@ anim.show()
 
 Notice how the lines of constant time have desynchronized in the moving frame, as we know should happen. At x = 0, the time interval starts at t = 0, but at x = -0.5, the interval starts a little later, at t = 0.4. But never mind that. Let's just fix our attention to x = 0 (a vertical line through the middle of the spacetime diagram). We can imagine this is where the moving observer sits, experiencing the passage of time.
 
-Notice that the time interval starts at t = 0, and finishes at t = 3. So, a period of five seconds in the lab frame is experienced as only *three* seconds by the moving observer. A person in the lab frame (let's call her Alice) has aged five seconds, while the moving observer (let's call him Bob) has aged by three; time is dilated for the moving observer.
+Notice that the time interval starts at t = 0, and finishes at t = 3. So, a period of five seconds in the lab frame is experienced as only *three* seconds by the moving observer. A person in the lab frame has aged five seconds, while the moving observer has aged by three; time is dilated for the moving observer.
 
 # Length Contraction
 
