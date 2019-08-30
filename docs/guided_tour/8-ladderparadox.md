@@ -99,7 +99,7 @@ p[0].show()
 ```
 ![The ladder paradox](figures/8-ladderparadox.png)
 
-As we can see, the ladder appears to fit in the garage in the lab frame, but most definitely does *not* fit in the garage. What gives?
+As we can see, the ladder appears to fit in the garage in the lab frame, but most definitely does *not* fit in the garage in the ladder's frame. What gives?
 
 Well, what do we mean by "the ladder fit in the garage"? We mean that there was some instant in time when we had both doors closed, with the ladder in between them. And this is true in the lab frame. But in the ladder's rest frame, we have a different story of what happened. Here, the doors were actually *never* closed at the same time. Instead, the right door was opened first, the ladder was pushed through a little bit until its left end cleared the left door of the garage, and *then* the left door was closed. So the ladder didn't *actually* fit; the "proof" in the lab frame is somehow faulty in the moving frame. One might imagine the two friends arguing; the one moving with the ladder would be annoyed at the one by the garage for not manning the doors properly, and the garage-master would insist that they did things right. In fact, both of them are right; simultaneity is frame-dependent.
 
