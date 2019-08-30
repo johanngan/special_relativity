@@ -80,6 +80,9 @@ class MultiAnimator(simpg.FigureCreator, simpg.BaseAnimator):
         if self.display_current:
             self._update_current_text(self.calc_frame_val(frame))
             artists.append(self._current_title_text)
+        else:
+            # Still update title every frame in case it changes
+            self._current_title_text.set_text(self.title)
         return artists + [anim.update(frame) for anim in self._animators]
 
     def get_frame_lim(self):
