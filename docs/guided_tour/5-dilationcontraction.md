@@ -76,7 +76,7 @@ tlim = (0, duration + 0.5)
 xlim = (-0.5, 0.5)
 anim = vis.compare_frames_animated_with_worldline(onesecond, v,
     tlim=tlim, xlim=xlim, instant_pause_time=0, linewidth=10,
-    title='Two clock ticks in different frames', current_time_color='cyan')
+    title='Time interval in different frames', current_time_color='cyan')
 anim.save('5-timedilation2.mp4')
 anim.show()
 ```

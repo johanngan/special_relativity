@@ -29,7 +29,6 @@ anim = vis.compare_frames_animated_with_worldline(colorchange, v,
 anim.save('5-timedilation.mp4')
 anim.show()
 
-# One seconds in the lab frame
 duration = 5
 # The two boundary lines have a direction vector (t = 0, x = 1), and the bottom
 # and top boundaries pass through (t = 0, x = 0) and (t = 5, x = 0),
@@ -42,7 +41,7 @@ tlim = (0, duration + 0.5)
 xlim = (-0.5, 0.5)
 anim = vis.compare_frames_animated_with_worldline(onesecond, v,
     tlim=tlim, xlim=xlim, instant_pause_time=0, linewidth=10,
-    title='Two clock ticks in different frames', current_time_color='cyan')
+    title='Time interval in different frames', current_time_color='cyan')
 anim.save('5-timedilation2.mp4')
 anim.show()
 
