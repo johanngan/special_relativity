@@ -24,13 +24,13 @@ anim.show()
 ```
 ![An FTL meterstick](figures/7-ftl_meterstick.gif)
 
-Strange things are happening! Firstly, the meterstick moves to the right in the lab frame, but left in the frame moving at 80% the speed of light. Odd, since we wouldn't overtake the FTL meterstick if we only moved at 80% the speed of light. Secondly, and perhaps more worryingly, in a frame moving at about half the speed of light, the meterstick has grown to an infinite length! Furthermore, different parts of the meterstick (like the right end and the left end) never appear at the same time!
+Strange things are happening! Firstly, the meterstick moves to the right in the lab frame, but left in the frame moving at 80% the speed of light. Odd, since we wouldn't overtake the FTL meterstick if we only moved at 80% the speed of light. Secondly, and perhaps more worryingly, in a frame moving at half the speed of light, the meterstick has grown to an infinite length! Furthermore, different parts of the meterstick (like the right end and the left end) never appear at the same time!
 
 ---
 
 Faster-than-light communication also allows for *violations of causality*. To see how, let's consider the following scenario.
 
-Somehow, faster-than-light communication technology has been developed, and two people are having a conversation through FTL messages. Person 1 is stationary, in what we'll call the "lab frame." Person 2 is moving at Person 1 starts with a joke: "The bartender says 'We don't server tachyons in here.' A tachyon walks into a bar." Person 2 responds with: "Hahaha, good joke!"
+Somehow, faster-than-light communication technology has been developed, and two people are having a conversation through FTL messages. Person 1 is stationary, in what we'll call the "lab frame." Person 2 is moving at Person 1 starts with a joke: "The bartender says 'We don't serve tachyons in here.' A tachyon walks into a bar." Person 2 responds with: "Hahaha, good joke!"
 
 Let's set up the scenario. Using the power of hindsight, it's easiest to set up this system in a "median" frame, where both Person 1 and Person 2 are moving away from each other at equal speeds. Just trust me on the numbers here. For convenience, make use of the `Line` object's `intersect` method to save us from doing geometry. After everything is set, we can transform to Person 2's frame for plotting.
 
