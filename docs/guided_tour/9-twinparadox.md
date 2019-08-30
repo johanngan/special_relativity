@@ -160,7 +160,7 @@ Finally, gluing everything together, we get the final animation.
 compg.concat_demuxer([earth_fname, rew_fname, lt_fname,
     forward_fname, accel_fname, backward_fname], '9-twinparadox.mp4')
 ```
-![The twin paradox](9-twinparadox.gif)
+![The twin paradox](figures/9-twinparadox.gif)
 
 As we can see, in each of the moving frames individually, it appears that the traveling twin should be *older*. However, the twin's acceleration halfway through "brings home closer" in some sense, so the net result is that the traveling twin indeed is younger. Both twins agree. The takeaway here is that while velocities are relative, acceleration is absolute. Since one twin accelerates and the other doesn't, the system isn't symmetric anymore, and the reference frames aren't on even footing.
 

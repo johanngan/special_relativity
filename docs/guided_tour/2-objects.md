@@ -35,7 +35,7 @@ p = vis.stplot(stationary, title=title, tlim=tlim, xlim=xlim,
 p.save('2-objects_stationary_point.png')
 p.show()
 ```
-![A stationary object](2-objects_stationary_point.png)
+![A stationary object](figures/2-objects_stationary_point.png)
 
 A stationary object is just a straight, vertical line, since the object is at the same position forever. As a check, let's animate the scene.
 
@@ -50,7 +50,7 @@ The `anim` variable is an *animator* object. These are just like plotter objects
 anim.save('2-objects_stationary_point_anim.mp4')
 anim.show()
 ```
-![A stationary object](2-objects_stationary_point_anim.gif)
+![A stationary object](figures/2-objects_stationary_point_anim.gif)
 
 We can also animate the scene alongside its worldline, just to see the correspondence.
 
@@ -61,7 +61,7 @@ anim = vis.stanimate_with_worldline(stationary, title=title,
 anim.save('2-objects_stationary_point_anim_worldline.mp4')
 anim.show()
 ```
-![A stationary object](2-objects_stationary_point_anim_worldline.gif)
+![A stationary object](figures/2-objects_stationary_point_anim_worldline.gif)
 
 ---
 
@@ -98,7 +98,7 @@ anim = vis.stanimate_with_worldline(objects, title=title,
 anim.save('2-objects_moving_points.mp4')
 anim.show()
 ```
-![Various objects](2-objects_moving_points.gif)
+![Various objects](figures/2-objects_moving_points.gif)
 
 We can also have objects with an actual length. We can do this by specifying the `length` parameter when making a `MovingObject`. Let's make a "meterstick" with length 1 (really, it should be a "light-second-stick"), moving at half the speed of light. The starting position parameter specifies the left end, so let's make it -1/2 so the center of the meterstick starts at x = 0.
 
@@ -112,7 +112,7 @@ anim = vis.stanimate_with_worldline(meterstick, title=title,
 anim.save('2-objects_moving_meterstick.mp4')
 anim.show()
 ```
-![A moving meterstick](2-objects_moving_meterstick.gif)
+![A moving meterstick](figures/2-objects_moving_meterstick.gif)
 
 Notice how the object is now a "ribbon" instead of just a line, since it has extent over space as well as time.
 

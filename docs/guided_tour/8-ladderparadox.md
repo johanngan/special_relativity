@@ -97,7 +97,7 @@ p = vis.compare_frames(scene, v, tlim=tlim, xlim=xlim, legend=legend,
 p[0].save('8-ladderparadox.png')
 p[0].show()
 ```
-![The ladder paradox](8-ladderparadox.png)
+![The ladder paradox](figures/8-ladderparadox.png)
 
 As we can see, the ladder appears to fit in the garage in the lab frame, but most definitely does *not* fit in the garage. What gives?
 
@@ -147,7 +147,7 @@ Those are all the components. All that remains it to bind the animation together
 compg.concat_demuxer([lab_fname, rew_fname, lt_fname, ladder_fname],
     '8-ladderparadox.mp4')
 ```
-![The ladder paradox](8-ladderparadox.gif)
+![The ladder paradox](figures/8-ladderparadox.gif)
 
 [Previous: Faster-than-light Travel](7-ftl.md) | [Next: Twin Paradox](9-twinparadox.md)
 --- | ---

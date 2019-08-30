@@ -22,7 +22,7 @@ anim = vis.animate_lt(meterstick, v_frame, tlim=tlim, xlim=xlim,
 anim.save('7-ftl_meterstick.mp4')
 anim.show()
 ```
-![An FTL meterstick](7-ftl_meterstick.gif)
+![An FTL meterstick](figures/7-ftl_meterstick.gif)
 
 Strange things are happening! Firstly, the meterstick moves to the right in the lab frame, but left in the frame moving at 80% the speed of light. Odd, since we wouldn't overtake the FTL meterstick if we only moved at 80% the speed of light. Secondly, and perhaps more worryingly, in a frame moving at about half the speed of light, the meterstick has grown to an infinite length! Furthermore, different parts of the meterstick (like the right end and the left end) never appear at the same time!
 
@@ -94,7 +94,7 @@ anim = vis.stanimate_with_worldline(ftl_convo, tlim=tlim, xlim=xlim,
 anim.save('7-ftl_person2.mp4')
 anim.show()
 ```
-![FTL messages (Person 2's POV)](7-ftl_person2.gif)
+![FTL messages (Person 2's POV)](figures/7-ftl_person2.gif)
 
 Person 2 sees the FTL joke, waits a bit, and then sends out an FTL response. This happens *in order*. It's curious how the joke appears to come from the opposite direction from where Person 1 is! But let's ignore that for now. What does Person 1 see?
 
@@ -107,7 +107,7 @@ anim = vis.stanimate_with_worldline(ftl_convo, tlim=tlim, xlim=xlim,
 anim.save('7-ftl_person1.mp4')
 anim.show()
 ```
-![FTL messages (Person 1's POV)](7-ftl_person1.gif)
+![FTL messages (Person 1's POV)](figures/7-ftl_person1.gif)
 
 Person 1...receives Person 2's response before they even send out the joke! Hence, *FTL communication leads to violations of causality*.
 
@@ -122,7 +122,7 @@ anim = vis.animate_lt(ftl_convo, -4/5, tlim=tlim, xlim=xlim,
 anim.save('7-ftl_messages.mp4')
 anim.show()
 ```
-![FTL messages](7-ftl_messages.gif)
+![FTL messages](figures/7-ftl_messages.gif)
 
 [Previous: Velocity Addition](6-velocityaddition.md) | [Next: Ladder Paradox](8-ladderparadox.md)
 --- | ---

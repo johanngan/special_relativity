@@ -42,7 +42,7 @@ anim = vis.compare_frames_animated_with_worldline(objects, v, tlim=tlim,
 anim.save('6-velocityaddition.mp4')
 anim.show()
 ```
-![Relativistic addition of velocities](6-velocityaddition.gif)
+![Relativistic addition of velocities](figures/6-velocityaddition.gif)
 
 As we can see from the rocket's frame, the satellite is indeed fired off at a relative speed of 80% the speed of light. But from the lab frame, the satellite velocity has only gone up by a little bit, inching towards the speed of light but not quite reaching it.
 
@@ -56,7 +56,7 @@ anim = vis.animate_lt_worldline_and_realspace(objects, -v,
 anim.save('6-velocityaddition_boost.mp4')
 anim.show()
 ```
-![Relativistic addition of velocities](6-velocityaddition_boost.gif)
+![Relativistic addition of velocities](figures/6-velocityaddition_boost.gif)
 
 [Previous: Time Dilation and Length Contraction](5-dilationcontraction.md) | [Next: Faster-than-light Travel](7-ftl.md)
 --- | ---

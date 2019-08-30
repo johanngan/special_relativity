@@ -38,7 +38,7 @@ p = plotters[0]
 p.save('4-simultaneity.png')
 p.show()
 ```
-![Relativity of simultaneity](4-simultaneity.png)
+![Relativity of simultaneity](figures/4-simultaneity.png)
 
 The `compare_frames` function returns a *list* of plotters, one for each frame. They all correspond to the same figure window, so we can just pull one of them to call `save` and `show` from.
 
@@ -69,8 +69,8 @@ anim = vis.compare_frames_animated_with_worldline(points, v,
 anim.save('4-simultaneity_anim_worldline.mp4')
 anim.show()
 ```
-![Relativity of simultaneity](4-simultaneity_anim.gif)
-![Relativity of simultaneity](4-simultaneity_anim_worldline.gif)
+![Relativity of simultaneity](figures/4-simultaneity_anim.gif)
+![Relativity of simultaneity](figures/4-simultaneity_anim_worldline.gif)
 
 The `ct_per_sec` parameter controls how many seconds in the scene pass in one real second of animation. The `instant_pause_time` parameter controls the "pause time" in seconds when the animation hits an "instantaneous" event like a spacetime point.
 

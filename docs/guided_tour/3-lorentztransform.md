@@ -31,7 +31,7 @@ anim = visualize.animate_lt(grid_with_light, v, tlim=tlim, xlim=xlim,
 anim.save('3-lorentztransform.mp4')
 anim.show()
 ```
-![The Lorentz transformation](3-lorentztransform.mp4)
+![The Lorentz transformation](figures/3-lorentztransform.mp4)
 
 There's only one point that doesn't move in the transformation: the origin (t = 0, x = 0). This is actually arbitrary. The choice of origin is the one specific spacetime point that both frames agree on. The universe doesn't actually care *which* time we call "t = 0" and *which* position we call "x = 0", so we could just as well set the "center" of the stretching and squeezing from the Lorentz transformation to be at the point (t = 2, x = 1).
 
@@ -45,7 +45,7 @@ anim = visualize.animate_lt(grid_with_light, v, origin=origin,
 anim.save('3-lorentztransform_origin.mp4')
 anim.show()
 ```
-![The Lorentz transformation about (t = 2, x = 1)](3-lorentztransform_origin.mp4)
+![The Lorentz transformation about (t = 2, x = 1)](figures/3-lorentztransform_origin.mp4)
 
 Notice that now the point tagged as "origin" stays still during this transformation. However, the stretching and squeezing still happens the same way, such that any pair of two spacetime points end up with the same separation, regardless of the choice of origin. The only difference is the absolute location on the spacetime diagram.
 
@@ -63,7 +63,7 @@ p = vis.stplot(meterstick_copy, tlim=tlim, xlim=xlim,
 p.save('3-lorentztransform_stationary_meterstick.png')
 p.show()
 ```
-![Meterstick in its rest frame](3-lorentztransform_stationary_meterstick.png)
+![Meterstick in its rest frame](figures/3-lorentztransform_stationary_meterstick.png)
 
 The `geom.lorentz_transformed` function returns a *Lorentz-transformed copy* of a `LorentzTransformable`, similar to how Python's built-in `sorted` function gives a sorted copy of a collection. In a similar vein to the mutating `list.sort` method in Python, there is also the `LorentzTransformable.lorentz_transformed` method that mutates a `LorentzTransformable` object in place, rather than copying.
 
@@ -74,7 +74,7 @@ p = vis.stplot(meterstick, tlim=tlim, xlim=xlim,
 p.save('3-lorentztransform_reversed_meterstick.png')
 p.show()
 ```
-![Meterstick with its direction of motion reversed](3-lorentztransform_reversed_meterstick.png)
+![Meterstick with its direction of motion reversed](figures/3-lorentztransform_reversed_meterstick.png)
 
 ---
 

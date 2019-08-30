@@ -34,7 +34,7 @@ p = plotters[0]
 p.save('5-timedilation_full.png')
 p.show()
 ```
-![A gradually color-changing signal](5-timedilation_full.png)
+![A gradually color-changing signal](figures/5-timedilation_full.png)
 
 Our line will turn blue and then *stay* blue for eternity (it is also red for eternity until t = 0). This makes it a bit hard to see when the color change actually starts and ends, so let's `pop` the ends of the `Collection`. Then, we can animate cleanly.
 
@@ -48,7 +48,7 @@ anim = vis.compare_frames_animated_with_worldline(colorchange, v,
 anim.save('5-timedilation.mp4')
 anim.show()
 ```
-![A gradually color-changing signal](5-timedilation.gif)
+![A gradually color-changing signal](figures/5-timedilation.gif)
 
 Notice how the change of color takes 3 seconds in the lab frame, and 5 seconds in the moving frame? That's **time dilation**. The same "event" (the signal fully changing from red to blue) appears to take longer when it's moving, so we say *time moves slower in moving frames*.
 
@@ -80,7 +80,7 @@ anim = vis.compare_frames_animated_with_worldline(onesecond, v,
 anim.save('5-timedilation2.mp4')
 anim.show()
 ```
-![A "five second" time interval from the lab frame](5-timedilation2.gif)
+![A "five second" time interval from the lab frame](figures/5-timedilation2.gif)
 
 Notice how the lines of constant time have desynchronized in the moving frame, as we know should happen. At x = 0, the time interval starts at t = 0, but at x = -0.5, the interval starts a little later, at t = 0.4. But never mind that. Let's just fix our attention to x = 0 (a vertical line through the middle of the spacetime diagram). We can imagine this is where the moving observer sits, experiencing the passage of time.
 
@@ -111,7 +111,7 @@ anim = vis.compare_frames_animated_with_worldline(meterstick, v,
 anim.save('5-lengthcontraction.mp4')
 anim.show()
 ```
-![A meterstick in different frames](5-lengthcontraction.gif)
+![A meterstick in different frames](figures/5-lengthcontraction.gif)
 
 If we look at a fixed time *in the moving frame*, the meterstick appears to be 0.6 light-seconds long; shorter than it was when it was at rest, so we say *moving objects appear shorter*. Notice how a "fixed time" in the moving frame is *not* the same set of points as a "fixed time" in the lab frame. The fixed-time measurement made in the moving frame involves spacetime points from the *lab frame's past* on the left and the *lab frame's future* on the right.
 
