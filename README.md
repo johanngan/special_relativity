@@ -3,16 +3,22 @@
 The `specrel` package is a Python 3 sandbox tool for understanding basic concepts in special relativity. Easily set up relativistic systems, perform Lorentz transformations, and create plots and animations through a relatively (get it?) simple API.
 
 # At a Glance
-#### Spacetime Plots
+### Spacetime Plots
+#### The Relativity of Simultaneity
 ![Relativity of simultaneity](figures/simultaneity.png)
+#### Faster-Than-Light Communication
 ![Faster-than-light communication](figures/ftl.png)
-#### Lorentz Transformations
+### Lorentz Transformations
 ![The Lorentz transformation about some origin](figures/lorentztransform.gif)
-#### Simple Spacetime Animations
+### Simple Spacetime Animations
+#### Time Dilation
 ![Time dilation](figures/timedilation.gif)
+#### Length Contraction
 ![Length contraction](figures/lengthcontraction.gif)
-#### Sequential, Multi-Part Spacetime Animations
+### Sequential, Multi-Part Spacetime Animations
+#### The Ladder Paradox
 ![The ladder paradox](figures/ladderparadox.gif)
+#### The Twin Paradox
 ![The twin paradox](figures/twinparadox.gif)
 
 # Dependencies
