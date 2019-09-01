@@ -7,6 +7,7 @@ import subprocess
 
 import matplotlib.pyplot as plt
 
+from specrel.graphics.graphrc import graphrc
 import specrel.graphics.simpgraph as simpg
 
 """Runs multiple animations simultaneously on different subplots"""
@@ -17,14 +18,14 @@ class MultiAnimator(simpg.FigureCreator, simpg.BaseAnimator):
     """
     def __init__(self,
         n_animations,
-        fig=simpg.graphrc['fig'],
-        axs=simpg.graphrc['axs'],
+        fig=graphrc['fig'],
+        axs=graphrc['axs'],
         stepsize=None,
-        fps=simpg.graphrc['anim.fps'],
-        display_current=simpg.graphrc['anim.display_current'],
+        fps=graphrc['anim.fps'],
+        display_current=graphrc['anim.display_current'],
         display_current_decimals=
-            simpg.graphrc['anim.display_current_decimals'],
-        title=simpg.graphrc['title'],
+            graphrc['anim.display_current_decimals'],
+        title=graphrc['title'],
         frame_lim=(None, None)):
 
         simpg.FigureCreator.__init__(self)
@@ -130,16 +131,16 @@ class MultiTimeAnimator(MultiAnimator, simpg.TimeAnimator):
     """
     def __init__(self,
         animations_params,
-        fig=simpg.graphrc['fig'],
-        axs=simpg.graphrc['axs'],
+        fig=graphrc['fig'],
+        axs=graphrc['axs'],
         tlim=(None, None),
-        ct_per_sec=simpg.graphrc['anim.time.ct_per_sec'],
-        instant_pause_time=simpg.graphrc['anim.time.instant_pause_time'],
-        fps=simpg.graphrc['anim.fps'],
-        display_current_time=simpg.graphrc['anim.display_current'],
+        ct_per_sec=graphrc['anim.time.ct_per_sec'],
+        instant_pause_time=graphrc['anim.time.instant_pause_time'],
+        fps=graphrc['anim.fps'],
+        display_current_time=graphrc['anim.display_current'],
         display_current_time_decimals=
-            simpg.graphrc['anim.display_current_decimals'],
-        title=simpg.graphrc['title']):
+            graphrc['anim.display_current_decimals'],
+        title=graphrc['title']):
 
         simpg.TimeAnimator.__init__(self, fig, ct_per_sec, instant_pause_time,
             fps, display_current_time, display_current_time_decimals)
@@ -226,14 +227,14 @@ class MultiTransformAnimator(MultiAnimator):
     def __init__(self,
         animations_params,
         velocity,
-        fig=simpg.graphrc['fig'],
-        axs=simpg.graphrc['axs'],
-        transition_duration=simpg.graphrc['anim.transform.transition_duration'],
-        fps=simpg.graphrc['anim.fps'],
-        display_current_velocity=simpg.graphrc['anim.display_current'],
+        fig=graphrc['fig'],
+        axs=graphrc['axs'],
+        transition_duration=graphrc['anim.transform.transition_duration'],
+        fps=graphrc['anim.fps'],
+        display_current_velocity=graphrc['anim.display_current'],
         display_current_velocity_decimals=
-            simpg.graphrc['anim.display_current_decimals'],
-        title=simpg.graphrc['title']):
+            graphrc['anim.display_current_decimals'],
+        title=graphrc['title']):
 
         nsteps = round(transition_duration * fps)
         super().__init__(len(animations_params), fig, axs, velocity / nsteps,
