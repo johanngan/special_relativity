@@ -460,12 +460,13 @@ class Line(Collection):
         return (tmin, tmax), (xmin, xmax)
 
 """Returns a line of fixed space across all time"""
-def fixedspace(position, draw_options=geomrc['draw_options']):
-    return Line((1, 0), (0, position), draw_options=draw_options)
+def fixedspace(position, tag=geomrc['tag'],
+    draw_options=geomrc['draw_options']):
+    return Line((1, 0), (0, position), tag=tag, draw_options=draw_options)
 
 """Returns a line of fixed time across all space"""
-def fixedtime(time, draw_options=geomrc['draw_options']):
-    return Line((0, 1), (time, 0), draw_options=draw_options)
+def fixedtime(time, tag=geomrc['tag'], draw_options=geomrc['draw_options']):
+    return Line((0, 1), (time, 0), tag=tag, draw_options=draw_options)
 
 """An infinite ray in spacetime. Note that intersection only works if the
 argument is a vanilla Line, not a Ray"""
