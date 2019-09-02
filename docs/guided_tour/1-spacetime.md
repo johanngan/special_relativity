@@ -1,5 +1,5 @@
 | [Next: Objects in Spacetime](2-objects.md)
-| -
+| ---
 
 # 1. Spacetime Fundamentals
 
