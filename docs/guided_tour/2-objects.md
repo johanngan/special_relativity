@@ -1,4 +1,4 @@
-**[Previous: Spacetime Fundamentals](1-spacetime.md) | [Next: Lorentz Transformations](3-lorentztransform.md)**
+[**Previous: Spacetime Fundamentals**](1-spacetime.md) | [**Next: Lorentz Transformations**](3-lorentztransform.md)
 
 # 2. Objects in Spacetime
 
@@ -131,4 +131,4 @@ meterstick = geom.Ribbon(left, right, draw_options={'label': 'Meterstick'})
 
 Now that we know how to create and visualize objects in spacetime, we can move onto the *relativity* part of "special relativity" in the next module.
 
-**[Previous: Spacetime Fundamentals](1-spacetime.md) | [Next: Lorentz Transformations](3-lorentztransform.md)**
+[**Previous: Spacetime Fundamentals**](1-spacetime.md) | [**Next: Lorentz Transformations**](3-lorentztransform.md)

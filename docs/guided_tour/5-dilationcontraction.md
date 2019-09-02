@@ -1,4 +1,4 @@
-**[Previous: Simultaneity](4-simultaneity.md) | [Next: Velocity Addition](6-velocityaddition.md)**
+[**Previous: Simultaneity**](4-simultaneity.md) | [**Next: Velocity Addition**](6-velocityaddition.md)
 
 # 5. Time Dilation and Length Contraction
 
@@ -114,4 +114,4 @@ anim.show()
 
 If we look at a fixed time *in the moving frame*, the meterstick appears to be 0.6 light-seconds long; shorter than it was when it was at rest, so we say *moving objects appear shorter*. Notice how a "fixed time" in the moving frame is *not* the same set of points as a "fixed time" in the lab frame. The fixed-time measurement made in the moving frame involves spacetime points from the *lab frame's past* on the left and the *lab frame's future* on the right.
 
-**[Previous: Simultaneity](4-simultaneity.md) | [Next: Velocity Addition](6-velocityaddition.md)**
+[**Previous: Simultaneity**](4-simultaneity.md) | [**Next: Velocity Addition**](6-velocityaddition.md)

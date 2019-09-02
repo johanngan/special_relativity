@@ -1,4 +1,4 @@
-**[Previous: Objects in Spacetime](2-objects.md) | [Next: Simultaneity](4-simultaneity.md)**
+[**Previous: Objects in Spacetime**](2-objects.md) | [**Next: Simultaneity**](4-simultaneity.md)
 
 # 3. Lorentz Transformations
 
@@ -79,4 +79,4 @@ p.show()
 
 The Lorentz transformation is great and all, but in the next few modules, let's look more closely at the *tangible* physical consequences of the Lorentz transformation.
 
-**[Previous: Objects in Spacetime](2-objects.md) | [Next: Simultaneity](4-simultaneity.md)**
+[**Previous: Objects in Spacetime**](2-objects.md) | [**Next: Simultaneity**](4-simultaneity.md)

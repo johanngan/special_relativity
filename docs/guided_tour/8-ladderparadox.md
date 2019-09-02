@@ -1,4 +1,4 @@
-**[Previous: Faster-than-light Travel](7-ftl.md) | [Next: Twin Paradox](9-twinparadox.md)**
+[**Previous: Faster-than-light Travel**](7-ftl.md) | [**Next: Twin Paradox**](9-twinparadox.md)
 
 # 8. Ladder Paradox
 
@@ -148,4 +148,4 @@ compg.concat_demuxer([lab_fname, rew_fname, lt_fname, ladder_fname],
 ```
 ![The ladder paradox](figures/8-ladderparadox.gif)
 
-**[Previous: Faster-than-light Travel](7-ftl.md) | [Next: Twin Paradox](9-twinparadox.md)**
+[**Previous: Faster-than-light Travel**](7-ftl.md) | [**Next: Twin Paradox**](9-twinparadox.md)
