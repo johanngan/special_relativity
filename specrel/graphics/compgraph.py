@@ -26,7 +26,7 @@ class MultiAnimator(simpg.FigureCreator, simpg.BaseAnimator):
         display_current_decimals=
             graphrc['anim.display_current_decimals'],
         title=graphrc['title'],
-        frame_lim=(None, None)):
+        frame_lim=(0, 0)):
 
         simpg.FigureCreator.__init__(self)
         # Make a new figure if necessary
@@ -133,7 +133,7 @@ class MultiTimeAnimator(MultiAnimator, simpg.TimeAnimator):
         animations_params,
         fig=graphrc['fig'],
         axs=graphrc['axs'],
-        tlim=(None, None),
+        tlim=(0, 0),
         ct_per_sec=graphrc['anim.time.ct_per_sec'],
         instant_pause_time=graphrc['anim.time.instant_pause_time'],
         fps=graphrc['anim.fps'],
@@ -239,7 +239,7 @@ class MultiTransformAnimator(MultiAnimator):
         nsteps = round(transition_duration * fps)
         super().__init__(len(animations_params), fig, axs, velocity / nsteps,
             fps, display_current_velocity, display_current_velocity_decimals,
-            title, (None, None))
+            title, (0, 0))
 
         # Set up animators
         for params, ax in zip(animations_params, self.axs):
