@@ -1,5 +1,4 @@
-[Previous: Lorentz Transformations](3-lorentztransformations.md) | [Next: Time Dilation and Length Contraction](5-dilationcontraction.md)
---- | ---
+**[Previous: Lorentz Transformations](3-lorentztransform.md) | [Next: Time Dilation and Length Contraction](5-dilationcontraction.md)**
 
 # 4. Simultaneity
 
@@ -80,5 +79,4 @@ Comparing the plots, it's apparent that the events we set to be simultaneous in 
 
 The relativity of simultaneity is what gives rise to the probably more famous results of special relativity: time dilation and length contraction. We'll see these in the next module.
 
-[Previous: Lorentz Transformations](3-lorentztransformations.md) | [Next: Time Dilation and Length Contraction](5-dilationcontraction.md)
---- | ---
+**[Previous: Lorentz Transformations](3-lorentztransform.md) | [Next: Time Dilation and Length Contraction](5-dilationcontraction.md)**

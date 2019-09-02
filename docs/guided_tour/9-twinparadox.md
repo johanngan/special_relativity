@@ -1,5 +1,4 @@
-[Previous: Ladder Paradox](8-ladderparadox.md) | [Return to Main Page](README.md)
---- | ---
+**[Previous: Ladder Paradox](8-ladderparadox.md) | [Return to Main Page](README.md)**
 
 # 9. Twin Paradox
 
@@ -166,5 +165,4 @@ As we can see, in each of the moving frames individually, it appears that the tr
 
 This is the last demo. I encourage you to dream up your own systems and plot them. This is the best way to develop an understanding and intuition for relativistic scenarios.
 
-[Previous: Ladder Paradox](8-ladderparadox.md) | [Return to Main Page](README.md)
---- | ---
+**[Previous: Ladder Paradox](8-ladderparadox.md) | [Return to Main Page](README.md)**

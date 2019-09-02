@@ -1,5 +1,4 @@
-[Previous: Velocity Addition](6-velocityaddition.md) | [Next: Ladder Paradox](8-ladderparadox.md)
---- | ---
+**[Previous: Velocity Addition](6-velocityaddition.md) | [Next: Ladder Paradox](8-ladderparadox.md)**
 
 # 7. Faster-than-light Travel
 
@@ -124,5 +123,4 @@ anim.show()
 ```
 ![FTL messages](figures/7-ftl_messages.gif)
 
-[Previous: Velocity Addition](6-velocityaddition.md) | [Next: Ladder Paradox](8-ladderparadox.md)
---- | ---
+**[Previous: Velocity Addition](6-velocityaddition.md) | [Next: Ladder Paradox](8-ladderparadox.md)**

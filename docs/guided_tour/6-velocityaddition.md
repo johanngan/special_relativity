@@ -1,5 +1,4 @@
-[Previous: Time Dilation and Length Contraction](5-dilationcontraction.md) | [Next: Faster-than-light Travel](7-ftl.md)
---- | ---
+**[Previous: Time Dilation and Length Contraction](5-dilationcontraction.md) | [Next: Faster-than-light Travel](7-ftl.md)**
 
 # 6. Velocity Addition
 
@@ -58,5 +57,4 @@ anim.show()
 ```
 ![Relativistic addition of velocities](figures/6-velocityaddition_boost.gif)
 
-[Previous: Time Dilation and Length Contraction](5-dilationcontraction.md) | [Next: Faster-than-light Travel](7-ftl.md)
---- | ---
+**[Previous: Time Dilation and Length Contraction](5-dilationcontraction.md) | [Next: Faster-than-light Travel](7-ftl.md)**

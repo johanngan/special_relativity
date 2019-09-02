@@ -1,5 +1,4 @@
-| [Next: Objects in Spacetime](2-objects.md)
-| ---
+**[Next: Objects in Spacetime](2-objects.md)**
 
 # 1. Spacetime Fundamentals
 
@@ -84,5 +83,4 @@ To summarize, the general flow of things creating a plot is:
 
 Next, we'll look at the different types of plottable objects, and some different types of plots and animations that we can make.
 
-| [Next: Objects in Spacetime](2-objects.md)
-| ---
+**[Next: Objects in Spacetime](2-objects.md)**
