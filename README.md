@@ -30,8 +30,10 @@ The `specrel` package is a Python 3 sandbox tool for understanding basic concept
 The `specrel` package is meant for simple and/or interactive use. To "install", first check the package dependencies. Then, simply place the `specrel` package directory wherever you want to use it, or manually add the containing directory to the Python path (for example, with `sys.path.append`).
 
 # Usage
-- For a walkthrough of how to use this package, see the [guided tour](docs/guided_tour/README.md).
-- For general documentation, see [docs](docs).
+- For a walkthrough of how to use this package, see the [guided tour](https://johanngan.github.io/special_relativity/guided_tour/)
+    - [Raw files](docs/guided_tour/README.md).
+- For general documentation, see the [docs](https://johanngan.github.io/special_relativity/).
+    - [Raw files](docs)
 - For example code, see [examples](examples).
 
 # Acknowledgements
