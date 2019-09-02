@@ -1,5 +1,6 @@
-| [Next: Objects in Spacetime](2-objects.md)
-| ---
+<table><tr>
+    <th><a href=2-objects.md>Next: Objects in Spacetime</a></th>
+</tr></table>
 
 # 1. Spacetime Fundamentals
 
