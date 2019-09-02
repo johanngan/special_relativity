@@ -6,3 +6,6 @@ The [guided tour](guided_tour) is a series of demo modules that show off practic
 
 # API Documentation
 For detailed documentation on the `specrel` API, see [here](api/specrel).
+
+# Testing
+For notes on unit testing, see [here](testing.md).
