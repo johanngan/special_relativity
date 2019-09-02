@@ -1,0 +1,1926 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.6.3" />
+<title>specrel.spacetime API documentation</title>
+<meta name="description" content="Contains convenience classes and synthesis functions for common spacetime
+objects whose functionality would be possible to implement through just the
+…" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase;cursor:pointer}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>specrel.spacetime</code></h1>
+</header>
+<section id="section-intro">
+<p>Contains convenience classes and synthesis functions for common spacetime
+objects whose functionality would be possible to implement through just the
+<a title="specrel.geom" href="geom.html"><code>specrel.geom</code></a> API, but would be rather annoying in practice.</p>
+<p>Core geometric classes are in <a title="specrel.geom" href="geom.html"><code>specrel.geom</code></a>.</p>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">&#34;&#34;&#34;Contains convenience classes and synthesis functions for common spacetime
+objects whose functionality would be possible to implement through just the
+`specrel.geom` API, but would be rather annoying in practice.
+
+Core geometric classes are in `specrel.geom`.
+&#34;&#34;&#34;
+
+import copy
+import math
+
+from matplotlib.colors import to_rgba
+
+import specrel.geom as geom
+
+def stgrid(tlim, xlim, origin=geom.geomrc[&#39;origin&#39;], t_spacing=1, x_spacing=1,
+    axis_draw_options=geom.geomrc[&#39;draw_options&#39;],
+    grid_draw_options=geom.geomrc[&#39;draw_options&#39;]):
+    &#34;&#34;&#34;Spacetime grid with some spacing on some range
+
+    Args:
+        tlim (tuple): Minimum and maximum time values for the grid.
+        xlim (tuple): Minimum and maximum position values for the grid.
+        origin (tuple, optional): (t, x) value defining the grid &#34;center&#34;.
+        t_spacing (float, optional): The spacing between grid lines of constant
+            time.
+        x_spacing (float, optional): The spacing between grid lines of constant
+            position.
+        axis_draw_options (dict, optional): Draw options for the axis lines
+            passing through the origin. See `specrel.geom.LorentzTransformable`
+            for details.
+        grid_draw_options (dict, optional): Draw options for the grid lines
+            not including the axis lines. See
+            `specrel.geom.LorentzTransformable` for details.
+
+    Returns:
+        specrel.geom.Collection:
+            collection of grid lines in the order
+            `[constant t lines in ascending order of t,
+            constant x lines in ascending order of x,
+            t axis,
+            x axis]`
+    &#34;&#34;&#34;
+    # Default draw options if none are specified
+    axis_draw_options = {&#39;color&#39;: &#39;black&#39;, &#39;linewidth&#39;: 2, **axis_draw_options}
+    grid_draw_options = {&#39;color&#39;: &#39;darkgray&#39;, &#39;linewidth&#39;: 1, **grid_draw_options}
+
+    gridlines = geom.Collection()
+    # Add all the minor grid lines that fit within the limits
+    down_steps = math.ceil((tlim[0] - origin[0]) / t_spacing)
+    up_steps = math.floor((tlim[1] - origin[0]) / t_spacing)
+    left_steps = math.ceil((xlim[0] - origin[1]) / x_spacing)
+    right_steps = math.floor((xlim[1] - origin[1]) / x_spacing)
+    for tstep in range(down_steps, up_steps+1):
+        if tstep != 0:  # Add axes later
+            gridlines.append(
+                geom.Line((0, 1), (origin[0] + tstep*t_spacing, origin[1]),
+                    draw_options=grid_draw_options))
+    for xstep in range(left_steps, right_steps+1):
+        if xstep != 0:
+            gridlines.append(
+                geom.Line((1, 0), (origin[0], origin[1] + xstep*x_spacing),
+                    draw_options=grid_draw_options))
+
+    # Add the axes if in range
+    if origin[0] &gt;= tlim[0] and origin[0] &lt;= tlim[1]:
+        gridlines.append(
+            geom.Line((0, 1), origin, draw_options=axis_draw_options))
+    if origin[1] &gt;= xlim[0] and origin[1] &lt;= xlim[1]:
+        gridlines.append(
+            geom.Line((1, 0), origin, draw_options=axis_draw_options))
+    return gridlines
+
+&#34;&#34;&#34;An object moving at some velocity&#34;&#34;&#34;
+&#34;&#34;&#34;
+    left_start_pos is the position of the left end of the object at
+    t = start_time
+    &#34;&#34;&#34;
+class MovingObject(geom.Ribbon):
+    &#34;&#34;&#34;An object moving at a constant velocity.
+
+    Args:
+        left_start_pos (float): Position of the object&#39;s left end at
+            t = `start_time`.
+        length (float, optional): Length of the object.
+        velocity (float, optional): Velocity of the object.
+        start_time (float, optional): Time corresponding to `left_start_pos`.
+        tag (str, optional): See `specrel.geom.LorentzTransformable`.
+        draw_options (dict, optional): See `specrel.geom.LorentzTransformable`.
+    &#34;&#34;&#34;
+    def __init__(self, left_start_pos, length=0, velocity=0, start_time=0,
+        tag=geom.geomrc[&#39;tag&#39;], draw_options=geom.geomrc[&#39;draw_options&#39;]):
+        super().__init__(
+            geom.Line((1, velocity), (start_time, left_start_pos)),
+            geom.Line((1, velocity), (start_time, left_start_pos + length)),
+            tag=tag,
+            draw_options=draw_options
+        )
+
+    def left(self):
+        &#34;&#34;&#34;
+        Returns:
+            specrel.geom.Line:
+                Left end of the object throughout time.
+        &#34;&#34;&#34;
+        return self[0]
+
+    def right(self):
+        &#34;&#34;&#34;
+        Returns:
+            specrel.geom.Line:
+                Right end of the object throughout time.
+        &#34;&#34;&#34;
+        return self[1]
+
+    @staticmethod
+    def _pos_at_time(line, time):
+        &#34;&#34;&#34;Returns position of an object (represented by a line) at a given
+        time.&#34;&#34;&#34;
+        return line.intersect(geom.fixedtime(time)).x
+
+    @staticmethod
+    def _time_for_pos(line, pos):
+        &#34;&#34;&#34;Returns time at which an object (represented by a line) will reach a
+        specified position.&#34;&#34;&#34;
+        # Throw an error if the object isn&#39;t moving
+        if line.slope() is None:
+            raise RuntimeError(&#39;Object is not moving.&#39;)
+        return line.intersect(geom.fixedspace(pos)).t
+
+    def left_pos(self, time):
+        &#34;&#34;&#34;Returns the left end position at some time.
+
+        Args:
+            time (float): Time at which to get the position.
+
+        Returns:
+            float:
+                Position of the object&#39;s left end at t = `time`.
+        &#34;&#34;&#34;
+        return self._pos_at_time(self.left(), time)
+
+    def right_pos(self, time):
+        &#34;&#34;&#34;Returns the right end position at some time.
+
+        Args:
+            time (float): Time at which to get the position.
+
+        Returns:
+            float:
+                Position of the object&#39;s right end at t = `time`.
+        &#34;&#34;&#34;
+        return self._pos_at_time(self.right(), time)
+
+    def center_pos(self, time):
+        &#34;&#34;&#34;Returns the middle position at some time.
+
+        Args:
+            time (float): Time at which to get the position.
+
+        Returns:
+            float:
+                Position of the object&#39;s midpoint at t = `time`.
+        &#34;&#34;&#34;
+        return (self.left_pos(time) + self.right_pos(time)) / 2
+
+    def time_for_left_pos(self, pos):
+        &#34;&#34;&#34;Returns the time when the left end reaches some position.
+
+        Args:
+            pos (float): Target position.
+
+        Returns:
+            float:
+                Time at which the object&#39;s left end is at the target position.
+
+        Raises:
+            RuntimeError:
+                If the object isn&#39;t moving.
+        &#34;&#34;&#34;
+        return self._time_for_pos(self.left(), pos)
+
+    def time_for_right_pos(self, pos):
+        &#34;&#34;&#34;Returns the time when the right end reaches some position.
+
+        Args:
+            pos (float): Target position.
+
+        Returns:
+            float:
+                Time at which the object&#39;s right end is at the target position.
+
+        Raises:
+            RuntimeError:
+                If the object isn&#39;t moving.
+        &#34;&#34;&#34;
+        return self._time_for_pos(self.right(), pos)
+
+    def time_for_center_pos(self, pos):
+        &#34;&#34;&#34;Returns the time when the center reaches some position.
+
+        Args:
+            pos (float): Target position.
+
+        Returns:
+            float:
+                Time at which the object&#39;s midpoint is at the target position.
+
+        Raises:
+            RuntimeError:
+                If the object isn&#39;t moving.
+        &#34;&#34;&#34;
+        return (self.time_for_left_pos(pos) + self.time_for_right_pos(pos)) / 2
+
+    def length(self):
+        &#34;&#34;&#34;
+        Returns:
+            float:
+                The physical length of the object.
+        &#34;&#34;&#34;
+        # Compare when fixing to t = 0
+        return self.right_pos(0) - self.left_pos(0)
+
+    def has_extent(self):
+        &#34;&#34;&#34;Checks whether the object has spatial extent or not.
+
+        Returns:
+            bool:
+                Flag for whether the object has a nonzero length.
+        &#34;&#34;&#34;
+        return self.length() != 0
+
+    def velocity(self):
+        &#34;&#34;&#34;
+        Returns:
+            float:
+                The velocity of the object.
+        &#34;&#34;&#34;
+        return self[0].direction().x / self[0].direction().t
+
+class TimeInterval(geom.Ribbon):
+    &#34;&#34;&#34;A time interval moving with some amount of spatial lag (starts at
+    different times at different positions).
+
+    Args:
+        start_time (float): Start time of the interval at x = `start_pos`.
+        duration (float, optional): Interval duration.
+        unit_delay (float, optional): Delay between start times at x and x + 1.
+        start_pos (float, optional): Position corresponding to `start_time`.
+        tag (str, optional): See `specrel.geom.LorentzTransformable`.
+        draw_options (dict, optional): See `specrel.geom.LorentzTransformable`.
+    &#34;&#34;&#34;
+    def __init__(self, start_time, duration=0, unit_delay=0, start_pos=0,
+        tag=geom.geomrc[&#39;tag&#39;], draw_options=geom.geomrc[&#39;draw_options&#39;]):
+        super().__init__(
+            geom.Line((unit_delay, 1), (start_time, start_pos)),
+            geom.Line((unit_delay, 1), (start_time + duration, start_pos)),
+            tag=tag,
+            draw_options=draw_options
+        )
+
+    def start(self):
+        &#34;&#34;&#34;
+        Returns:
+            specrel.geom.Line:
+                The start of the interval across all space.
+        &#34;&#34;&#34;
+        return self[0]
+
+    def end(self):
+        &#34;&#34;&#34;
+        Returns:
+            specrel.geom.Line:
+                The end of the interval across all space.
+        &#34;&#34;&#34;
+        return self[1]
+
+    @staticmethod
+    def _time_at_pos(line, position):
+        &#34;&#34;&#34;Returns the time value of an event (represented by a line) at a given
+        position.&#34;&#34;&#34;
+        return line.intersect(geom.fixedspace(position)).t
+
+    def start_time(self, position):
+        &#34;&#34;&#34;Returns start time at some position.
+
+        Args:
+            position (float): Position at which to get the starting time.
+
+        Returns:
+            float:
+                The starting time at x = `position`.
+        &#34;&#34;&#34;
+        return self._time_at_pos(self.start(), position)
+
+    def end_time(self, position):
+        &#34;&#34;&#34;Returns end time at some position.
+
+        Args:
+            position (float): Position at which to get the ending time.
+
+        Returns:
+            float:
+                The ending time at x = `position`.
+        &#34;&#34;&#34;
+        return self._time_at_pos(self.end(), position)
+
+    def duration(self):
+        &#34;&#34;&#34;
+        Returns:
+            float:
+                The duration of the time interval.
+        &#34;&#34;&#34;
+        # Compare when fixing to x = 0
+        return self.end_time(0) - self.start_time(0)
+
+    def has_extent(self):
+        &#34;&#34;&#34;Checks whether the interval has temporal extent or not.
+
+        Returns:
+            bool:
+                Flag for whether the object has a nonzero duration.
+        &#34;&#34;&#34;
+        return self.duration() != 0
+
+    def unit_delay(self):
+        &#34;&#34;&#34;Return the delay between start times at positions separated by
+        one spatial unit. A delay of 0 implies simultaneity.
+
+        Returns:
+            float:
+                Unit delay between the interval at x and x + 1.
+        &#34;&#34;&#34;
+        return self[0].direction().t / self[0].direction().x
+
+def _calc_colorgrad(x, point1, point2, color1, color2):
+    &#34;&#34;&#34;Calculate a linear color gradient value between two points at some
+    proportion x, where 0 is the start point/color, and 1 is the end
+    point/color.
+    &#34;&#34;&#34;
+    color1 = to_rgba(color1)
+    color2 = to_rgba(color2)
+    xpoint = tuple([p1 + x*(p2 - p1) for p1, p2 in zip(point1, point2)])
+    xcolor = tuple([c1 + x*(c2 - c1) for c1, c2 in zip(color1, color2)])
+    return xpoint, xcolor
+
+def _valid_color(col):
+    &#34;&#34;&#34;Checks whether an rgba value is a valid color or not.&#34;&#34;&#34;
+    for c in col:
+        if c &lt; 0 or c &gt; 1:
+            return False
+    return True
+
+def _colorgrad_extremes(point1, point2, color1, color2, divisions):
+    &#34;&#34;&#34;Extrapolates a linear color gradient between two points to the extreme
+    endpoints of colorspace, at some interval resolution.
+    &#34;&#34;&#34;
+    # Extend the range backwards
+    i1 = 0
+    while _valid_color(_calc_colorgrad(
+        -(i1+1)/divisions, point1, point2, color1, color2)[1]):
+        i1 += 1
+    # Extend the range forwards
+    i2 = 0
+    while _valid_color(_calc_colorgrad(
+        1 + (i2+1)/divisions, point1, point2, color1, color2)[1]):
+        i2 += 1
+
+    # Get the final extremes of the range
+    ext_point1, ext_color1 = _calc_colorgrad(-i1/divisions,
+        point1, point2, color1, color2)
+    ext_point2, ext_color2 = _calc_colorgrad(1 + i2/divisions,
+        point1, point2, color1, color2)
+    return ext_point1, ext_point2, ext_color1, ext_color2, divisions + i1 + i2
+
+def gradient_line(point1, point2, color1, color2, divisions=100,
+    extrapolate_color=True, draw_options=geom.geomrc[&#39;draw_options&#39;]):
+    &#34;&#34;&#34;A line with a color gradient. The gradient transition will happen over
+    a finite range in spacetime, and be monochromatic at either end.
+
+    Args:
+        point1 (specrel.geom.STVector or iterable): Starting point of the
+            gradient.
+        point2 (specrel.geom.STVector or iterable): Ending point of the
+            gradient.
+        color1 (color): A Matplotlib color for the gradient starting color.
+        color2 (color): A Matplotlib color for the gradient ending color.
+        divisions (int, optional): The number of line segment divisions in the
+            gradient. More divisions means a smoother gradient.
+        extrapolate_color (bool, optional): Flag for whether or not to
+            extrapolate the color gradient across the line past the specified
+            endpoints so that the color change spans as far as possible across
+            the line.
+        draw_options (dict, optional): See `specrel.geom.LorentzTransformable`.
+
+    Returns:
+        specrel.geom.Collection:
+            Collection containing the color gradient increments, in the order:
+
+            1. `specrel.geom.Ray` before `point1` with `color1`.
+            2. Line segments changing color from `point1` to `point2`.
+            3. `specrel.geom.Ray` after `point2` with `color2`.
+    &#34;&#34;&#34;
+    # Copy draw_options and remove color if it&#39;s there
+    draw_options = dict(draw_options)
+    draw_options.pop(&#39;color&#39;, None)
+
+    # If extrapolating color, calculate the color gradient extremes
+    if extrapolate_color:
+        point1, point2, color1, color2, divisions = _colorgrad_extremes(
+            point1, point2, color1, color2, divisions)
+
+    # Color gradient calculator for the given points and colors
+    def this_colorgrad(x):
+        return _calc_colorgrad(x, point1, point2, color1, color2)
+
+    # Line direction vector
+    direc = geom.STVector(point2) - geom.STVector(point1)
+
+    grad = geom.Collection()
+    # Monochromatic ray at the tail end of the gradient line
+    grad.append(geom.Ray(-direc, point1,
+        draw_options={&#39;color&#39;: color1, **draw_options}))
+    # The line segments comprising the color gradient
+    for i in range(divisions):
+        start_point, _ = this_colorgrad(i/divisions)
+        end_point, _ = this_colorgrad((i+1)/divisions)
+        _, grad_color = this_colorgrad((i+1/2)/divisions)
+        grad.append(geom.line_segment(start_point, end_point,
+            draw_options={&#39;color&#39;: grad_color, **draw_options}))
+    # Monochromatic ray at the head end of the gradient line
+    grad.append(geom.Ray(direc, point2,
+        draw_options={&#39;color&#39;: color2, **draw_options}))
+    return grad
+
+def longitudinal_gradient_ribbon(line1_endpoints, line2_endpoints, color1,
+    color2, divisions=100, extrapolate_color=True,
+    draw_options=geom.geomrc[&#39;draw_options&#39;]):
+    &#34;&#34;&#34;A `specrel.geom.Ribbon`-esque object with a longitudinal color gradient
+    (across the infinite direction).
+
+    Args:
+        line1_endpoints (list): list of two `specrel.geom.STVector`-convertible
+            points defining the start and end positions of the gradient along
+            the first edge of the ribbon.
+        line2_endpoints (list): Same as `line1_endpoints`, but for the second
+            edge of the ribbon.
+        color1 (color): A Matplotlib color for the gradient starting color.
+        color2 (color): A Matplotlib color for the gradient ending color.
+        divisions (int, optional): The number of line segment divisions in the
+            gradient. More divisions means a smoother gradient.
+        extrapolate_color (bool, optional): Flag for whether or not to
+            extrapolate the color gradient across the ribbon past the specified
+            endpoints so that the color change spans as far as possible across
+            the ribbon.
+        draw_options (TYPE, optional): See `specrel.geom.LorentzTransformable`.
+
+    Returns:
+        specrel.geom.Collection:
+            Collection containing the color gradient increments, in the order:
+
+            1. `specrel.geom.HalfRibbon` with `color1` before both line starting
+                points.
+            2. Polygons changing color from starts of the lines to the ends.
+            3. `specrel.geom.HalfRibbon` with `color2` after both line ending
+                points.
+    &#34;&#34;&#34;
+    # Copy draw_options and remove color, facecolor, and edgecolor if they&#39;re
+    # there
+    draw_options = dict(draw_options)
+    draw_options.pop(&#39;color&#39;, None)
+    draw_options.pop(&#39;facecolor&#39;, None)
+    draw_options.pop(&#39;edgecolor&#39;, None)
+
+    # If extrapolating color, calculate the color gradient extremes
+    if extrapolate_color:
+        point1, point2, color1, color2, divisions = _colorgrad_extremes(
+            *line1_endpoints, color1, color2, divisions)
+        line1_endpoints = (point1, point2)
+        point1, point2, _, _, _ = _colorgrad_extremes(
+            *line2_endpoints, color1, color2, divisions)
+        line2_endpoints = (point1, point2)
+
+    # Color gradient calculators for each line with the given colors
+    def line1_colorgrad(x):
+        return _calc_colorgrad(x, *line1_endpoints, color1, color2)
+    def line2_colorgrad(x):
+        return _calc_colorgrad(x, *line2_endpoints, color1, color2)
+
+    # Direction vectors of each line
+    direc1 = geom.STVector(line1_endpoints[1]) - geom.STVector(line1_endpoints[0])
+    direc2 = geom.STVector(line2_endpoints[1]) - geom.STVector(line2_endpoints[0])
+    grad = geom.Collection()
+    # Form the monochromatic half ribbon at the tail end of the gradient
+    # Overlap with the first polygon by half a division to mitigate any
+    # boundary gaps
+    start_point1, _ = line1_colorgrad(1/(2*divisions))
+    start_point2, _ = line2_colorgrad(1/(2*divisions))
+    grad.append(geom.HalfRibbon(
+        geom.Ray(-direc1, start_point1),
+        geom.Ray(-direc2, start_point2),
+        # Explicitly turn off edge coloring
+        draw_options={&#39;facecolor&#39;: color1, &#39;edgecolor&#39;: &#39;None&#39;, **draw_options}))
+    # Interior polygons comprising the color gradient
+    for i in range(divisions):
+        start_point1, _ = line1_colorgrad(i/divisions)
+        # Overlap bands by half a division
+        end_point1, _ = line1_colorgrad((i+1+1/2)/divisions)
+        start_point2, _ = line2_colorgrad(i/divisions)
+        end_point2, _ = line2_colorgrad((i+1+1/2)/divisions)
+        _, grad_color = line1_colorgrad((i+1/2)/divisions)
+        grad.append(geom.polygon(
+            [start_point1, end_point1, end_point2, start_point2],
+            draw_options={&#39;facecolor&#39;: grad_color, **draw_options}))
+    # Monochromatic half ribon at the head end of the gradient
+    grad.append(geom.HalfRibbon(
+        geom.Ray(direc1, line1_endpoints[1]),
+        geom.Ray(direc2, line2_endpoints[1]),
+        draw_options={&#39;facecolor&#39;: color2, &#39;edgecolor&#39;: &#39;None&#39;, **draw_options}))
+    return grad
+
+def lateral_gradient_ribbon(direction, point1, point2, color1, color2,
+    divisions=100, draw_options=geom.geomrc[&#39;draw_options&#39;]):
+    &#34;&#34;&#34;A `specrel.geom.Ribbon`-esque object with a lateral color gradient
+    (across the finite direction).
+
+    Args:
+        direction (specrel.geom.STVector or iterable): Direction vector for the
+            gradient.
+        point1 (specrel.geom.STVector or iterable): A point that the first edge
+            of the ribbon passes through.
+        point2 (specrel.geom.STVector or iterable): A point that the second edge
+            of the ribbon passes through.
+        color1 (color): A Matplotlib color for the gradient starting color.
+        color2 (color): A Matplotlib color for the gradient ending color.
+        divisions (int, optional): The number of line segment divisions in the
+            gradient. More divisions means a smoother gradient.
+        draw_options (TYPE, optional): See `specrel.geom.LorentzTransformable`.
+
+    Returns:
+        specrel.geom.Collection:
+            Collection containing the `specrel.geom.Ribbon` objects of slowly
+            changing color from `point1` to `point2`.
+    &#34;&#34;&#34;
+    # Copy draw_options and remove color, facecolor, and edgecolor if they&#39;re
+    # there
+    draw_options = dict(draw_options)
+    draw_options.pop(&#39;color&#39;, None)
+    draw_options.pop(&#39;facecolor&#39;, None)
+    draw_options.pop(&#39;edgecolor&#39;, None)
+
+    # Color gradient calculator for the given points and colors
+    def this_colorgrad(x):
+        return _calc_colorgrad(x, point1, point2, color1, color2)
+
+    grad = geom.Collection()
+    # Ribbons comprising the color gradient, as we move from point1 to point2
+    for i in range(divisions):
+        start_point, _ = this_colorgrad(i/divisions)
+        # Overlap bands by half a division, except the last one
+        end_point, _ = this_colorgrad(min((i+1+1/2)/divisions, 1))
+        _, grad_color = this_colorgrad((i+1/2)/divisions)
+        # Explicitly turn off edge coloring
+        grad.append(geom.Ribbon(
+            geom.Line(direction, start_point),
+            geom.Line(direction, end_point),
+            draw_options={&#39;facecolor&#39;: grad_color, &#39;edgecolor&#39;: &#39;None&#39;,
+                **draw_options}
+        ))
+    return grad</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="specrel.spacetime.gradient_line"><code class="name flex">
+<span>def <span class="ident">gradient_line</span></span>(<span>point1, point2, color1, color2, divisions=100, extrapolate_color=True, draw_options={})</span>
+</code></dt>
+<dd>
+<section class="desc"><p>A line with a color gradient. The gradient transition will happen over
+a finite range in spacetime, and be monochromatic at either end.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>point1</code></strong> :&ensp;<a title="specrel.geom.STVector" href="geom.html#specrel.geom.STVector"><code>STVector</code></a> or <code>iterable</code></dt>
+<dd>Starting point of the
+gradient.</dd>
+<dt><strong><code>point2</code></strong> :&ensp;<a title="specrel.geom.STVector" href="geom.html#specrel.geom.STVector"><code>STVector</code></a> or <code>iterable</code></dt>
+<dd>Ending point of the
+gradient.</dd>
+<dt><strong><code>color1</code></strong> :&ensp;<code>color</code></dt>
+<dd>A Matplotlib color for the gradient starting color.</dd>
+<dt><strong><code>color2</code></strong> :&ensp;<code>color</code></dt>
+<dd>A Matplotlib color for the gradient ending color.</dd>
+<dt><strong><code>divisions</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>The number of line segment divisions in the
+gradient. More divisions means a smoother gradient.</dd>
+<dt><strong><code>extrapolate_color</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Flag for whether or not to
+extrapolate the color gradient across the line past the specified
+endpoints so that the color change spans as far as possible across
+the line.</dd>
+<dt><strong><code>draw_options</code></strong> :&ensp;<code>dict</code>, optional</dt>
+<dd>See <a title="specrel.geom.LorentzTransformable" href="geom.html#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a>.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="specrel.geom.Collection" href="geom.html#specrel.geom.Collection"><code>Collection</code></a>:</dt>
+<dd>
+<p>Collection containing the color gradient increments, in the order:</p>
+<ol>
+<li><a title="specrel.geom.Ray" href="geom.html#specrel.geom.Ray"><code>Ray</code></a> before <code>point1</code> with <code>color1</code>.</li>
+<li>Line segments changing color from <code>point1</code> to <code>point2</code>.</li>
+<li><a title="specrel.geom.Ray" href="geom.html#specrel.geom.Ray"><code>Ray</code></a> after <code>point2</code> with <code>color2</code>.</li>
+</ol>
+</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def gradient_line(point1, point2, color1, color2, divisions=100,
+    extrapolate_color=True, draw_options=geom.geomrc[&#39;draw_options&#39;]):
+    &#34;&#34;&#34;A line with a color gradient. The gradient transition will happen over
+    a finite range in spacetime, and be monochromatic at either end.
+
+    Args:
+        point1 (specrel.geom.STVector or iterable): Starting point of the
+            gradient.
+        point2 (specrel.geom.STVector or iterable): Ending point of the
+            gradient.
+        color1 (color): A Matplotlib color for the gradient starting color.
+        color2 (color): A Matplotlib color for the gradient ending color.
+        divisions (int, optional): The number of line segment divisions in the
+            gradient. More divisions means a smoother gradient.
+        extrapolate_color (bool, optional): Flag for whether or not to
+            extrapolate the color gradient across the line past the specified
+            endpoints so that the color change spans as far as possible across
+            the line.
+        draw_options (dict, optional): See `specrel.geom.LorentzTransformable`.
+
+    Returns:
+        specrel.geom.Collection:
+            Collection containing the color gradient increments, in the order:
+
+            1. `specrel.geom.Ray` before `point1` with `color1`.
+            2. Line segments changing color from `point1` to `point2`.
+            3. `specrel.geom.Ray` after `point2` with `color2`.
+    &#34;&#34;&#34;
+    # Copy draw_options and remove color if it&#39;s there
+    draw_options = dict(draw_options)
+    draw_options.pop(&#39;color&#39;, None)
+
+    # If extrapolating color, calculate the color gradient extremes
+    if extrapolate_color:
+        point1, point2, color1, color2, divisions = _colorgrad_extremes(
+            point1, point2, color1, color2, divisions)
+
+    # Color gradient calculator for the given points and colors
+    def this_colorgrad(x):
+        return _calc_colorgrad(x, point1, point2, color1, color2)
+
+    # Line direction vector
+    direc = geom.STVector(point2) - geom.STVector(point1)
+
+    grad = geom.Collection()
+    # Monochromatic ray at the tail end of the gradient line
+    grad.append(geom.Ray(-direc, point1,
+        draw_options={&#39;color&#39;: color1, **draw_options}))
+    # The line segments comprising the color gradient
+    for i in range(divisions):
+        start_point, _ = this_colorgrad(i/divisions)
+        end_point, _ = this_colorgrad((i+1)/divisions)
+        _, grad_color = this_colorgrad((i+1/2)/divisions)
+        grad.append(geom.line_segment(start_point, end_point,
+            draw_options={&#39;color&#39;: grad_color, **draw_options}))
+    # Monochromatic ray at the head end of the gradient line
+    grad.append(geom.Ray(direc, point2,
+        draw_options={&#39;color&#39;: color2, **draw_options}))
+    return grad</code></pre>
+</details>
+</dd>
+<dt id="specrel.spacetime.lateral_gradient_ribbon"><code class="name flex">
+<span>def <span class="ident">lateral_gradient_ribbon</span></span>(<span>direction, point1, point2, color1, color2, divisions=100, draw_options={})</span>
+</code></dt>
+<dd>
+<section class="desc"><p>A <a title="specrel.geom.Ribbon" href="geom.html#specrel.geom.Ribbon"><code>Ribbon</code></a>-esque object with a lateral color gradient
+(across the finite direction).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>direction</code></strong> :&ensp;<a title="specrel.geom.STVector" href="geom.html#specrel.geom.STVector"><code>STVector</code></a> or <code>iterable</code></dt>
+<dd>Direction vector for the
+gradient.</dd>
+<dt><strong><code>point1</code></strong> :&ensp;<a title="specrel.geom.STVector" href="geom.html#specrel.geom.STVector"><code>STVector</code></a> or <code>iterable</code></dt>
+<dd>A point that the first edge
+of the ribbon passes through.</dd>
+<dt><strong><code>point2</code></strong> :&ensp;<a title="specrel.geom.STVector" href="geom.html#specrel.geom.STVector"><code>STVector</code></a> or <code>iterable</code></dt>
+<dd>A point that the second edge
+of the ribbon passes through.</dd>
+<dt><strong><code>color1</code></strong> :&ensp;<code>color</code></dt>
+<dd>A Matplotlib color for the gradient starting color.</dd>
+<dt><strong><code>color2</code></strong> :&ensp;<code>color</code></dt>
+<dd>A Matplotlib color for the gradient ending color.</dd>
+<dt><strong><code>divisions</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>The number of line segment divisions in the
+gradient. More divisions means a smoother gradient.</dd>
+<dt><strong><code>draw_options</code></strong> :&ensp;<code>TYPE</code>, optional</dt>
+<dd>See <a title="specrel.geom.LorentzTransformable" href="geom.html#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a>.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="specrel.geom.Collection" href="geom.html#specrel.geom.Collection"><code>Collection</code></a>:</dt>
+<dd>Collection containing the <a title="specrel.geom.Ribbon" href="geom.html#specrel.geom.Ribbon"><code>Ribbon</code></a> objects of slowly
+changing color from <code>point1</code> to <code>point2</code>.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def lateral_gradient_ribbon(direction, point1, point2, color1, color2,
+    divisions=100, draw_options=geom.geomrc[&#39;draw_options&#39;]):
+    &#34;&#34;&#34;A `specrel.geom.Ribbon`-esque object with a lateral color gradient
+    (across the finite direction).
+
+    Args:
+        direction (specrel.geom.STVector or iterable): Direction vector for the
+            gradient.
+        point1 (specrel.geom.STVector or iterable): A point that the first edge
+            of the ribbon passes through.
+        point2 (specrel.geom.STVector or iterable): A point that the second edge
+            of the ribbon passes through.
+        color1 (color): A Matplotlib color for the gradient starting color.
+        color2 (color): A Matplotlib color for the gradient ending color.
+        divisions (int, optional): The number of line segment divisions in the
+            gradient. More divisions means a smoother gradient.
+        draw_options (TYPE, optional): See `specrel.geom.LorentzTransformable`.
+
+    Returns:
+        specrel.geom.Collection:
+            Collection containing the `specrel.geom.Ribbon` objects of slowly
+            changing color from `point1` to `point2`.
+    &#34;&#34;&#34;
+    # Copy draw_options and remove color, facecolor, and edgecolor if they&#39;re
+    # there
+    draw_options = dict(draw_options)
+    draw_options.pop(&#39;color&#39;, None)
+    draw_options.pop(&#39;facecolor&#39;, None)
+    draw_options.pop(&#39;edgecolor&#39;, None)
+
+    # Color gradient calculator for the given points and colors
+    def this_colorgrad(x):
+        return _calc_colorgrad(x, point1, point2, color1, color2)
+
+    grad = geom.Collection()
+    # Ribbons comprising the color gradient, as we move from point1 to point2
+    for i in range(divisions):
+        start_point, _ = this_colorgrad(i/divisions)
+        # Overlap bands by half a division, except the last one
+        end_point, _ = this_colorgrad(min((i+1+1/2)/divisions, 1))
+        _, grad_color = this_colorgrad((i+1/2)/divisions)
+        # Explicitly turn off edge coloring
+        grad.append(geom.Ribbon(
+            geom.Line(direction, start_point),
+            geom.Line(direction, end_point),
+            draw_options={&#39;facecolor&#39;: grad_color, &#39;edgecolor&#39;: &#39;None&#39;,
+                **draw_options}
+        ))
+    return grad</code></pre>
+</details>
+</dd>
+<dt id="specrel.spacetime.longitudinal_gradient_ribbon"><code class="name flex">
+<span>def <span class="ident">longitudinal_gradient_ribbon</span></span>(<span>line1_endpoints, line2_endpoints, color1, color2, divisions=100, extrapolate_color=True, draw_options={})</span>
+</code></dt>
+<dd>
+<section class="desc"><p>A <a title="specrel.geom.Ribbon" href="geom.html#specrel.geom.Ribbon"><code>Ribbon</code></a>-esque object with a longitudinal color gradient
+(across the infinite direction).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>line1_endpoints</code></strong> :&ensp;<code>list</code></dt>
+<dd>list of two <a title="specrel.geom.STVector" href="geom.html#specrel.geom.STVector"><code>STVector</code></a>-convertible
+points defining the start and end positions of the gradient along
+the first edge of the ribbon.</dd>
+<dt><strong><code>line2_endpoints</code></strong> :&ensp;<code>list</code></dt>
+<dd>Same as <code>line1_endpoints</code>, but for the second
+edge of the ribbon.</dd>
+<dt><strong><code>color1</code></strong> :&ensp;<code>color</code></dt>
+<dd>A Matplotlib color for the gradient starting color.</dd>
+<dt><strong><code>color2</code></strong> :&ensp;<code>color</code></dt>
+<dd>A Matplotlib color for the gradient ending color.</dd>
+<dt><strong><code>divisions</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>The number of line segment divisions in the
+gradient. More divisions means a smoother gradient.</dd>
+<dt><strong><code>extrapolate_color</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Flag for whether or not to
+extrapolate the color gradient across the ribbon past the specified
+endpoints so that the color change spans as far as possible across
+the ribbon.</dd>
+<dt><strong><code>draw_options</code></strong> :&ensp;<code>TYPE</code>, optional</dt>
+<dd>See <a title="specrel.geom.LorentzTransformable" href="geom.html#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a>.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="specrel.geom.Collection" href="geom.html#specrel.geom.Collection"><code>Collection</code></a>:</dt>
+<dd>
+<p>Collection containing the color gradient increments, in the order:</p>
+<ol>
+<li><a title="specrel.geom.HalfRibbon" href="geom.html#specrel.geom.HalfRibbon"><code>HalfRibbon</code></a> with <code>color1</code> before both line starting
+points.</li>
+<li>Polygons changing color from starts of the lines to the ends.</li>
+<li><a title="specrel.geom.HalfRibbon" href="geom.html#specrel.geom.HalfRibbon"><code>HalfRibbon</code></a> with <code>color2</code> after both line ending
+points.</li>
+</ol>
+</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def longitudinal_gradient_ribbon(line1_endpoints, line2_endpoints, color1,
+    color2, divisions=100, extrapolate_color=True,
+    draw_options=geom.geomrc[&#39;draw_options&#39;]):
+    &#34;&#34;&#34;A `specrel.geom.Ribbon`-esque object with a longitudinal color gradient
+    (across the infinite direction).
+
+    Args:
+        line1_endpoints (list): list of two `specrel.geom.STVector`-convertible
+            points defining the start and end positions of the gradient along
+            the first edge of the ribbon.
+        line2_endpoints (list): Same as `line1_endpoints`, but for the second
+            edge of the ribbon.
+        color1 (color): A Matplotlib color for the gradient starting color.
+        color2 (color): A Matplotlib color for the gradient ending color.
+        divisions (int, optional): The number of line segment divisions in the
+            gradient. More divisions means a smoother gradient.
+        extrapolate_color (bool, optional): Flag for whether or not to
+            extrapolate the color gradient across the ribbon past the specified
+            endpoints so that the color change spans as far as possible across
+            the ribbon.
+        draw_options (TYPE, optional): See `specrel.geom.LorentzTransformable`.
+
+    Returns:
+        specrel.geom.Collection:
+            Collection containing the color gradient increments, in the order:
+
+            1. `specrel.geom.HalfRibbon` with `color1` before both line starting
+                points.
+            2. Polygons changing color from starts of the lines to the ends.
+            3. `specrel.geom.HalfRibbon` with `color2` after both line ending
+                points.
+    &#34;&#34;&#34;
+    # Copy draw_options and remove color, facecolor, and edgecolor if they&#39;re
+    # there
+    draw_options = dict(draw_options)
+    draw_options.pop(&#39;color&#39;, None)
+    draw_options.pop(&#39;facecolor&#39;, None)
+    draw_options.pop(&#39;edgecolor&#39;, None)
+
+    # If extrapolating color, calculate the color gradient extremes
+    if extrapolate_color:
+        point1, point2, color1, color2, divisions = _colorgrad_extremes(
+            *line1_endpoints, color1, color2, divisions)
+        line1_endpoints = (point1, point2)
+        point1, point2, _, _, _ = _colorgrad_extremes(
+            *line2_endpoints, color1, color2, divisions)
+        line2_endpoints = (point1, point2)
+
+    # Color gradient calculators for each line with the given colors
+    def line1_colorgrad(x):
+        return _calc_colorgrad(x, *line1_endpoints, color1, color2)
+    def line2_colorgrad(x):
+        return _calc_colorgrad(x, *line2_endpoints, color1, color2)
+
+    # Direction vectors of each line
+    direc1 = geom.STVector(line1_endpoints[1]) - geom.STVector(line1_endpoints[0])
+    direc2 = geom.STVector(line2_endpoints[1]) - geom.STVector(line2_endpoints[0])
+    grad = geom.Collection()
+    # Form the monochromatic half ribbon at the tail end of the gradient
+    # Overlap with the first polygon by half a division to mitigate any
+    # boundary gaps
+    start_point1, _ = line1_colorgrad(1/(2*divisions))
+    start_point2, _ = line2_colorgrad(1/(2*divisions))
+    grad.append(geom.HalfRibbon(
+        geom.Ray(-direc1, start_point1),
+        geom.Ray(-direc2, start_point2),
+        # Explicitly turn off edge coloring
+        draw_options={&#39;facecolor&#39;: color1, &#39;edgecolor&#39;: &#39;None&#39;, **draw_options}))
+    # Interior polygons comprising the color gradient
+    for i in range(divisions):
+        start_point1, _ = line1_colorgrad(i/divisions)
+        # Overlap bands by half a division
+        end_point1, _ = line1_colorgrad((i+1+1/2)/divisions)
+        start_point2, _ = line2_colorgrad(i/divisions)
+        end_point2, _ = line2_colorgrad((i+1+1/2)/divisions)
+        _, grad_color = line1_colorgrad((i+1/2)/divisions)
+        grad.append(geom.polygon(
+            [start_point1, end_point1, end_point2, start_point2],
+            draw_options={&#39;facecolor&#39;: grad_color, **draw_options}))
+    # Monochromatic half ribon at the head end of the gradient
+    grad.append(geom.HalfRibbon(
+        geom.Ray(direc1, line1_endpoints[1]),
+        geom.Ray(direc2, line2_endpoints[1]),
+        draw_options={&#39;facecolor&#39;: color2, &#39;edgecolor&#39;: &#39;None&#39;, **draw_options}))
+    return grad</code></pre>
+</details>
+</dd>
+<dt id="specrel.spacetime.stgrid"><code class="name flex">
+<span>def <span class="ident">stgrid</span></span>(<span>tlim, xlim, origin=(0, 0), t_spacing=1, x_spacing=1, axis_draw_options={}, grid_draw_options={})</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Spacetime grid with some spacing on some range</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>tlim</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>Minimum and maximum time values for the grid.</dd>
+<dt><strong><code>xlim</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>Minimum and maximum position values for the grid.</dd>
+<dt><strong><code>origin</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>(t, x) value defining the grid "center".</dd>
+<dt><strong><code>t_spacing</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>The spacing between grid lines of constant
+time.</dd>
+<dt><strong><code>x_spacing</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>The spacing between grid lines of constant
+position.</dd>
+<dt><strong><code>axis_draw_options</code></strong> :&ensp;<code>dict</code>, optional</dt>
+<dd>Draw options for the axis lines
+passing through the origin. See <a title="specrel.geom.LorentzTransformable" href="geom.html#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a>
+for details.</dd>
+<dt><strong><code>grid_draw_options</code></strong> :&ensp;<code>dict</code>, optional</dt>
+<dd>Draw options for the grid lines
+not including the axis lines. See
+<a title="specrel.geom.LorentzTransformable" href="geom.html#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a> for details.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="specrel.geom.Collection" href="geom.html#specrel.geom.Collection"><code>Collection</code></a>:</dt>
+<dd>collection of grid lines in the order
+<code>[constant t lines in ascending order of t,
+constant x lines in ascending order of x,
+t axis,
+x axis]</code></dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def stgrid(tlim, xlim, origin=geom.geomrc[&#39;origin&#39;], t_spacing=1, x_spacing=1,
+    axis_draw_options=geom.geomrc[&#39;draw_options&#39;],
+    grid_draw_options=geom.geomrc[&#39;draw_options&#39;]):
+    &#34;&#34;&#34;Spacetime grid with some spacing on some range
+
+    Args:
+        tlim (tuple): Minimum and maximum time values for the grid.
+        xlim (tuple): Minimum and maximum position values for the grid.
+        origin (tuple, optional): (t, x) value defining the grid &#34;center&#34;.
+        t_spacing (float, optional): The spacing between grid lines of constant
+            time.
+        x_spacing (float, optional): The spacing between grid lines of constant
+            position.
+        axis_draw_options (dict, optional): Draw options for the axis lines
+            passing through the origin. See `specrel.geom.LorentzTransformable`
+            for details.
+        grid_draw_options (dict, optional): Draw options for the grid lines
+            not including the axis lines. See
+            `specrel.geom.LorentzTransformable` for details.
+
+    Returns:
+        specrel.geom.Collection:
+            collection of grid lines in the order
+            `[constant t lines in ascending order of t,
+            constant x lines in ascending order of x,
+            t axis,
+            x axis]`
+    &#34;&#34;&#34;
+    # Default draw options if none are specified
+    axis_draw_options = {&#39;color&#39;: &#39;black&#39;, &#39;linewidth&#39;: 2, **axis_draw_options}
+    grid_draw_options = {&#39;color&#39;: &#39;darkgray&#39;, &#39;linewidth&#39;: 1, **grid_draw_options}
+
+    gridlines = geom.Collection()
+    # Add all the minor grid lines that fit within the limits
+    down_steps = math.ceil((tlim[0] - origin[0]) / t_spacing)
+    up_steps = math.floor((tlim[1] - origin[0]) / t_spacing)
+    left_steps = math.ceil((xlim[0] - origin[1]) / x_spacing)
+    right_steps = math.floor((xlim[1] - origin[1]) / x_spacing)
+    for tstep in range(down_steps, up_steps+1):
+        if tstep != 0:  # Add axes later
+            gridlines.append(
+                geom.Line((0, 1), (origin[0] + tstep*t_spacing, origin[1]),
+                    draw_options=grid_draw_options))
+    for xstep in range(left_steps, right_steps+1):
+        if xstep != 0:
+            gridlines.append(
+                geom.Line((1, 0), (origin[0], origin[1] + xstep*x_spacing),
+                    draw_options=grid_draw_options))
+
+    # Add the axes if in range
+    if origin[0] &gt;= tlim[0] and origin[0] &lt;= tlim[1]:
+        gridlines.append(
+            geom.Line((0, 1), origin, draw_options=axis_draw_options))
+    if origin[1] &gt;= xlim[0] and origin[1] &lt;= xlim[1]:
+        gridlines.append(
+            geom.Line((1, 0), origin, draw_options=axis_draw_options))
+    return gridlines</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="specrel.spacetime.MovingObject"><code class="flex name class">
+<span>class <span class="ident">MovingObject</span></span>
+<span>(</span><span>left_start_pos, length=0, velocity=0, start_time=0, tag=None, draw_options={})</span>
+</code></dt>
+<dd>
+<section class="desc"><p>An object moving at a constant velocity.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>left_start_pos</code></strong> :&ensp;<code>float</code></dt>
+<dd>Position of the object's left end at
+t = <code>start_time</code>.</dd>
+<dt><strong><code>length</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Length of the object.</dd>
+<dt><strong><code>velocity</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Velocity of the object.</dd>
+<dt><strong><code>start_time</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Time corresponding to <code>left_start_pos</code>.</dd>
+<dt><strong><code>tag</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>See <a title="specrel.geom.LorentzTransformable" href="geom.html#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a>.</dd>
+<dt><strong><code>draw_options</code></strong> :&ensp;<code>dict</code>, optional</dt>
+<dd>See <a title="specrel.geom.LorentzTransformable" href="geom.html#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a>.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">class MovingObject(geom.Ribbon):
+    &#34;&#34;&#34;An object moving at a constant velocity.
+
+    Args:
+        left_start_pos (float): Position of the object&#39;s left end at
+            t = `start_time`.
+        length (float, optional): Length of the object.
+        velocity (float, optional): Velocity of the object.
+        start_time (float, optional): Time corresponding to `left_start_pos`.
+        tag (str, optional): See `specrel.geom.LorentzTransformable`.
+        draw_options (dict, optional): See `specrel.geom.LorentzTransformable`.
+    &#34;&#34;&#34;
+    def __init__(self, left_start_pos, length=0, velocity=0, start_time=0,
+        tag=geom.geomrc[&#39;tag&#39;], draw_options=geom.geomrc[&#39;draw_options&#39;]):
+        super().__init__(
+            geom.Line((1, velocity), (start_time, left_start_pos)),
+            geom.Line((1, velocity), (start_time, left_start_pos + length)),
+            tag=tag,
+            draw_options=draw_options
+        )
+
+    def left(self):
+        &#34;&#34;&#34;
+        Returns:
+            specrel.geom.Line:
+                Left end of the object throughout time.
+        &#34;&#34;&#34;
+        return self[0]
+
+    def right(self):
+        &#34;&#34;&#34;
+        Returns:
+            specrel.geom.Line:
+                Right end of the object throughout time.
+        &#34;&#34;&#34;
+        return self[1]
+
+    @staticmethod
+    def _pos_at_time(line, time):
+        &#34;&#34;&#34;Returns position of an object (represented by a line) at a given
+        time.&#34;&#34;&#34;
+        return line.intersect(geom.fixedtime(time)).x
+
+    @staticmethod
+    def _time_for_pos(line, pos):
+        &#34;&#34;&#34;Returns time at which an object (represented by a line) will reach a
+        specified position.&#34;&#34;&#34;
+        # Throw an error if the object isn&#39;t moving
+        if line.slope() is None:
+            raise RuntimeError(&#39;Object is not moving.&#39;)
+        return line.intersect(geom.fixedspace(pos)).t
+
+    def left_pos(self, time):
+        &#34;&#34;&#34;Returns the left end position at some time.
+
+        Args:
+            time (float): Time at which to get the position.
+
+        Returns:
+            float:
+                Position of the object&#39;s left end at t = `time`.
+        &#34;&#34;&#34;
+        return self._pos_at_time(self.left(), time)
+
+    def right_pos(self, time):
+        &#34;&#34;&#34;Returns the right end position at some time.
+
+        Args:
+            time (float): Time at which to get the position.
+
+        Returns:
+            float:
+                Position of the object&#39;s right end at t = `time`.
+        &#34;&#34;&#34;
+        return self._pos_at_time(self.right(), time)
+
+    def center_pos(self, time):
+        &#34;&#34;&#34;Returns the middle position at some time.
+
+        Args:
+            time (float): Time at which to get the position.
+
+        Returns:
+            float:
+                Position of the object&#39;s midpoint at t = `time`.
+        &#34;&#34;&#34;
+        return (self.left_pos(time) + self.right_pos(time)) / 2
+
+    def time_for_left_pos(self, pos):
+        &#34;&#34;&#34;Returns the time when the left end reaches some position.
+
+        Args:
+            pos (float): Target position.
+
+        Returns:
+            float:
+                Time at which the object&#39;s left end is at the target position.
+
+        Raises:
+            RuntimeError:
+                If the object isn&#39;t moving.
+        &#34;&#34;&#34;
+        return self._time_for_pos(self.left(), pos)
+
+    def time_for_right_pos(self, pos):
+        &#34;&#34;&#34;Returns the time when the right end reaches some position.
+
+        Args:
+            pos (float): Target position.
+
+        Returns:
+            float:
+                Time at which the object&#39;s right end is at the target position.
+
+        Raises:
+            RuntimeError:
+                If the object isn&#39;t moving.
+        &#34;&#34;&#34;
+        return self._time_for_pos(self.right(), pos)
+
+    def time_for_center_pos(self, pos):
+        &#34;&#34;&#34;Returns the time when the center reaches some position.
+
+        Args:
+            pos (float): Target position.
+
+        Returns:
+            float:
+                Time at which the object&#39;s midpoint is at the target position.
+
+        Raises:
+            RuntimeError:
+                If the object isn&#39;t moving.
+        &#34;&#34;&#34;
+        return (self.time_for_left_pos(pos) + self.time_for_right_pos(pos)) / 2
+
+    def length(self):
+        &#34;&#34;&#34;
+        Returns:
+            float:
+                The physical length of the object.
+        &#34;&#34;&#34;
+        # Compare when fixing to t = 0
+        return self.right_pos(0) - self.left_pos(0)
+
+    def has_extent(self):
+        &#34;&#34;&#34;Checks whether the object has spatial extent or not.
+
+        Returns:
+            bool:
+                Flag for whether the object has a nonzero length.
+        &#34;&#34;&#34;
+        return self.length() != 0
+
+    def velocity(self):
+        &#34;&#34;&#34;
+        Returns:
+            float:
+                The velocity of the object.
+        &#34;&#34;&#34;
+        return self[0].direction().x / self[0].direction().t</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="specrel.geom.Ribbon" href="geom.html#specrel.geom.Ribbon">Ribbon</a></li>
+<li><a title="specrel.geom.Collection" href="geom.html#specrel.geom.Collection">Collection</a></li>
+<li><a title="specrel.geom.LorentzTransformable" href="geom.html#specrel.geom.LorentzTransformable">LorentzTransformable</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="specrel.spacetime.MovingObject.center_pos"><code class="name flex">
+<span>def <span class="ident">center_pos</span></span>(<span>self, time)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Returns the middle position at some time.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>time</code></strong> :&ensp;<code>float</code></dt>
+<dd>Time at which to get the position.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float</code>:</dt>
+<dd>Position of the object's midpoint at t = <code>time</code>.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def center_pos(self, time):
+    &#34;&#34;&#34;Returns the middle position at some time.
+
+    Args:
+        time (float): Time at which to get the position.
+
+    Returns:
+        float:
+            Position of the object&#39;s midpoint at t = `time`.
+    &#34;&#34;&#34;
+    return (self.left_pos(time) + self.right_pos(time)) / 2</code></pre>
+</details>
+</dd>
+<dt id="specrel.spacetime.MovingObject.has_extent"><code class="name flex">
+<span>def <span class="ident">has_extent</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Checks whether the object has spatial extent or not.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code>:</dt>
+<dd>Flag for whether the object has a nonzero length.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def has_extent(self):
+    &#34;&#34;&#34;Checks whether the object has spatial extent or not.
+
+    Returns:
+        bool:
+            Flag for whether the object has a nonzero length.
+    &#34;&#34;&#34;
+    return self.length() != 0</code></pre>
+</details>
+</dd>
+<dt id="specrel.spacetime.MovingObject.left"><code class="name flex">
+<span>def <span class="ident">left</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="specrel.geom.Line" href="geom.html#specrel.geom.Line"><code>Line</code></a>:</dt>
+<dd>Left end of the object throughout time.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def left(self):
+    &#34;&#34;&#34;
+    Returns:
+        specrel.geom.Line:
+            Left end of the object throughout time.
+    &#34;&#34;&#34;
+    return self[0]</code></pre>
+</details>
+</dd>
+<dt id="specrel.spacetime.MovingObject.left_pos"><code class="name flex">
+<span>def <span class="ident">left_pos</span></span>(<span>self, time)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Returns the left end position at some time.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>time</code></strong> :&ensp;<code>float</code></dt>
+<dd>Time at which to get the position.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float</code>:</dt>
+<dd>Position of the object's left end at t = <code>time</code>.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def left_pos(self, time):
+    &#34;&#34;&#34;Returns the left end position at some time.
+
+    Args:
+        time (float): Time at which to get the position.
+
+    Returns:
+        float:
+            Position of the object&#39;s left end at t = `time`.
+    &#34;&#34;&#34;
+    return self._pos_at_time(self.left(), time)</code></pre>
+</details>
+</dd>
+<dt id="specrel.spacetime.MovingObject.length"><code class="name flex">
+<span>def <span class="ident">length</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float</code>:</dt>
+<dd>The physical length of the object.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def length(self):
+    &#34;&#34;&#34;
+    Returns:
+        float:
+            The physical length of the object.
+    &#34;&#34;&#34;
+    # Compare when fixing to t = 0
+    return self.right_pos(0) - self.left_pos(0)</code></pre>
+</details>
+</dd>
+<dt id="specrel.spacetime.MovingObject.right"><code class="name flex">
+<span>def <span class="ident">right</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="specrel.geom.Line" href="geom.html#specrel.geom.Line"><code>Line</code></a>:</dt>
+<dd>Right end of the object throughout time.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def right(self):
+    &#34;&#34;&#34;
+    Returns:
+        specrel.geom.Line:
+            Right end of the object throughout time.
+    &#34;&#34;&#34;
+    return self[1]</code></pre>
+</details>
+</dd>
+<dt id="specrel.spacetime.MovingObject.right_pos"><code class="name flex">
+<span>def <span class="ident">right_pos</span></span>(<span>self, time)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Returns the right end position at some time.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>time</code></strong> :&ensp;<code>float</code></dt>
+<dd>Time at which to get the position.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float</code>:</dt>
+<dd>Position of the object's right end at t = <code>time</code>.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def right_pos(self, time):
+    &#34;&#34;&#34;Returns the right end position at some time.
+
+    Args:
+        time (float): Time at which to get the position.
+
+    Returns:
+        float:
+            Position of the object&#39;s right end at t = `time`.
+    &#34;&#34;&#34;
+    return self._pos_at_time(self.right(), time)</code></pre>
+</details>
+</dd>
+<dt id="specrel.spacetime.MovingObject.time_for_center_pos"><code class="name flex">
+<span>def <span class="ident">time_for_center_pos</span></span>(<span>self, pos)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Returns the time when the center reaches some position.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>pos</code></strong> :&ensp;<code>float</code></dt>
+<dd>Target position.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float</code>:</dt>
+<dd>Time at which the object's midpoint is at the target position.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>RuntimeError</code>:</dt>
+<dd>If the object isn't moving.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def time_for_center_pos(self, pos):
+    &#34;&#34;&#34;Returns the time when the center reaches some position.
+
+    Args:
+        pos (float): Target position.
+
+    Returns:
+        float:
+            Time at which the object&#39;s midpoint is at the target position.
+
+    Raises:
+        RuntimeError:
+            If the object isn&#39;t moving.
+    &#34;&#34;&#34;
+    return (self.time_for_left_pos(pos) + self.time_for_right_pos(pos)) / 2</code></pre>
+</details>
+</dd>
+<dt id="specrel.spacetime.MovingObject.time_for_left_pos"><code class="name flex">
+<span>def <span class="ident">time_for_left_pos</span></span>(<span>self, pos)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Returns the time when the left end reaches some position.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>pos</code></strong> :&ensp;<code>float</code></dt>
+<dd>Target position.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float</code>:</dt>
+<dd>Time at which the object's left end is at the target position.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>RuntimeError</code>:</dt>
+<dd>If the object isn't moving.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def time_for_left_pos(self, pos):
+    &#34;&#34;&#34;Returns the time when the left end reaches some position.
+
+    Args:
+        pos (float): Target position.
+
+    Returns:
+        float:
+            Time at which the object&#39;s left end is at the target position.
+
+    Raises:
+        RuntimeError:
+            If the object isn&#39;t moving.
+    &#34;&#34;&#34;
+    return self._time_for_pos(self.left(), pos)</code></pre>
+</details>
+</dd>
+<dt id="specrel.spacetime.MovingObject.time_for_right_pos"><code class="name flex">
+<span>def <span class="ident">time_for_right_pos</span></span>(<span>self, pos)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Returns the time when the right end reaches some position.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>pos</code></strong> :&ensp;<code>float</code></dt>
+<dd>Target position.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float</code>:</dt>
+<dd>Time at which the object's right end is at the target position.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>RuntimeError</code>:</dt>
+<dd>If the object isn't moving.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def time_for_right_pos(self, pos):
+    &#34;&#34;&#34;Returns the time when the right end reaches some position.
+
+    Args:
+        pos (float): Target position.
+
+    Returns:
+        float:
+            Time at which the object&#39;s right end is at the target position.
+
+    Raises:
+        RuntimeError:
+            If the object isn&#39;t moving.
+    &#34;&#34;&#34;
+    return self._time_for_pos(self.right(), pos)</code></pre>
+</details>
+</dd>
+<dt id="specrel.spacetime.MovingObject.velocity"><code class="name flex">
+<span>def <span class="ident">velocity</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float</code>:</dt>
+<dd>The velocity of the object.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def velocity(self):
+    &#34;&#34;&#34;
+    Returns:
+        float:
+            The velocity of the object.
+    &#34;&#34;&#34;
+    return self[0].direction().x / self[0].direction().t</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="specrel.geom.Ribbon" href="geom.html#specrel.geom.Ribbon">Ribbon</a></b></code>:
+<ul class="hlist">
+<li><code><a title="specrel.geom.Ribbon.append" href="geom.html#specrel.geom.Ribbon.append">append</a></code></li>
+<li><code><a title="specrel.geom.Ribbon.draw" href="geom.html#specrel.geom.LorentzTransformable.draw">draw</a></code></li>
+<li><code><a title="specrel.geom.Ribbon.lorentz_boost" href="geom.html#specrel.geom.LorentzTransformable.lorentz_boost">lorentz_boost</a></code></li>
+<li><code><a title="specrel.geom.Ribbon.lorentz_transform" href="geom.html#specrel.geom.LorentzTransformable.lorentz_transform">lorentz_transform</a></code></li>
+<li><code><a title="specrel.geom.Ribbon.pop" href="geom.html#specrel.geom.Collection.pop">pop</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="specrel.spacetime.TimeInterval"><code class="flex name class">
+<span>class <span class="ident">TimeInterval</span></span>
+<span>(</span><span>start_time, duration=0, unit_delay=0, start_pos=0, tag=None, draw_options={})</span>
+</code></dt>
+<dd>
+<section class="desc"><p>A time interval moving with some amount of spatial lag (starts at
+different times at different positions).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>start_time</code></strong> :&ensp;<code>float</code></dt>
+<dd>Start time of the interval at x = <code>start_pos</code>.</dd>
+<dt><strong><code>duration</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Interval duration.</dd>
+<dt><strong><code>unit_delay</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Delay between start times at x and x + 1.</dd>
+<dt><strong><code>start_pos</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Position corresponding to <code>start_time</code>.</dd>
+<dt><strong><code>tag</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>See <a title="specrel.geom.LorentzTransformable" href="geom.html#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a>.</dd>
+<dt><strong><code>draw_options</code></strong> :&ensp;<code>dict</code>, optional</dt>
+<dd>See <a title="specrel.geom.LorentzTransformable" href="geom.html#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a>.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">class TimeInterval(geom.Ribbon):
+    &#34;&#34;&#34;A time interval moving with some amount of spatial lag (starts at
+    different times at different positions).
+
+    Args:
+        start_time (float): Start time of the interval at x = `start_pos`.
+        duration (float, optional): Interval duration.
+        unit_delay (float, optional): Delay between start times at x and x + 1.
+        start_pos (float, optional): Position corresponding to `start_time`.
+        tag (str, optional): See `specrel.geom.LorentzTransformable`.
+        draw_options (dict, optional): See `specrel.geom.LorentzTransformable`.
+    &#34;&#34;&#34;
+    def __init__(self, start_time, duration=0, unit_delay=0, start_pos=0,
+        tag=geom.geomrc[&#39;tag&#39;], draw_options=geom.geomrc[&#39;draw_options&#39;]):
+        super().__init__(
+            geom.Line((unit_delay, 1), (start_time, start_pos)),
+            geom.Line((unit_delay, 1), (start_time + duration, start_pos)),
+            tag=tag,
+            draw_options=draw_options
+        )
+
+    def start(self):
+        &#34;&#34;&#34;
+        Returns:
+            specrel.geom.Line:
+                The start of the interval across all space.
+        &#34;&#34;&#34;
+        return self[0]
+
+    def end(self):
+        &#34;&#34;&#34;
+        Returns:
+            specrel.geom.Line:
+                The end of the interval across all space.
+        &#34;&#34;&#34;
+        return self[1]
+
+    @staticmethod
+    def _time_at_pos(line, position):
+        &#34;&#34;&#34;Returns the time value of an event (represented by a line) at a given
+        position.&#34;&#34;&#34;
+        return line.intersect(geom.fixedspace(position)).t
+
+    def start_time(self, position):
+        &#34;&#34;&#34;Returns start time at some position.
+
+        Args:
+            position (float): Position at which to get the starting time.
+
+        Returns:
+            float:
+                The starting time at x = `position`.
+        &#34;&#34;&#34;
+        return self._time_at_pos(self.start(), position)
+
+    def end_time(self, position):
+        &#34;&#34;&#34;Returns end time at some position.
+
+        Args:
+            position (float): Position at which to get the ending time.
+
+        Returns:
+            float:
+                The ending time at x = `position`.
+        &#34;&#34;&#34;
+        return self._time_at_pos(self.end(), position)
+
+    def duration(self):
+        &#34;&#34;&#34;
+        Returns:
+            float:
+                The duration of the time interval.
+        &#34;&#34;&#34;
+        # Compare when fixing to x = 0
+        return self.end_time(0) - self.start_time(0)
+
+    def has_extent(self):
+        &#34;&#34;&#34;Checks whether the interval has temporal extent or not.
+
+        Returns:
+            bool:
+                Flag for whether the object has a nonzero duration.
+        &#34;&#34;&#34;
+        return self.duration() != 0
+
+    def unit_delay(self):
+        &#34;&#34;&#34;Return the delay between start times at positions separated by
+        one spatial unit. A delay of 0 implies simultaneity.
+
+        Returns:
+            float:
+                Unit delay between the interval at x and x + 1.
+        &#34;&#34;&#34;
+        return self[0].direction().t / self[0].direction().x</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="specrel.geom.Ribbon" href="geom.html#specrel.geom.Ribbon">Ribbon</a></li>
+<li><a title="specrel.geom.Collection" href="geom.html#specrel.geom.Collection">Collection</a></li>
+<li><a title="specrel.geom.LorentzTransformable" href="geom.html#specrel.geom.LorentzTransformable">LorentzTransformable</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="specrel.spacetime.TimeInterval.duration"><code class="name flex">
+<span>def <span class="ident">duration</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float</code>:</dt>
+<dd>The duration of the time interval.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def duration(self):
+    &#34;&#34;&#34;
+    Returns:
+        float:
+            The duration of the time interval.
+    &#34;&#34;&#34;
+    # Compare when fixing to x = 0
+    return self.end_time(0) - self.start_time(0)</code></pre>
+</details>
+</dd>
+<dt id="specrel.spacetime.TimeInterval.end"><code class="name flex">
+<span>def <span class="ident">end</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="specrel.geom.Line" href="geom.html#specrel.geom.Line"><code>Line</code></a>:</dt>
+<dd>The end of the interval across all space.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def end(self):
+    &#34;&#34;&#34;
+    Returns:
+        specrel.geom.Line:
+            The end of the interval across all space.
+    &#34;&#34;&#34;
+    return self[1]</code></pre>
+</details>
+</dd>
+<dt id="specrel.spacetime.TimeInterval.end_time"><code class="name flex">
+<span>def <span class="ident">end_time</span></span>(<span>self, position)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Returns end time at some position.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>position</code></strong> :&ensp;<code>float</code></dt>
+<dd>Position at which to get the ending time.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float</code>:</dt>
+<dd>The ending time at x = <code>position</code>.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def end_time(self, position):
+    &#34;&#34;&#34;Returns end time at some position.
+
+    Args:
+        position (float): Position at which to get the ending time.
+
+    Returns:
+        float:
+            The ending time at x = `position`.
+    &#34;&#34;&#34;
+    return self._time_at_pos(self.end(), position)</code></pre>
+</details>
+</dd>
+<dt id="specrel.spacetime.TimeInterval.has_extent"><code class="name flex">
+<span>def <span class="ident">has_extent</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Checks whether the interval has temporal extent or not.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>bool</code>:</dt>
+<dd>Flag for whether the object has a nonzero duration.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def has_extent(self):
+    &#34;&#34;&#34;Checks whether the interval has temporal extent or not.
+
+    Returns:
+        bool:
+            Flag for whether the object has a nonzero duration.
+    &#34;&#34;&#34;
+    return self.duration() != 0</code></pre>
+</details>
+</dd>
+<dt id="specrel.spacetime.TimeInterval.start"><code class="name flex">
+<span>def <span class="ident">start</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="specrel.geom.Line" href="geom.html#specrel.geom.Line"><code>Line</code></a>:</dt>
+<dd>The start of the interval across all space.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def start(self):
+    &#34;&#34;&#34;
+    Returns:
+        specrel.geom.Line:
+            The start of the interval across all space.
+    &#34;&#34;&#34;
+    return self[0]</code></pre>
+</details>
+</dd>
+<dt id="specrel.spacetime.TimeInterval.start_time"><code class="name flex">
+<span>def <span class="ident">start_time</span></span>(<span>self, position)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Returns start time at some position.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>position</code></strong> :&ensp;<code>float</code></dt>
+<dd>Position at which to get the starting time.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float</code>:</dt>
+<dd>The starting time at x = <code>position</code>.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def start_time(self, position):
+    &#34;&#34;&#34;Returns start time at some position.
+
+    Args:
+        position (float): Position at which to get the starting time.
+
+    Returns:
+        float:
+            The starting time at x = `position`.
+    &#34;&#34;&#34;
+    return self._time_at_pos(self.start(), position)</code></pre>
+</details>
+</dd>
+<dt id="specrel.spacetime.TimeInterval.unit_delay"><code class="name flex">
+<span>def <span class="ident">unit_delay</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Return the delay between start times at positions separated by
+one spatial unit. A delay of 0 implies simultaneity.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float</code>:</dt>
+<dd>Unit delay between the interval at x and x + 1.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def unit_delay(self):
+    &#34;&#34;&#34;Return the delay between start times at positions separated by
+    one spatial unit. A delay of 0 implies simultaneity.
+
+    Returns:
+        float:
+            Unit delay between the interval at x and x + 1.
+    &#34;&#34;&#34;
+    return self[0].direction().t / self[0].direction().x</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="specrel.geom.Ribbon" href="geom.html#specrel.geom.Ribbon">Ribbon</a></b></code>:
+<ul class="hlist">
+<li><code><a title="specrel.geom.Ribbon.append" href="geom.html#specrel.geom.Ribbon.append">append</a></code></li>
+<li><code><a title="specrel.geom.Ribbon.draw" href="geom.html#specrel.geom.LorentzTransformable.draw">draw</a></code></li>
+<li><code><a title="specrel.geom.Ribbon.lorentz_boost" href="geom.html#specrel.geom.LorentzTransformable.lorentz_boost">lorentz_boost</a></code></li>
+<li><code><a title="specrel.geom.Ribbon.lorentz_transform" href="geom.html#specrel.geom.LorentzTransformable.lorentz_transform">lorentz_transform</a></code></li>
+<li><code><a title="specrel.geom.Ribbon.pop" href="geom.html#specrel.geom.Collection.pop">pop</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="specrel" href="index.html">specrel</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="specrel.spacetime.gradient_line" href="#specrel.spacetime.gradient_line">gradient_line</a></code></li>
+<li><code><a title="specrel.spacetime.lateral_gradient_ribbon" href="#specrel.spacetime.lateral_gradient_ribbon">lateral_gradient_ribbon</a></code></li>
+<li><code><a title="specrel.spacetime.longitudinal_gradient_ribbon" href="#specrel.spacetime.longitudinal_gradient_ribbon">longitudinal_gradient_ribbon</a></code></li>
+<li><code><a title="specrel.spacetime.stgrid" href="#specrel.spacetime.stgrid">stgrid</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="specrel.spacetime.MovingObject" href="#specrel.spacetime.MovingObject">MovingObject</a></code></h4>
+<ul class="two-column">
+<li><code><a title="specrel.spacetime.MovingObject.center_pos" href="#specrel.spacetime.MovingObject.center_pos">center_pos</a></code></li>
+<li><code><a title="specrel.spacetime.MovingObject.has_extent" href="#specrel.spacetime.MovingObject.has_extent">has_extent</a></code></li>
+<li><code><a title="specrel.spacetime.MovingObject.left" href="#specrel.spacetime.MovingObject.left">left</a></code></li>
+<li><code><a title="specrel.spacetime.MovingObject.left_pos" href="#specrel.spacetime.MovingObject.left_pos">left_pos</a></code></li>
+<li><code><a title="specrel.spacetime.MovingObject.length" href="#specrel.spacetime.MovingObject.length">length</a></code></li>
+<li><code><a title="specrel.spacetime.MovingObject.right" href="#specrel.spacetime.MovingObject.right">right</a></code></li>
+<li><code><a title="specrel.spacetime.MovingObject.right_pos" href="#specrel.spacetime.MovingObject.right_pos">right_pos</a></code></li>
+<li><code><a title="specrel.spacetime.MovingObject.time_for_center_pos" href="#specrel.spacetime.MovingObject.time_for_center_pos">time_for_center_pos</a></code></li>
+<li><code><a title="specrel.spacetime.MovingObject.time_for_left_pos" href="#specrel.spacetime.MovingObject.time_for_left_pos">time_for_left_pos</a></code></li>
+<li><code><a title="specrel.spacetime.MovingObject.time_for_right_pos" href="#specrel.spacetime.MovingObject.time_for_right_pos">time_for_right_pos</a></code></li>
+<li><code><a title="specrel.spacetime.MovingObject.velocity" href="#specrel.spacetime.MovingObject.velocity">velocity</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="specrel.spacetime.TimeInterval" href="#specrel.spacetime.TimeInterval">TimeInterval</a></code></h4>
+<ul class="two-column">
+<li><code><a title="specrel.spacetime.TimeInterval.duration" href="#specrel.spacetime.TimeInterval.duration">duration</a></code></li>
+<li><code><a title="specrel.spacetime.TimeInterval.end" href="#specrel.spacetime.TimeInterval.end">end</a></code></li>
+<li><code><a title="specrel.spacetime.TimeInterval.end_time" href="#specrel.spacetime.TimeInterval.end_time">end_time</a></code></li>
+<li><code><a title="specrel.spacetime.TimeInterval.has_extent" href="#specrel.spacetime.TimeInterval.has_extent">has_extent</a></code></li>
+<li><code><a title="specrel.spacetime.TimeInterval.start" href="#specrel.spacetime.TimeInterval.start">start</a></code></li>
+<li><code><a title="specrel.spacetime.TimeInterval.start_time" href="#specrel.spacetime.TimeInterval.start_time">start_time</a></code></li>
+<li><code><a title="specrel.spacetime.TimeInterval.unit_delay" href="#specrel.spacetime.TimeInterval.unit_delay">unit_delay</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.6.3</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

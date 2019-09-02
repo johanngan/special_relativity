@@ -1,0 +1,3506 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.6.3" />
+<title>specrel.graphics.simpgraph API documentation</title>
+<meta name="description" content="Simple (one set of axes) spacetime plots and animations in special
+relativity." />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase;cursor:pointer}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>specrel.graphics.simpgraph</code></h1>
+</header>
+<section id="section-intro">
+<p>Simple (one set of axes) spacetime plots and animations in special
+relativity.</p>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">&#34;&#34;&#34;Simple (one set of axes) spacetime plots and animations in special
+relativity.
+&#34;&#34;&#34;
+
+from abc import ABC, abstractmethod
+import copy
+import math
+import warnings
+
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
+
+from specrel.graphics.graphrc import graphrc
+
+class FigureCreator:
+    &#34;&#34;&#34;Something that can create and own a figure.
+
+    Attributes:
+        fig (matplotlib.figure.Figure): Figure handle.
+    &#34;&#34;&#34;
+    def __init__(self):
+        self.fig = None
+        self._created_own_fig = False
+
+    def close(self):
+        &#34;&#34;&#34;Close the figure window if it was created by the class.&#34;&#34;&#34;
+        if self._created_own_fig:
+            plt.close(self.fig)
+
+class SingleAxisFigureCreator(FigureCreator):
+    &#34;&#34;&#34;Something that creates and owns a figure with a single axis
+    (i.e. not a subplot).
+
+    Args:
+        fig (matplotlib.figure.Figure, optional): Figure window. If `None` and
+            `ax` is not `None`, will be set to `ax.figure`. If both are `None`,
+            a new figure will be created.
+        ax (matplotlib.axes.Axes, optional): Axes to draw on. If `None` and
+            `fig` is not `None`, will be set to `fig.gca()`. If both are `None`,
+            a new set of axes will be created.
+
+    Attributes:
+        ax (matplotlib.axes.Axes): Axes to draw on.
+        fig (matplotlib.figure.Figure): Figure window.
+    &#34;&#34;&#34;
+    def __init__(self, fig=graphrc[&#39;fig&#39;], ax=graphrc[&#39;ax&#39;]):
+        super().__init__()
+        if fig is None and ax is None:
+            self.fig, self.ax = plt.subplots()
+            self._created_own_fig = True
+        elif fig is not None and ax is None:
+            self.fig = fig
+            self.ax = fig.gca()
+        elif fig is None and ax is not None:
+            self.fig = ax.figure
+            self.ax = ax
+        else:
+            self.fig = fig
+            self.ax = ax
+
+class STPlotter(SingleAxisFigureCreator, ABC):
+    &#34;&#34;&#34;Base-level plotting interface.&#34;&#34;&#34;
+
+    @abstractmethod
+    def draw_point(self, point, tag, **kwargs):
+        &#34;&#34;&#34;Draws a single spacetime point.
+
+        Args:
+            point (specrel.geom.STVector): Point to draw.
+            tag (str): Tag to draw with the point.
+            **kwargs: Matplotlib plot keyword arguments.
+
+        Raises:
+            NotImplementedError:
+                Abstract method.
+        &#34;&#34;&#34;
+        raise NotImplementedError
+
+    @abstractmethod
+    def draw_line_segment(self, point1, point2, tag, **kwargs):
+        &#34;&#34;&#34;Draws a line segment between two spacetime points.
+
+        Args:
+            point1 (specrel.geom.STVector): One line segment endpoint.
+            point2 (specrel.geom.STVector): Other line segment endpoint.
+            tag (str): Tag to draw with the point.
+            **kwargs: Matplotlib plot keyword arguments.
+
+        Raises:
+            NotImplementedError:
+                Abstract method.
+        &#34;&#34;&#34;
+        raise NotImplementedError
+
+    @abstractmethod
+    def draw_shaded_polygon(self, vertices, tag, **kwargs):
+        &#34;&#34;&#34;Draws a shaded polygon in spacetime.
+
+        Args:
+            vertices (list): List of `specrel.geom.STVector` objects defining
+                the polygon vertices.
+            tag (str): Tag to draw with the point.
+            **kwargs: Matplotlib plot keyword arguments.
+
+        Raises:
+            NotImplementedError:
+                Abstract method.
+        &#34;&#34;&#34;
+        raise NotImplementedError
+
+    @staticmethod
+    def _decouple_stvectors(stvectors):
+        &#34;&#34;&#34;Separate time and space values in a list of STVectors.&#34;&#34;&#34;
+        if stvectors:
+            return tuple(zip(*stvectors))
+        return tuple(), tuple()
+
+    @abstractmethod
+    def set_lims(self, tlim, xlim):
+        &#34;&#34;&#34;Sets the plotting limits for the plotter.
+
+        Args:
+            tlim (tuple): Minimum and maximum time values of the plot. `None`
+                values are filled automatically.
+            xlim (tuple): Minimum and maximum position values of the plot.
+                `None` values are filled automatically.
+
+        Raises:
+            NotImplementedError:
+                Abstract method.
+        &#34;&#34;&#34;
+        raise NotImplementedError
+
+    @abstractmethod
+    def show(self):
+        &#34;&#34;&#34;Shows the plot in interactive mode.
+
+        Raises:
+            NotImplementedError:
+                Abstract method.
+        &#34;&#34;&#34;
+        raise NotImplementedError
+
+    def save(self, filename, **kwargs):
+        &#34;&#34;&#34;Saves the plot to a file.
+
+        Args:
+            filename (str): Output file name.
+            **kwargs: Keyword arguments to `matplotlib.figure.Figure.savefig`.
+        &#34;&#34;&#34;
+        self.fig.savefig(filename, **kwargs)
+
+class WorldlinePlotter(STPlotter):
+    &#34;&#34;&#34;Plotter for creating static spacetime diagrams.
+
+    Args:
+        fig (matplotlib.figure.Figure, optional): See
+            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+        ax (matplotlib.axes.Axes, optional): See
+            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+        others: See attributes.
+
+    Attributes:
+        equal_lim_expand (float): If the limits on an axis are specified to be
+            equal, they will be expanded symmetrically until the axis size is
+            this value.
+        grid (bool): Flag for whether or not to plot background grid lines.
+        legend (bool): Flag for whether or not to plot a legend.
+        legend_loc (str): Legend location according to the Matplotlib
+            `loc` parameter. If `legend` is `False`, this attribute is ignored.
+        lim_padding (float): Extra padding on spacetime diagram axis limits,
+            relative to the axis sizes.
+    &#34;&#34;&#34;
+
+    def __init__(self,
+        fig=graphrc[&#39;fig&#39;],
+        ax=graphrc[&#39;ax&#39;],
+        grid=graphrc[&#39;grid&#39;],
+        legend=graphrc[&#39;legend&#39;],
+        legend_loc=graphrc[&#39;legend_loc&#39;],
+        lim_padding=graphrc[&#39;worldline.lim_padding&#39;],
+        equal_lim_expand=graphrc[&#39;worldline.equal_lim_expand&#39;]):
+
+        super().__init__(fig, ax)
+        self.grid = grid
+        self.legend = legend
+        self.legend_loc = legend_loc
+        self.lim_padding = lim_padding
+        self.equal_lim_expand = equal_lim_expand
+
+    def _prepare_ax(self):
+        &#34;&#34;&#34;Do any axis preparation before drawing stuff.&#34;&#34;&#34;
+        self.ax.grid(self.grid)
+        # Ensure grid lines are behind other objects
+        self.ax.set_axisbelow(True)
+
+    def _set_legend(self):
+        &#34;&#34;&#34;Turn on the legend, or do nothing, depending on self.legend&#34;&#34;&#34;
+        if self.legend:
+            self.ax.legend(loc=self.legend_loc)
+
+    def draw_point(self, point, tag=None, **kwargs):
+        &#34;&#34;&#34;See `specrel.graphics.simpgraph.STPlotter.draw_point`.
+
+        Kwargs:
+            linestyle: Forced to be `&#39;None&#39;`
+            marker: Default is `&#39;.&#39;`.
+        &#34;&#34;&#34;
+        self._prepare_ax()
+        marker = kwargs.pop(&#39;marker&#39;, &#39;.&#39;)
+        # Force linestyle to be none for a point
+        kwargs[&#39;linestyle&#39;] = &#39;None&#39;
+        self.ax.plot(point[1], point[0], marker=marker, **kwargs)
+        if tag:
+            self.ax.text(point[1], point[0], tag)
+        self._set_legend()
+
+    def draw_line_segment(self, point1, point2, tag=None, **kwargs):
+        &#34;&#34;&#34;See `specrel.graphics.simpgraph.STPlotter.draw_line_segment`.
+
+        Kwargs:
+            marker: Forced to be `None`.
+        &#34;&#34;&#34;
+        self._prepare_ax()
+        # Ignore the &#34;marker&#34; parameter
+        kwargs.pop(&#39;marker&#39;, None)
+        self.ax.plot((point1[1], point2[1]), (point1[0], point2[0]), **kwargs)
+        # Put the tag at the midpoint
+        if tag:
+            self.ax.text((point1[1] + point2[1])/2, (point1[0] + point2[0])/2,
+                tag, ha=&#39;center&#39;, va=&#39;center&#39;, bbox={&#39;boxstyle&#39;: &#39;round&#39;,
+                    &#39;ec&#39;: &#39;black&#39;, &#39;fc&#39;: (1, 1, 1, 0.5)})
+        self._set_legend()
+
+    def draw_shaded_polygon(self, vertices, tag=None, **kwargs):
+        &#34;&#34;&#34;See `specrel.graphics.simpgraph.STPlotter.draw_shaded_polygon`.
+
+        Kwargs:
+            linewidth: Forced to be `None`.
+        &#34;&#34;&#34;
+        self._prepare_ax()
+        tvals, xvals = self._decouple_stvectors(vertices)
+        # Ignore the &#34;linewidth&#34; parameter
+        kwargs.pop(&#39;linewidth&#39;, None)
+        self.ax.fill(xvals, tvals, **kwargs)
+        # Put tag at the centroid
+        if vertices and tag:
+            self.ax.text(sum(xvals)/len(xvals), sum(tvals)/len(tvals), tag,
+                ha=&#39;center&#39;, va=&#39;center&#39;, bbox={&#39;boxstyle&#39;: &#39;round&#39;,
+                    &#39;ec&#39;: &#39;black&#39;, &#39;fc&#39;: (1, 1, 1, 0.5)})
+        self._set_legend()
+
+    def set_lims(self, tlim, xlim):
+        # Pad the limits
+        tpad = self.lim_padding/2 * (tlim[1] - tlim[0])
+        xpad = self.lim_padding/2 * (xlim[1] - xlim[0])
+        # If the limits are identical, expand them
+        if tlim[0] == tlim[1]:
+            tpad = self.equal_lim_expand/2
+        if xlim[0] == xlim[1]:
+            xpad = self.equal_lim_expand/2
+
+        padded_tlim = (tlim[0] - tpad, tlim[1] + tpad)
+        padded_xlim = (xlim[0] - xpad, xlim[1] + xpad)
+
+        # Set the actual limits
+        self.ax.set_xlim(padded_xlim)
+        self.ax.set_ylim(padded_tlim)
+
+        # Clip lines and polygons objects to the actual limits
+        clipbox = self.ax.fill([xlim[0], xlim[0], xlim[1], xlim[1]],
+            [tlim[0], tlim[1], tlim[1], tlim[0]], color=&#39;None&#39;)[0]
+        # Only clip lines, not points
+        for artist in [ln for ln in self.ax.lines if len(ln.get_xdata()) &gt; 1] \
+            + self.ax.patches[:-1]:
+            artist.set_clip_path(clipbox)
+        self.ax.patches.pop()
+
+    def show(self):
+        plt.show()
+
+    def set_labels(self):
+        &#34;&#34;&#34;Set labels for the time and space axes. See
+        `specrel.graphics.graphrc`.
+        &#34;&#34;&#34;
+        self.ax.set_xlabel(graphrc[&#39;xlabel&#39;])
+        self.ax.set_ylabel(graphrc[&#39;tlabel&#39;])
+
+class BaseAnimator(ABC):
+    &#34;&#34;&#34;Base class for animators that animate over some changing control
+    variable, like time or velocity.
+
+    Args:
+        frame_lim (tuple, optional): Minimum and maximum frame index of the
+            animation. See `BaseAnimator.calc_frame_idx`.
+        others: See attributes.
+
+    Attributes:
+        display_current (bool): Flag for displaying the control variable value
+            of the current animation frame.
+        display_current_decimals (int): Number of decimals to display the
+            current control variable to.
+        fig (matplotlib.figure.Figure): Matplotlib figure window.
+        fps (float): Animation frames per second.
+        stepsize (float): Change in control variable value over one frame.
+        title (str): Animation title; static throughout all frames.
+    &#34;&#34;&#34;
+    def __init__(self,
+        fig=graphrc[&#39;fig&#39;],
+        stepsize=None,
+        fps=graphrc[&#39;anim.fps&#39;],
+        display_current=graphrc[&#39;anim.display_current&#39;],
+        display_current_decimals=graphrc[&#39;anim.display_current_decimals&#39;],
+        title=graphrc[&#39;title&#39;],
+        frame_lim=(0, 0)):
+
+        self.fig = fig
+        self.display_current = display_current
+        self.display_current_decimals = display_current_decimals
+        self.stepsize = stepsize
+        self.fps = fps
+        self.title = title
+        self._frame_lim = frame_lim
+        # Cached animation if already created previously
+        self._cached_anim = None
+
+    def clear(self):
+        &#34;&#34;&#34;Clear persistent data from the last animation.&#34;&#34;&#34;
+        self._frame_lim = (0, 0)
+        self._cached_anim = None
+
+    def calc_frame_idx(self, val):
+        &#34;&#34;&#34;Snap a value to the closest corresponding frame. Frames are indexed
+        as multiples of the stepsize. Note that frame indexes can be either
+        positive or negative.
+
+        Args:
+            val (float): Value of the frame.
+
+        Returns:
+            int:
+                Closest frame index corresponding to `val`.
+        &#34;&#34;&#34;
+        return round(val / self.stepsize)
+
+    def calc_frame_val(self, idx):
+        &#34;&#34;&#34;Get the corresponding value of a frame at a specified index, rounded
+        to the same precision as the stepsize, but with one extra decimal place.
+
+        Args:
+            idx (int): Frame index.
+
+        Returns:
+            float:
+                Value of the frame.
+        &#34;&#34;&#34;
+        # Round to the same order of magnitude (one smaller for safety) as the
+        # stepsize to ensure precision, but to mitigate floating-point error
+        def order_of_mag(x):
+            return int(math.floor(math.log10(abs(x))))
+        return round(idx * self.stepsize, 1-order_of_mag(self.stepsize))
+
+    @abstractmethod
+    def init_func(self):
+        &#34;&#34;&#34;Initialization function for `matplotlib.animation.FuncAnimation`.
+
+        Returns:
+            matplotlib.artist.Artist
+
+        Raises:
+            NotImplementedError:
+                Abstract method.
+        &#34;&#34;&#34;
+        raise NotImplementedError
+
+    @abstractmethod
+    def update(self, frame):
+        &#34;&#34;&#34;Update the animation frame.
+
+        Args:
+            frame (int): Index of the frame to draw.
+
+        Returns:
+            matplotlib.artist.Artist
+
+        Raises:
+            NotImplementedError:
+                Abstract method.
+        &#34;&#34;&#34;
+        raise NotImplementedError
+
+    def get_frame_lim(self):
+        &#34;&#34;&#34;
+        Returns:
+            tuple:
+                The animation frame index limits.
+        &#34;&#34;&#34;
+        return self._frame_lim
+
+    def _get_frame_list(self):
+        &#34;&#34;&#34;Get a full list of all frame values to be played in the animation.&#34;&#34;&#34;
+        frame_lim = self.get_frame_lim()
+        return list(range(frame_lim[0], frame_lim[1]+1))
+
+    def animate(self):
+        &#34;&#34;&#34;Synthesize an animation. If an animation was already synthesized and
+        cached, return the cached animation.
+
+        Returns:
+            matplotlib.animation.FuncAnimation
+        &#34;&#34;&#34;
+        # Only create a new animation if the cache is empty
+        if self._cached_anim is None:
+            self._cached_anim = FuncAnimation(self.fig, self.update,
+                init_func=self.init_func,
+                frames=self._get_frame_list(),
+                interval=1e3/self.fps,
+                repeat=False)
+        return self._cached_anim
+
+    def show(self):
+        &#34;&#34;&#34;Play the animation in interactive mode.&#34;&#34;&#34;
+        plt.show(self.animate())
+
+    def save(self, filename, **kwargs):
+        &#34;&#34;&#34;Save the animation to a file.
+
+        Kwargs:
+            fps: Fixed to the animator&#39;s `fps` attribute.
+        &#34;&#34;&#34;
+        kwargs.pop(&#39;fps&#39;, None) # FPS is fixed
+        self.animate().save(filename, fps=self.fps, **kwargs)
+
+class TimeAnimator(BaseAnimator):
+    &#34;&#34;&#34;Animator where the frame variable is time, i.e. depicts a sequence
+    evolving in time.
+
+    Args:
+        ct_per_sec (float, optional): Amount of time to pass within an animation
+            for every second of real time.
+        instant_pause_time (float, optional): Amount of pause time in seconds
+            for instantaneous events (appear in a single instant of time).
+        display_current_time (bool, optional): Same as `display_current` in
+            `specrel.graphics.simpgraph.BaseAnimator`.
+        display_current_time_decimals (int, optional): Same as
+            `display_current_decimals` in
+            `specrel.graphics.simpgraph.BaseAnimator`.
+        others: See `specrel.graphics.simpgraph.BaseAnimator`.
+    &#34;&#34;&#34;
+    def __init__(self,
+        fig=graphrc[&#39;fig&#39;],
+        ct_per_sec=graphrc[&#39;anim.time.ct_per_sec&#39;],
+        instant_pause_time=graphrc[&#39;anim.time.instant_pause_time&#39;],
+        fps=graphrc[&#39;anim.fps&#39;],
+        display_current_time=graphrc[&#39;anim.display_current&#39;],
+        display_current_time_decimals=
+            graphrc[&#39;anim.display_current_decimals&#39;],
+        title=graphrc[&#39;title&#39;]):
+
+        super().__init__(fig, ct_per_sec / fps, fps, display_current_time,
+            display_current_time_decimals, title)
+        # Number of frames corresponding to the desired pause time
+        self._pause_frames = round(instant_pause_time * fps)
+
+class STAnimator(TimeAnimator, STPlotter, ABC):
+    &#34;&#34;&#34;TimeAnimator that fulfills the `specrel.graphics.simpgraph.STPlotter`
+    interface, and hence can be used by
+    `specrel.geom.LorentzTransformable.draw`.
+
+    Attributes:
+        frame_pause_flags (dict): Maps frame indexes to a flag for whether or
+            not the animation should pause on that frame.
+        frame_plotters (dict): Maps frame indexes to lists of plotting functions
+            that should be called to draw that frame.
+        grid (bool): Flag for whether or not to plot background grid lines.
+        legend (bool): Flag for whether or not to plot a legend.
+        legend_loc (str): Legend location according to the Matplotlib
+            `loc` parameter. If `legend` is `False`, this attribute is ignored.
+        xlim (tuple): Position axis draw limits.
+    &#34;&#34;&#34;
+    def __init__(self,
+        fig=graphrc[&#39;fig&#39;],
+        ax=graphrc[&#39;ax&#39;],
+        grid=graphrc[&#39;grid&#39;],
+        legend=graphrc[&#39;legend&#39;],
+        legend_loc=graphrc[&#39;legend_loc&#39;],
+        ct_per_sec=graphrc[&#39;anim.time.ct_per_sec&#39;],
+        instant_pause_time=graphrc[&#39;anim.time.instant_pause_time&#39;],
+        fps=graphrc[&#39;anim.fps&#39;],
+        display_current_time=graphrc[&#39;anim.display_current&#39;],
+        display_current_time_decimals=graphrc[&#39;anim.display_current_decimals&#39;],
+        title=graphrc[&#39;title&#39;]):
+
+        STPlotter.__init__(self, fig, ax)
+        TimeAnimator.__init__(self, self.fig, ct_per_sec, instant_pause_time,
+            fps, display_current_time, display_current_time_decimals, title)
+        self.grid = grid
+        self.legend = legend
+        self.legend_loc = legend_loc
+        self.clear()
+
+    def clear(self):
+        super().clear()
+        self.xlim = (0, 0)
+        # At each key corresponding to a frame index, a list of function
+        # handles to be called to plot the frame
+        self.frame_plotters = {}
+        # Flags for whether each frame should be paused
+        self.frame_pause_flags = {}
+
+    def _init_frame(self, idx):
+        &#34;&#34;&#34;Initialize the frame plotters at some frame index.&#34;&#34;&#34;
+        self.frame_plotters[idx] = []
+        # Set the given title, current time, both, or neither
+        titles = []
+        if self.title:
+            titles.append(self.title)
+        if self.display_current:
+            titles.append(
+                f&#39;Time = {{:.{self.display_current_decimals}f}} s&#39;.format(
+                    self.calc_frame_val(idx)))
+        if titles:
+            title_str = &#39;\n&#39;.join(titles)
+            self.frame_plotters[idx] += [lambda: self.ax.set_title(title_str)]
+        self.frame_pause_flags[idx] = False
+
+    def resize(self, tlim):
+        &#34;&#34;&#34;Expand the animator&#39;s stored frame range to accomodate a given time
+        range. Otherwise, the animator won&#39;t know how to plot an out-of-range
+        time value.
+
+        Args:
+            tlim (tuple): Time range to accomodate, in the form (min, max).
+        &#34;&#34;&#34;
+        # Convert tlim to frame indexes
+        flims = [
+            self.calc_frame_idx(tlim[0]),
+            self.calc_frame_idx(tlim[1]),
+        ]
+        if not self.frame_plotters:
+            # Initialize all frame within the limits
+            new_fidx = list(range(flims[0], flims[1]+1))
+        else:
+            # Initialize frames that don&#39;t exist yet
+            keys = self.frame_plotters.keys()
+            new_fidx = list(range(flims[0], min(keys))) \
+                + list(range(max(keys)+1, flims[1]+1))
+        # Initialize the necessary frames
+        for idx in new_fidx:
+            self._init_frame(idx)
+
+    def set_lims(self, tlim, xlim):
+        self.xlim = xlim
+        self._frame_lim = (
+            self.calc_frame_idx(tlim[0]),
+            self.calc_frame_idx(tlim[1]),
+        )
+        self.resize(tlim)
+
+    @abstractmethod
+    def draw_point(self, point, tag, **kwargs):
+        # Flush cache upon drawing a new thing
+        self._cached_anim = None
+
+        # Add any necessary new frames
+        self.resize(2*[point[0]])
+
+        # Pause if specified
+        if self._pause_frames:
+            frame = self.calc_frame_idx(point[0])
+            self.frame_pause_flags[frame] = True
+
+    @abstractmethod
+    def draw_line_segment(self, point1, point2, tag, **kwargs):
+        # Flush cache upon drawing a new thing
+        self._cached_anim = None
+
+        # Add any necessary new frames
+        self.resize([
+            min(point1[0], point2[0]),
+            max(point1[0], point2[0])
+        ])
+
+        # If the line is horizontal, treat it like an instantaneous point,
+        # and pause if specified
+        if point1[0] == point2[0]:
+            if self._pause_frames:
+                frame = self.calc_frame_idx(point1[0])
+                self.frame_pause_flags[frame] = True
+
+    @abstractmethod
+    def draw_shaded_polygon(self, vertices, tag, **kwargs):
+        # Flush cache upon drawing a new thing
+        self._cached_anim = None
+
+        # Add any necessary new frames
+        tvals = self._decouple_stvectors(vertices)[0]
+        if tvals:
+            self.resize([min(tvals), max(tvals)])
+
+    def init_func(self):
+        return [self.ax]
+
+    def update(self, frame):
+        for plotter in self.frame_plotters[frame]:
+            plotter()
+        return [self.ax]
+
+    def _get_frame_list(self):
+        # Prolong any frames that have been flagged for a pause
+        return [f for f in super()._get_frame_list() for repeat in range(
+            self._pause_frames if self.frame_pause_flags[f] else 1)]
+
+class WorldlineAnimator(STAnimator):
+    &#34;&#34;&#34;Animates a spacetime plot with a sweeping horizontal line overlaid to
+    indicate the current time.
+
+    Args:
+        current_time_style (linestyle, optional): See attributes.
+        current_time_color (color, optional): See attributes.
+        lim_padding (float, optional): See
+            `specrel.graphics.simpgraph.WorldlinePlotter`.
+        equal_lim_expand (float, optional): See
+            `specrel.graphics.simpgraph.WorldlinePlotter`.
+        others: See `specrel.graphics.simpgraph.STAnimator`.
+
+    Attributes:
+        current_time_color (TYPE): Matplotlib color for the line of current
+            time.
+        current_time_style (TYPE): Matplotlib linestyle for the line of current
+            time.
+    &#34;&#34;&#34;
+    def __init__(self,
+        fig=graphrc[&#39;fig&#39;],
+        ax=graphrc[&#39;ax&#39;],
+        grid=graphrc[&#39;grid&#39;],
+        legend=graphrc[&#39;legend&#39;],
+        legend_loc=graphrc[&#39;legend_loc&#39;],
+        ct_per_sec=graphrc[&#39;anim.time.ct_per_sec&#39;],
+        instant_pause_time=graphrc[&#39;anim.time.instant_pause_time&#39;],
+        fps=graphrc[&#39;anim.fps&#39;],
+        display_current_time=graphrc[&#39;anim.display_current&#39;],
+        display_current_time_decimals=graphrc[&#39;anim.display_current_decimals&#39;],
+        title=graphrc[&#39;title&#39;],
+        lim_padding=graphrc[&#39;worldline.lim_padding&#39;],
+        equal_lim_expand=graphrc[&#39;worldline.equal_lim_expand&#39;],
+        current_time_style=graphrc[&#39;anim.worldline.current_time_style&#39;],
+        current_time_color=graphrc[&#39;anim.worldline.current_time_color&#39;]):
+
+        super().__init__(fig,
+            ax=ax,
+            grid=grid,
+            legend=legend,
+            legend_loc=legend_loc,
+            ct_per_sec=ct_per_sec,
+            instant_pause_time=instant_pause_time,
+            fps=fps,
+            display_current_time=display_current_time,
+            display_current_time_decimals=display_current_time_decimals,
+            title=title)
+        # Form a WorldlinePlotter to meet the animator&#39;s needs
+        self._worldline_plotter = WorldlinePlotter(self.fig, self.ax,
+            self.grid, self.legend, self.legend_loc, lim_padding,
+            equal_lim_expand)
+        self.current_time_style = current_time_style
+        self.current_time_color = current_time_color
+
+    def clear(self):
+        super().clear()
+        # Plotters to call on all frames
+        self._plotters_all_frames = []
+        # Line object for current time
+        self._current_time = None
+
+    def _draw_current_time(self, t):
+        &#34;&#34;&#34;Draw the actual line marking the current time.&#34;&#34;&#34;
+        # Update the line&#39;s position
+        self._current_time.set_data(self.xlim, (t, t))
+
+    def _init_frame(self, idx):
+        super()._init_frame(idx)
+
+        # Draw the current line of constant time
+        self.frame_plotters[idx] += [
+            lambda: self._draw_current_time(self.calc_frame_val(idx))
+        ]
+
+    def draw_point(self, point, tag=None, **kwargs):
+        super().draw_point(point, tag, **kwargs)
+
+        # Draw the point in every frame
+        self._plotters_all_frames += [
+            lambda: self._worldline_plotter.draw_point(point, tag, **kwargs)
+        ]
+
+    def draw_line_segment(self, point1, point2, tag=None, **kwargs):
+        super().draw_line_segment(point1, point2, tag, **kwargs)
+
+        # Draw the line in every frame
+        self._plotters_all_frames += [
+            lambda: self._worldline_plotter.draw_line_segment(
+                point1, point2, tag, **kwargs)
+        ]
+
+    def draw_shaded_polygon(self, vertices, tag=None, **kwargs):
+        super().draw_shaded_polygon(vertices, tag, **kwargs)
+
+        # Draw the polygon in every frame
+        self._plotters_all_frames += [
+            lambda: self._worldline_plotter.draw_shaded_polygon(
+                vertices, tag, **kwargs)
+        ]
+
+    def init_func(self):
+        self.ax.clear()
+        tlim = [self.calc_frame_val(f) for f in self.get_frame_lim()]
+        # Do the all-frames plotting first
+        for plotter in self._plotters_all_frames:
+            plotter()
+        # Make sure the limits are set properly after calling the all-frames
+        # plotters
+        self._worldline_plotter.set_lims(tlim, self.xlim)
+        # Create the current time line
+        self._current_time, = self.ax.plot([], [],
+            linestyle=self.current_time_style,
+            color=self.current_time_color)
+        # Set axis labels for the plot
+        self._worldline_plotter.set_labels()
+        return [self.ax]
+
+class ObjectAnimator(STAnimator):
+    &#34;&#34;&#34;Animates objects in real space over time.
+
+    Args:
+        tag_height (float, optional): See attributes.
+        others: See `specrel.graphics.simpgraph.STAnimator`.
+
+    Attributes:
+        tag_height (float): The height (relative to the axis height) above the
+            actual objects of any tag text that&#39;s drawn.
+    &#34;&#34;&#34;
+
+    def __init__(self,
+        fig=graphrc[&#39;fig&#39;],
+        ax=graphrc[&#39;ax&#39;],
+        grid=graphrc[&#39;grid&#39;],
+        legend=graphrc[&#39;legend&#39;],
+        legend_loc=&#39;upper right&#39;,
+        ct_per_sec=graphrc[&#39;anim.time.ct_per_sec&#39;],
+        instant_pause_time=graphrc[&#39;anim.time.instant_pause_time&#39;],
+        fps=graphrc[&#39;anim.fps&#39;],
+        display_current_time=graphrc[&#39;anim.display_current&#39;],
+        display_current_time_decimals=graphrc[&#39;anim.display_current_decimals&#39;],
+        title=graphrc[&#39;title&#39;],
+        tag_height=0.025):
+
+        super().__init__(fig=fig,
+            ax=ax,
+            grid=grid,
+            legend=legend,
+            legend_loc=legend_loc,
+            ct_per_sec=ct_per_sec,
+            instant_pause_time=instant_pause_time,
+            fps=fps,
+            display_current_time=display_current_time,
+            display_current_time_decimals=display_current_time_decimals,
+            title=title)
+        self.tag_height = tag_height
+
+    def _disable_y_axis(self):
+        &#34;&#34;&#34;Hide the y-axis ticks because they mean nothing.&#34;&#34;&#34;
+        # Hard-coded fixed y-axis size with length 1
+        self.ax.set_ylim((-0.5, 0.5))
+        self.ax.set_yticks([])
+
+    def init_func(self):
+        self._disable_y_axis()
+        self._set_labels()
+        self.ax.set_xlim(self.xlim)
+        return super().init_func()
+
+    def _init_frame(self, idx):
+        super()._init_frame(idx)
+
+        # Wipe the axis before doing anything else
+        self.frame_plotters[idx].insert(0, self.ax.clear)
+        # Perform other frame setup
+        self.frame_plotters[idx] += [
+            lambda: self.ax.set_xlim(self.xlim),
+            # Disable the y axis because it&#39;s meaningless
+            self._disable_y_axis,
+            self._set_labels,
+        ]
+        if self.grid:
+            # Set the x grid
+            self.frame_plotters[idx] += [self._set_grid]
+
+    def _set_grid(self):
+        &#34;&#34;&#34;Set the x-grid.&#34;&#34;&#34;
+        self.ax.grid(True, axis=&#39;x&#39;)   # Only the x grid
+        # Ensure grid lines are behind other objects
+        self.ax.set_axisbelow(True)
+
+    def _set_labels(self):
+        &#34;&#34;&#34;Set the x-label.&#34;&#34;&#34;
+        self.ax.set_xlabel(graphrc[&#39;xlabel&#39;])
+
+    def _generate_point_drawer(self, xval, tag, **kwargs):
+        &#34;&#34;&#34;Factory function for point drawing functions. Needed to save
+        persistent copies of xval calculated in loops.&#34;&#34;&#34;
+        marker = kwargs.pop(&#39;marker&#39;, &#39;.&#39;)
+        # Force linestyle to be none for a point
+        kwargs[&#39;linestyle&#39;] = &#39;None&#39;
+        def point_drawer():
+            self.ax.plot(xval, 0, marker=marker, **kwargs)
+            if tag:
+                self.ax.text(xval, self.tag_height, tag)
+        return point_drawer
+
+    def _generate_line_drawer(self, xval1, xval2, tag, **kwargs):
+        &#34;&#34;&#34;Factory function for line drawing functions. Needed to save
+        persistent copies of xval calculated in loops.&#34;&#34;&#34;
+        def line_drawer():
+            self.ax.plot([xval1, xval2], [0, 0], **kwargs)
+            if tag:
+                self.ax.text((xval1 + xval2)/2, self.tag_height, tag,
+                    ha=&#39;center&#39;)
+        return line_drawer
+
+    def _draw_legend(self):
+        &#34;&#34;&#34;Draw a plot legend.&#34;&#34;&#34;
+        self.ax.legend(loc=self.legend_loc)
+
+    def draw_point(self, point, tag=None, **kwargs):
+        super().draw_point(point, tag, **kwargs)
+
+        # Draw the point in the frame it corresponds to
+        self.frame_plotters[self.calc_frame_idx(point[0])] += [
+            self._generate_point_drawer(point[1], tag, **kwargs)
+        ]
+        # Ensure the legend is updated on that frame
+        if self.legend:
+            self.frame_plotters[self.calc_frame_idx(point[0])] += [
+                self._draw_legend
+            ]
+
+    def _interpolate(self, point1, point2, t):
+        &#34;&#34;&#34;Linearly interpolate the position value at a specific time value
+        between two points. Assumes the two points have different time values.
+        &#34;&#34;&#34;
+        return point1[1] + \
+            (t - point1[0]) / (point2[0] - point1[0]) * (point2[1] - point1[1])
+
+    def _strict_interpolate(self, point1, point2, t, precision):
+        &#34;&#34;&#34;If the time value isn&#39;t between the two points, return None.&#34;&#34;&#34;
+        # Do bounds checking at a given precision level
+        if (t &lt; round(min(point1[0], point2[0]), precision) or
+            t &gt; round(max(point1[0], point2[0]), precision)):
+            return None
+        return self._interpolate(point1, point2, t)
+
+    def _loose_interpolate(self, point1, point2, t):
+        &#34;&#34;&#34;Only looking at the internal frame resolution, if the time value
+        isn&#39;t between the two points, return None.&#34;&#34;&#34;
+        # Do bounds checking at the internal frame resolution
+        snapped_t, snapped_t1, snapped_t2 = [
+            self.calc_frame_val(val) for val in [t, point1[0], point2[0]]]
+        if (snapped_t &lt; min(snapped_t1, snapped_t2) or
+            snapped_t &gt; max(snapped_t1, snapped_t2)):
+            return None
+        return self._interpolate(point1, point2, t)
+
+    def draw_line_segment(self, point1, point2, tag=None, **kwargs):
+        super().draw_line_segment(point1, point2, tag, **kwargs)
+
+        # For a line of constant time, draw the whole line in one frame
+        if point1[0] == point2[0]:
+            idx = self.calc_frame_idx(point1[0])
+            self.frame_plotters[idx] += [
+                self._generate_line_drawer(point1[1], point2[1], tag, **kwargs)
+            ]
+            # Ensure the legend is updated on that frame
+            if self.legend:
+                self.frame_plotters[idx] += [self._draw_legend]
+            return
+
+        # Otherwise, spread out the points across different frames
+        start_idx = self.calc_frame_idx(min(point1[0], point2[0]))
+        end_idx = self.calc_frame_idx(max(point1[0], point2[0]))
+        for idx in range(start_idx, end_idx+1):
+            snapped_tval = self.calc_frame_val(idx)
+            # The bounds checking won&#39;t screw up the general line shape, so
+            # use loose interpolation
+            xval = self._loose_interpolate(point1, point2, snapped_tval)
+            if xval is not None:
+                self.frame_plotters[idx] += [
+                    self._generate_point_drawer(xval, tag, **kwargs)
+                ]
+                # Ensure the legend is updated on each modified frame
+                if self.legend:
+                    self.frame_plotters[idx] += [self._draw_legend]
+
+    def draw_shaded_polygon(self, vertices, tag=None, **kwargs):
+        # If no vertices, just return
+        if not vertices:
+            return
+        super().draw_shaded_polygon(vertices, tag, **kwargs)
+
+        # Use &#39;color&#39; over &#39;facecolor&#39;, but if no &#39;color&#39;,
+        # then apply &#39;facecolor&#39;
+        if &#39;facecolor&#39; in kwargs and &#39;color&#39; not in kwargs:
+            kwargs[&#39;color&#39;] = kwargs.pop(&#39;facecolor&#39;)
+
+        # Spread out the points/lines across different frames
+        tvals = self._decouple_stvectors(vertices)[0]
+        start_idx = self.calc_frame_idx(min(tvals))
+        end_idx = self.calc_frame_idx(max(tvals))
+        for idx in range(start_idx, end_idx+1):
+            snapped_tval = self.calc_frame_val(idx)
+
+            # Gather a list of all the intersections between the line of
+            # constant time and the polygon edges
+            intersections = []
+            # Wrap around to the beginning for the last iteration
+            for start_vertex, end_vertex in zip(
+                vertices, vertices[1:] + vertices[:1]):
+                # Skip when the edge is at a fixed time; the endpoints will
+                # individually be identified in the prior and next iterations
+                try:
+                    precision = min(start_vertex.precision,
+                        end_vertex.precision)
+                except AttributeError:
+                    # Default precision level
+                    precision = 7
+                if round(start_vertex[0], precision) == \
+                    round(end_vertex[0], precision):
+                    continue
+                # Whether or not points are between the vertices will strongly
+                # affect how the polygon is drawn, so use strict interpolation
+                intersection = self._strict_interpolate(
+                    start_vertex, end_vertex, snapped_tval, precision)
+                if intersection is not None:
+                    intersections.append(round(intersection, precision))
+
+            # Sort in ascending order of position
+            intersections.sort()
+
+            # Draw line segments between every even-odd pair (0-1, 2-3, etc.),
+            # If there&#39;s a corner point (two equal, adjacent intersections)
+            # possibly flip polarity (even-odd to odd-even)
+            i = 0
+            first_patch = True
+            line_tag = tag
+            line_kwargs = dict(kwargs)
+            while i &lt; len(intersections) - 1:
+                x1 = intersections[i]
+                x2 = intersections[i+1]
+                # If x1 and x2 are equal, we&#39;ve hit a corner point.
+                # Use ray-casting to figure out whether to reverse polarity
+                # I.e. count the distinct points after x2. If there&#39;s an odd
+                # number, reverse polarity.
+                if x1 == x2 and len(set(intersections[i+2:])) % 2 == 1:
+                    # Reverse polarity by incrementing by just +1 instead of
+                    # by +2
+                    i += 1
+                else:
+                    # Connect x1 and x2 by a line segment and move onto the
+                    # next pair
+                    self.frame_plotters[idx] += [
+                        self._generate_line_drawer(x1, x2, line_tag, **line_kwargs)
+                    ]
+                    if first_patch:
+                        first_patch = False
+                        # Only give a legend entry to the first patch
+                        if self.legend:
+                            self.frame_plotters[idx] += [self._draw_legend]
+                            line_kwargs.pop(&#39;label&#39;, None)
+                        # Only give a tag to the first patch
+                        if line_tag:
+                            line_tag = None
+                    i += 2
+
+&#34;&#34;&#34;
+    lorentz_transformable = a LorentzTransformable to animate a transformation
+        for
+    velocity = final velocity for the transformation. Initial velocity is
+        assumed to be 0
+    origin = origin to be used for the transformation
+    stanimator = STAnimator initializer (NOT and instance). This is because
+        many properties depend on the TransformAnimator&#39;s params, and must be
+        initialized properly from within
+    stanimator_options = dict of allowed initializer options for the STAnimator
+        {
+            &lt;STAnimator kwargs except
+            fig, ax, instant_pause_time, fps, display_current_time, title&gt;
+        }
+    tlim, xlim = (min, max) tuples for the plotting limits for the animation.
+        Any element that&#39;s None will be automatically filled
+    time = fixed time value at which to carry out the transformation
+    transition_duration = duration in seconds of the animation
+    title = static title to be displayed throughout the animation
+    &#34;&#34;&#34;
+class TransformAnimator(BaseAnimator, SingleAxisFigureCreator):
+    &#34;&#34;&#34;Animator where the frame variable is velocity, i.e. animates a spacetime
+    transformation as the object is accelerated instantaneously.
+
+    Args:
+        lorentz_transformable (specrel.geom.LorentzTransformable): Object to
+            animate.
+        velocity (float): Relative velocity of the frame to transform to.
+        origin (tuple, optional): See attributes.
+        stanimator (type, optional): initializer of the
+            `specrel.graphics.simpgraph.STAnimator` to take drawing
+            functionality from.
+        stanimator_options (dict, optional): Dictionary of certain keyword
+            arguments for `stanimator`, *except* for the following:
+
+            - `fig`
+            - `ax`
+            - `instant_pause_time`
+            - `fps`
+            - `display_current_time`
+            - `title`
+
+        tlim (tuple, optional): See attributes.
+        xlim (tuple, optional): See attributes.
+        time (float, optional): Frame-local time value to fix during
+            transformation animation.
+        fig (matplotlib.figure.Figure, optional): See
+            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+        ax (matplotlib.axes.Axes, optional): See
+            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+        transition_duration (float, optional):
+        fps (float, optional): Animation frames per second.
+        display_current_velocity (bool, optional): Same as `display_current` in
+            `specrel.graphics.simpgraph.BaseAnimator`.
+        display_current_velocity_decimals (int, optional): Same as
+            `display_current_decimals` in
+            `specrel.graphics.simpgraph.BaseAnimator`.
+        title (str, optional): Animation title.
+
+    Attributes:
+        origin (tuple): Origin used for Lorentz transformation, in the form
+            (t, x).
+        tlim (tuple): Time drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+        transformable (specrel.geom.LorentzTransformable): Object to animate.
+        xlim (tuple): Position drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+    &#34;&#34;&#34;
+    def __init__(self,
+        lorentz_transformable,
+        velocity,
+        origin=(0, 0),
+        stanimator=WorldlineAnimator,
+        stanimator_options={},
+        tlim=(None, None),
+        xlim=(None, None),
+        time=graphrc[&#39;anim.transform.time&#39;],
+        fig=graphrc[&#39;fig&#39;],
+        ax=graphrc[&#39;ax&#39;],
+        transition_duration=graphrc[&#39;anim.transform.transition_duration&#39;],
+        fps=graphrc[&#39;anim.fps&#39;],
+        display_current_velocity=graphrc[&#39;anim.display_current&#39;],
+        display_current_velocity_decimals=
+            graphrc[&#39;anim.display_current_decimals&#39;],
+        title=graphrc[&#39;title&#39;]):
+
+        SingleAxisFigureCreator.__init__(self, fig, ax)
+        nsteps = round(transition_duration * fps)
+        BaseAnimator.__init__(self, self.fig, velocity / nsteps, fps,
+            display_current_velocity, display_current_velocity_decimals, title,
+            (0, nsteps))
+        self.transformable = lorentz_transformable
+        self.origin = origin
+        self.xlim = xlim
+        self.tlim = tlim
+
+        # Set up the STAnimator
+        anim_opts = dict(stanimator_options)
+        for omit in [&#39;fig&#39;, &#39;ax&#39;, &#39;instant_pause_time&#39;, &#39;fps&#39;,
+            &#39;display_current_time&#39;, &#39;title&#39;]:
+            anim_opts.pop(omit, None)
+        self._stanimator = stanimator(
+            fig=self.fig,
+            ax=self.ax,
+            instant_pause_time=0,
+            fps=self.fps,
+            display_current_time=False,
+            title=None,
+            **stanimator_options)
+        self._stanimator_frame = self._stanimator.calc_frame_idx(time)
+
+    def clear(self):
+        self._stanimator.clear()
+
+    def init_func(self):
+        return [self.ax]
+
+    def update(self, frame):
+        self._stanimator.clear()
+        # Transform the object with the current velocity and plot it with some
+        # STAnimator
+        v = self.calc_frame_val(frame)
+        obj = copy.deepcopy(self.transformable)
+        obj.lorentz_transform(v, origin=self.origin)
+        obj.draw(plotter=self._stanimator, tlim=self.tlim, xlim=self.xlim)
+        self._stanimator.init_func()
+        try:
+            artists = self._stanimator.update(self._stanimator_frame)
+        except KeyError:
+            # Don&#39;t know what to draw; the fixed time is out of the range of
+            # the plotter&#39;s tlim (either auto-generated or set manually)
+            warnings.warn(
+                &#39;Failed to draw. Fixed time value is outside of limits.&#39;)
+            artists = self.ax
+        # Display the given title, current velocity, both, or neither
+        titles = []
+        if self.title:
+            titles.append(self.title)
+        if self.display_current:
+            titles.append(
+                f&#39;$v = {{:.{self.display_current_decimals}f}}c$&#39;.format(v))
+        if titles:
+            self.ax.set_title(&#39;\n&#39;.join(titles))
+        return artists</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="specrel.graphics.simpgraph.BaseAnimator"><code class="flex name class">
+<span>class <span class="ident">BaseAnimator</span></span>
+<span>(</span><span>fig=None, stepsize=None, fps=50, display_current=True, display_current_decimals=3, title=None, frame_lim=(0, 0))</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Base class for animators that animate over some changing control
+variable, like time or velocity.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>frame_lim</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>Minimum and maximum frame index of the
+animation. See <a title="specrel.graphics.simpgraph.BaseAnimator.calc_frame_idx" href="#specrel.graphics.simpgraph.BaseAnimator.calc_frame_idx"><code>BaseAnimator.calc_frame_idx()</code></a>.</dd>
+<dt><strong><code>others</code></strong></dt>
+<dd>See attributes.</dd>
+</dl>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>display_current</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Flag for displaying the control variable value
+of the current animation frame.</dd>
+<dt><strong><code>display_current_decimals</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of decimals to display the
+current control variable to.</dd>
+<dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.figure.Figure</code></dt>
+<dd>Matplotlib figure window.</dd>
+<dt><strong><code>fps</code></strong> :&ensp;<code>float</code></dt>
+<dd>Animation frames per second.</dd>
+<dt><strong><code>stepsize</code></strong> :&ensp;<code>float</code></dt>
+<dd>Change in control variable value over one frame.</dd>
+<dt><strong><code>title</code></strong> :&ensp;<code>str</code></dt>
+<dd>Animation title; static throughout all frames.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">class BaseAnimator(ABC):
+    &#34;&#34;&#34;Base class for animators that animate over some changing control
+    variable, like time or velocity.
+
+    Args:
+        frame_lim (tuple, optional): Minimum and maximum frame index of the
+            animation. See `BaseAnimator.calc_frame_idx`.
+        others: See attributes.
+
+    Attributes:
+        display_current (bool): Flag for displaying the control variable value
+            of the current animation frame.
+        display_current_decimals (int): Number of decimals to display the
+            current control variable to.
+        fig (matplotlib.figure.Figure): Matplotlib figure window.
+        fps (float): Animation frames per second.
+        stepsize (float): Change in control variable value over one frame.
+        title (str): Animation title; static throughout all frames.
+    &#34;&#34;&#34;
+    def __init__(self,
+        fig=graphrc[&#39;fig&#39;],
+        stepsize=None,
+        fps=graphrc[&#39;anim.fps&#39;],
+        display_current=graphrc[&#39;anim.display_current&#39;],
+        display_current_decimals=graphrc[&#39;anim.display_current_decimals&#39;],
+        title=graphrc[&#39;title&#39;],
+        frame_lim=(0, 0)):
+
+        self.fig = fig
+        self.display_current = display_current
+        self.display_current_decimals = display_current_decimals
+        self.stepsize = stepsize
+        self.fps = fps
+        self.title = title
+        self._frame_lim = frame_lim
+        # Cached animation if already created previously
+        self._cached_anim = None
+
+    def clear(self):
+        &#34;&#34;&#34;Clear persistent data from the last animation.&#34;&#34;&#34;
+        self._frame_lim = (0, 0)
+        self._cached_anim = None
+
+    def calc_frame_idx(self, val):
+        &#34;&#34;&#34;Snap a value to the closest corresponding frame. Frames are indexed
+        as multiples of the stepsize. Note that frame indexes can be either
+        positive or negative.
+
+        Args:
+            val (float): Value of the frame.
+
+        Returns:
+            int:
+                Closest frame index corresponding to `val`.
+        &#34;&#34;&#34;
+        return round(val / self.stepsize)
+
+    def calc_frame_val(self, idx):
+        &#34;&#34;&#34;Get the corresponding value of a frame at a specified index, rounded
+        to the same precision as the stepsize, but with one extra decimal place.
+
+        Args:
+            idx (int): Frame index.
+
+        Returns:
+            float:
+                Value of the frame.
+        &#34;&#34;&#34;
+        # Round to the same order of magnitude (one smaller for safety) as the
+        # stepsize to ensure precision, but to mitigate floating-point error
+        def order_of_mag(x):
+            return int(math.floor(math.log10(abs(x))))
+        return round(idx * self.stepsize, 1-order_of_mag(self.stepsize))
+
+    @abstractmethod
+    def init_func(self):
+        &#34;&#34;&#34;Initialization function for `matplotlib.animation.FuncAnimation`.
+
+        Returns:
+            matplotlib.artist.Artist
+
+        Raises:
+            NotImplementedError:
+                Abstract method.
+        &#34;&#34;&#34;
+        raise NotImplementedError
+
+    @abstractmethod
+    def update(self, frame):
+        &#34;&#34;&#34;Update the animation frame.
+
+        Args:
+            frame (int): Index of the frame to draw.
+
+        Returns:
+            matplotlib.artist.Artist
+
+        Raises:
+            NotImplementedError:
+                Abstract method.
+        &#34;&#34;&#34;
+        raise NotImplementedError
+
+    def get_frame_lim(self):
+        &#34;&#34;&#34;
+        Returns:
+            tuple:
+                The animation frame index limits.
+        &#34;&#34;&#34;
+        return self._frame_lim
+
+    def _get_frame_list(self):
+        &#34;&#34;&#34;Get a full list of all frame values to be played in the animation.&#34;&#34;&#34;
+        frame_lim = self.get_frame_lim()
+        return list(range(frame_lim[0], frame_lim[1]+1))
+
+    def animate(self):
+        &#34;&#34;&#34;Synthesize an animation. If an animation was already synthesized and
+        cached, return the cached animation.
+
+        Returns:
+            matplotlib.animation.FuncAnimation
+        &#34;&#34;&#34;
+        # Only create a new animation if the cache is empty
+        if self._cached_anim is None:
+            self._cached_anim = FuncAnimation(self.fig, self.update,
+                init_func=self.init_func,
+                frames=self._get_frame_list(),
+                interval=1e3/self.fps,
+                repeat=False)
+        return self._cached_anim
+
+    def show(self):
+        &#34;&#34;&#34;Play the animation in interactive mode.&#34;&#34;&#34;
+        plt.show(self.animate())
+
+    def save(self, filename, **kwargs):
+        &#34;&#34;&#34;Save the animation to a file.
+
+        Kwargs:
+            fps: Fixed to the animator&#39;s `fps` attribute.
+        &#34;&#34;&#34;
+        kwargs.pop(&#39;fps&#39;, None) # FPS is fixed
+        self.animate().save(filename, fps=self.fps, **kwargs)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>abc.ABC</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="specrel.graphics.simpgraph.TimeAnimator" href="#specrel.graphics.simpgraph.TimeAnimator">TimeAnimator</a></li>
+<li><a title="specrel.graphics.simpgraph.TransformAnimator" href="#specrel.graphics.simpgraph.TransformAnimator">TransformAnimator</a></li>
+<li><a title="specrel.graphics.compgraph.MultiAnimator" href="compgraph.html#specrel.graphics.compgraph.MultiAnimator">MultiAnimator</a></li>
+<li><a title="specrel.graphics.compgraph.Rewinder" href="compgraph.html#specrel.graphics.compgraph.Rewinder">Rewinder</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="specrel.graphics.simpgraph.BaseAnimator.animate"><code class="name flex">
+<span>def <span class="ident">animate</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Synthesize an animation. If an animation was already synthesized and
+cached, return the cached animation.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>matplotlib.animation.FuncAnimation</code></dt>
+<dd>&nbsp;</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def animate(self):
+    &#34;&#34;&#34;Synthesize an animation. If an animation was already synthesized and
+    cached, return the cached animation.
+
+    Returns:
+        matplotlib.animation.FuncAnimation
+    &#34;&#34;&#34;
+    # Only create a new animation if the cache is empty
+    if self._cached_anim is None:
+        self._cached_anim = FuncAnimation(self.fig, self.update,
+            init_func=self.init_func,
+            frames=self._get_frame_list(),
+            interval=1e3/self.fps,
+            repeat=False)
+    return self._cached_anim</code></pre>
+</details>
+</dd>
+<dt id="specrel.graphics.simpgraph.BaseAnimator.calc_frame_idx"><code class="name flex">
+<span>def <span class="ident">calc_frame_idx</span></span>(<span>self, val)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Snap a value to the closest corresponding frame. Frames are indexed
+as multiples of the stepsize. Note that frame indexes can be either
+positive or negative.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>val</code></strong> :&ensp;<code>float</code></dt>
+<dd>Value of the frame.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>int</code>:</dt>
+<dd>Closest frame index corresponding to <code>val</code>.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def calc_frame_idx(self, val):
+    &#34;&#34;&#34;Snap a value to the closest corresponding frame. Frames are indexed
+    as multiples of the stepsize. Note that frame indexes can be either
+    positive or negative.
+
+    Args:
+        val (float): Value of the frame.
+
+    Returns:
+        int:
+            Closest frame index corresponding to `val`.
+    &#34;&#34;&#34;
+    return round(val / self.stepsize)</code></pre>
+</details>
+</dd>
+<dt id="specrel.graphics.simpgraph.BaseAnimator.calc_frame_val"><code class="name flex">
+<span>def <span class="ident">calc_frame_val</span></span>(<span>self, idx)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Get the corresponding value of a frame at a specified index, rounded
+to the same precision as the stepsize, but with one extra decimal place.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>idx</code></strong> :&ensp;<code>int</code></dt>
+<dd>Frame index.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float</code>:</dt>
+<dd>Value of the frame.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def calc_frame_val(self, idx):
+    &#34;&#34;&#34;Get the corresponding value of a frame at a specified index, rounded
+    to the same precision as the stepsize, but with one extra decimal place.
+
+    Args:
+        idx (int): Frame index.
+
+    Returns:
+        float:
+            Value of the frame.
+    &#34;&#34;&#34;
+    # Round to the same order of magnitude (one smaller for safety) as the
+    # stepsize to ensure precision, but to mitigate floating-point error
+    def order_of_mag(x):
+        return int(math.floor(math.log10(abs(x))))
+    return round(idx * self.stepsize, 1-order_of_mag(self.stepsize))</code></pre>
+</details>
+</dd>
+<dt id="specrel.graphics.simpgraph.BaseAnimator.clear"><code class="name flex">
+<span>def <span class="ident">clear</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Clear persistent data from the last animation.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def clear(self):
+    &#34;&#34;&#34;Clear persistent data from the last animation.&#34;&#34;&#34;
+    self._frame_lim = (0, 0)
+    self._cached_anim = None</code></pre>
+</details>
+</dd>
+<dt id="specrel.graphics.simpgraph.BaseAnimator.get_frame_lim"><code class="name flex">
+<span>def <span class="ident">get_frame_lim</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tuple</code>:</dt>
+<dd>The animation frame index limits.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def get_frame_lim(self):
+    &#34;&#34;&#34;
+    Returns:
+        tuple:
+            The animation frame index limits.
+    &#34;&#34;&#34;
+    return self._frame_lim</code></pre>
+</details>
+</dd>
+<dt id="specrel.graphics.simpgraph.BaseAnimator.init_func"><code class="name flex">
+<span>def <span class="ident">init_func</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Initialization function for <code>matplotlib.animation.FuncAnimation</code>.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>matplotlib.artist.Artist</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>NotImplementedError</code>:</dt>
+<dd>Abstract method.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">@abstractmethod
+def init_func(self):
+    &#34;&#34;&#34;Initialization function for `matplotlib.animation.FuncAnimation`.
+
+    Returns:
+        matplotlib.artist.Artist
+
+    Raises:
+        NotImplementedError:
+            Abstract method.
+    &#34;&#34;&#34;
+    raise NotImplementedError</code></pre>
+</details>
+</dd>
+<dt id="specrel.graphics.simpgraph.BaseAnimator.save"><code class="name flex">
+<span>def <span class="ident">save</span></span>(<span>self, filename, **kwargs)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Save the animation to a file.</p>
+<h2 id="kwargs">Kwargs</h2>
+<dl>
+<dt><strong><code>fps</code></strong></dt>
+<dd>Fixed to the animator's <code>fps</code> attribute.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def save(self, filename, **kwargs):
+    &#34;&#34;&#34;Save the animation to a file.
+
+    Kwargs:
+        fps: Fixed to the animator&#39;s `fps` attribute.
+    &#34;&#34;&#34;
+    kwargs.pop(&#39;fps&#39;, None) # FPS is fixed
+    self.animate().save(filename, fps=self.fps, **kwargs)</code></pre>
+</details>
+</dd>
+<dt id="specrel.graphics.simpgraph.BaseAnimator.show"><code class="name flex">
+<span>def <span class="ident">show</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Play the animation in interactive mode.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def show(self):
+    &#34;&#34;&#34;Play the animation in interactive mode.&#34;&#34;&#34;
+    plt.show(self.animate())</code></pre>
+</details>
+</dd>
+<dt id="specrel.graphics.simpgraph.BaseAnimator.update"><code class="name flex">
+<span>def <span class="ident">update</span></span>(<span>self, frame)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Update the animation frame.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>frame</code></strong> :&ensp;<code>int</code></dt>
+<dd>Index of the frame to draw.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>matplotlib.artist.Artist</code></dt>
+<dd>&nbsp;</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>NotImplementedError</code>:</dt>
+<dd>Abstract method.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">@abstractmethod
+def update(self, frame):
+    &#34;&#34;&#34;Update the animation frame.
+
+    Args:
+        frame (int): Index of the frame to draw.
+
+    Returns:
+        matplotlib.artist.Artist
+
+    Raises:
+        NotImplementedError:
+            Abstract method.
+    &#34;&#34;&#34;
+    raise NotImplementedError</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="specrel.graphics.simpgraph.FigureCreator"><code class="flex name class">
+<span>class <span class="ident">FigureCreator</span></span>
+</code></dt>
+<dd>
+<section class="desc"><p>Something that can create and own a figure.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.figure.Figure</code></dt>
+<dd>Figure handle.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">class FigureCreator:
+    &#34;&#34;&#34;Something that can create and own a figure.
+
+    Attributes:
+        fig (matplotlib.figure.Figure): Figure handle.
+    &#34;&#34;&#34;
+    def __init__(self):
+        self.fig = None
+        self._created_own_fig = False
+
+    def close(self):
+        &#34;&#34;&#34;Close the figure window if it was created by the class.&#34;&#34;&#34;
+        if self._created_own_fig:
+            plt.close(self.fig)</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="#specrel.graphics.simpgraph.SingleAxisFigureCreator">SingleAxisFigureCreator</a></li>
+<li><a title="specrel.graphics.compgraph.MultiAnimator" href="compgraph.html#specrel.graphics.compgraph.MultiAnimator">MultiAnimator</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="specrel.graphics.simpgraph.FigureCreator.close"><code class="name flex">
+<span>def <span class="ident">close</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Close the figure window if it was created by the class.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def close(self):
+    &#34;&#34;&#34;Close the figure window if it was created by the class.&#34;&#34;&#34;
+    if self._created_own_fig:
+        plt.close(self.fig)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="specrel.graphics.simpgraph.ObjectAnimator"><code class="flex name class">
+<span>class <span class="ident">ObjectAnimator</span></span>
+<span>(</span><span>fig=None, ax=None, grid=False, legend=False, legend_loc='upper right', ct_per_sec=1, instant_pause_time=1, fps=50, display_current_time=True, display_current_time_decimals=3, title=None, tag_height=0.025)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Animates objects in real space over time.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>tag_height</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>See attributes.</dd>
+<dt><strong><code>others</code></strong></dt>
+<dd>See <a title="specrel.graphics.simpgraph.STAnimator" href="#specrel.graphics.simpgraph.STAnimator"><code>STAnimator</code></a>.</dd>
+</dl>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>tag_height</code></strong> :&ensp;<code>float</code></dt>
+<dd>The height (relative to the axis height) above the
+actual objects of any tag text that's drawn.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">class ObjectAnimator(STAnimator):
+    &#34;&#34;&#34;Animates objects in real space over time.
+
+    Args:
+        tag_height (float, optional): See attributes.
+        others: See `specrel.graphics.simpgraph.STAnimator`.
+
+    Attributes:
+        tag_height (float): The height (relative to the axis height) above the
+            actual objects of any tag text that&#39;s drawn.
+    &#34;&#34;&#34;
+
+    def __init__(self,
+        fig=graphrc[&#39;fig&#39;],
+        ax=graphrc[&#39;ax&#39;],
+        grid=graphrc[&#39;grid&#39;],
+        legend=graphrc[&#39;legend&#39;],
+        legend_loc=&#39;upper right&#39;,
+        ct_per_sec=graphrc[&#39;anim.time.ct_per_sec&#39;],
+        instant_pause_time=graphrc[&#39;anim.time.instant_pause_time&#39;],
+        fps=graphrc[&#39;anim.fps&#39;],
+        display_current_time=graphrc[&#39;anim.display_current&#39;],
+        display_current_time_decimals=graphrc[&#39;anim.display_current_decimals&#39;],
+        title=graphrc[&#39;title&#39;],
+        tag_height=0.025):
+
+        super().__init__(fig=fig,
+            ax=ax,
+            grid=grid,
+            legend=legend,
+            legend_loc=legend_loc,
+            ct_per_sec=ct_per_sec,
+            instant_pause_time=instant_pause_time,
+            fps=fps,
+            display_current_time=display_current_time,
+            display_current_time_decimals=display_current_time_decimals,
+            title=title)
+        self.tag_height = tag_height
+
+    def _disable_y_axis(self):
+        &#34;&#34;&#34;Hide the y-axis ticks because they mean nothing.&#34;&#34;&#34;
+        # Hard-coded fixed y-axis size with length 1
+        self.ax.set_ylim((-0.5, 0.5))
+        self.ax.set_yticks([])
+
+    def init_func(self):
+        self._disable_y_axis()
+        self._set_labels()
+        self.ax.set_xlim(self.xlim)
+        return super().init_func()
+
+    def _init_frame(self, idx):
+        super()._init_frame(idx)
+
+        # Wipe the axis before doing anything else
+        self.frame_plotters[idx].insert(0, self.ax.clear)
+        # Perform other frame setup
+        self.frame_plotters[idx] += [
+            lambda: self.ax.set_xlim(self.xlim),
+            # Disable the y axis because it&#39;s meaningless
+            self._disable_y_axis,
+            self._set_labels,
+        ]
+        if self.grid:
+            # Set the x grid
+            self.frame_plotters[idx] += [self._set_grid]
+
+    def _set_grid(self):
+        &#34;&#34;&#34;Set the x-grid.&#34;&#34;&#34;
+        self.ax.grid(True, axis=&#39;x&#39;)   # Only the x grid
+        # Ensure grid lines are behind other objects
+        self.ax.set_axisbelow(True)
+
+    def _set_labels(self):
+        &#34;&#34;&#34;Set the x-label.&#34;&#34;&#34;
+        self.ax.set_xlabel(graphrc[&#39;xlabel&#39;])
+
+    def _generate_point_drawer(self, xval, tag, **kwargs):
+        &#34;&#34;&#34;Factory function for point drawing functions. Needed to save
+        persistent copies of xval calculated in loops.&#34;&#34;&#34;
+        marker = kwargs.pop(&#39;marker&#39;, &#39;.&#39;)
+        # Force linestyle to be none for a point
+        kwargs[&#39;linestyle&#39;] = &#39;None&#39;
+        def point_drawer():
+            self.ax.plot(xval, 0, marker=marker, **kwargs)
+            if tag:
+                self.ax.text(xval, self.tag_height, tag)
+        return point_drawer
+
+    def _generate_line_drawer(self, xval1, xval2, tag, **kwargs):
+        &#34;&#34;&#34;Factory function for line drawing functions. Needed to save
+        persistent copies of xval calculated in loops.&#34;&#34;&#34;
+        def line_drawer():
+            self.ax.plot([xval1, xval2], [0, 0], **kwargs)
+            if tag:
+                self.ax.text((xval1 + xval2)/2, self.tag_height, tag,
+                    ha=&#39;center&#39;)
+        return line_drawer
+
+    def _draw_legend(self):
+        &#34;&#34;&#34;Draw a plot legend.&#34;&#34;&#34;
+        self.ax.legend(loc=self.legend_loc)
+
+    def draw_point(self, point, tag=None, **kwargs):
+        super().draw_point(point, tag, **kwargs)
+
+        # Draw the point in the frame it corresponds to
+        self.frame_plotters[self.calc_frame_idx(point[0])] += [
+            self._generate_point_drawer(point[1], tag, **kwargs)
+        ]
+        # Ensure the legend is updated on that frame
+        if self.legend:
+            self.frame_plotters[self.calc_frame_idx(point[0])] += [
+                self._draw_legend
+            ]
+
+    def _interpolate(self, point1, point2, t):
+        &#34;&#34;&#34;Linearly interpolate the position value at a specific time value
+        between two points. Assumes the two points have different time values.
+        &#34;&#34;&#34;
+        return point1[1] + \
+            (t - point1[0]) / (point2[0] - point1[0]) * (point2[1] - point1[1])
+
+    def _strict_interpolate(self, point1, point2, t, precision):
+        &#34;&#34;&#34;If the time value isn&#39;t between the two points, return None.&#34;&#34;&#34;
+        # Do bounds checking at a given precision level
+        if (t &lt; round(min(point1[0], point2[0]), precision) or
+            t &gt; round(max(point1[0], point2[0]), precision)):
+            return None
+        return self._interpolate(point1, point2, t)
+
+    def _loose_interpolate(self, point1, point2, t):
+        &#34;&#34;&#34;Only looking at the internal frame resolution, if the time value
+        isn&#39;t between the two points, return None.&#34;&#34;&#34;
+        # Do bounds checking at the internal frame resolution
+        snapped_t, snapped_t1, snapped_t2 = [
+            self.calc_frame_val(val) for val in [t, point1[0], point2[0]]]
+        if (snapped_t &lt; min(snapped_t1, snapped_t2) or
+            snapped_t &gt; max(snapped_t1, snapped_t2)):
+            return None
+        return self._interpolate(point1, point2, t)
+
+    def draw_line_segment(self, point1, point2, tag=None, **kwargs):
+        super().draw_line_segment(point1, point2, tag, **kwargs)
+
+        # For a line of constant time, draw the whole line in one frame
+        if point1[0] == point2[0]:
+            idx = self.calc_frame_idx(point1[0])
+            self.frame_plotters[idx] += [
+                self._generate_line_drawer(point1[1], point2[1], tag, **kwargs)
+            ]
+            # Ensure the legend is updated on that frame
+            if self.legend:
+                self.frame_plotters[idx] += [self._draw_legend]
+            return
+
+        # Otherwise, spread out the points across different frames
+        start_idx = self.calc_frame_idx(min(point1[0], point2[0]))
+        end_idx = self.calc_frame_idx(max(point1[0], point2[0]))
+        for idx in range(start_idx, end_idx+1):
+            snapped_tval = self.calc_frame_val(idx)
+            # The bounds checking won&#39;t screw up the general line shape, so
+            # use loose interpolation
+            xval = self._loose_interpolate(point1, point2, snapped_tval)
+            if xval is not None:
+                self.frame_plotters[idx] += [
+                    self._generate_point_drawer(xval, tag, **kwargs)
+                ]
+                # Ensure the legend is updated on each modified frame
+                if self.legend:
+                    self.frame_plotters[idx] += [self._draw_legend]
+
+    def draw_shaded_polygon(self, vertices, tag=None, **kwargs):
+        # If no vertices, just return
+        if not vertices:
+            return
+        super().draw_shaded_polygon(vertices, tag, **kwargs)
+
+        # Use &#39;color&#39; over &#39;facecolor&#39;, but if no &#39;color&#39;,
+        # then apply &#39;facecolor&#39;
+        if &#39;facecolor&#39; in kwargs and &#39;color&#39; not in kwargs:
+            kwargs[&#39;color&#39;] = kwargs.pop(&#39;facecolor&#39;)
+
+        # Spread out the points/lines across different frames
+        tvals = self._decouple_stvectors(vertices)[0]
+        start_idx = self.calc_frame_idx(min(tvals))
+        end_idx = self.calc_frame_idx(max(tvals))
+        for idx in range(start_idx, end_idx+1):
+            snapped_tval = self.calc_frame_val(idx)
+
+            # Gather a list of all the intersections between the line of
+            # constant time and the polygon edges
+            intersections = []
+            # Wrap around to the beginning for the last iteration
+            for start_vertex, end_vertex in zip(
+                vertices, vertices[1:] + vertices[:1]):
+                # Skip when the edge is at a fixed time; the endpoints will
+                # individually be identified in the prior and next iterations
+                try:
+                    precision = min(start_vertex.precision,
+                        end_vertex.precision)
+                except AttributeError:
+                    # Default precision level
+                    precision = 7
+                if round(start_vertex[0], precision) == \
+                    round(end_vertex[0], precision):
+                    continue
+                # Whether or not points are between the vertices will strongly
+                # affect how the polygon is drawn, so use strict interpolation
+                intersection = self._strict_interpolate(
+                    start_vertex, end_vertex, snapped_tval, precision)
+                if intersection is not None:
+                    intersections.append(round(intersection, precision))
+
+            # Sort in ascending order of position
+            intersections.sort()
+
+            # Draw line segments between every even-odd pair (0-1, 2-3, etc.),
+            # If there&#39;s a corner point (two equal, adjacent intersections)
+            # possibly flip polarity (even-odd to odd-even)
+            i = 0
+            first_patch = True
+            line_tag = tag
+            line_kwargs = dict(kwargs)
+            while i &lt; len(intersections) - 1:
+                x1 = intersections[i]
+                x2 = intersections[i+1]
+                # If x1 and x2 are equal, we&#39;ve hit a corner point.
+                # Use ray-casting to figure out whether to reverse polarity
+                # I.e. count the distinct points after x2. If there&#39;s an odd
+                # number, reverse polarity.
+                if x1 == x2 and len(set(intersections[i+2:])) % 2 == 1:
+                    # Reverse polarity by incrementing by just +1 instead of
+                    # by +2
+                    i += 1
+                else:
+                    # Connect x1 and x2 by a line segment and move onto the
+                    # next pair
+                    self.frame_plotters[idx] += [
+                        self._generate_line_drawer(x1, x2, line_tag, **line_kwargs)
+                    ]
+                    if first_patch:
+                        first_patch = False
+                        # Only give a legend entry to the first patch
+                        if self.legend:
+                            self.frame_plotters[idx] += [self._draw_legend]
+                            line_kwargs.pop(&#39;label&#39;, None)
+                        # Only give a tag to the first patch
+                        if line_tag:
+                            line_tag = None
+                    i += 2</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="specrel.graphics.simpgraph.STAnimator" href="#specrel.graphics.simpgraph.STAnimator">STAnimator</a></li>
+<li><a title="specrel.graphics.simpgraph.TimeAnimator" href="#specrel.graphics.simpgraph.TimeAnimator">TimeAnimator</a></li>
+<li><a title="specrel.graphics.simpgraph.BaseAnimator" href="#specrel.graphics.simpgraph.BaseAnimator">BaseAnimator</a></li>
+<li><a title="specrel.graphics.simpgraph.STPlotter" href="#specrel.graphics.simpgraph.STPlotter">STPlotter</a></li>
+<li><a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="#specrel.graphics.simpgraph.SingleAxisFigureCreator">SingleAxisFigureCreator</a></li>
+<li><a title="specrel.graphics.simpgraph.FigureCreator" href="#specrel.graphics.simpgraph.FigureCreator">FigureCreator</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="specrel.graphics.simpgraph.STAnimator" href="#specrel.graphics.simpgraph.STAnimator">STAnimator</a></b></code>:
+<ul class="hlist">
+<li><code><a title="specrel.graphics.simpgraph.STAnimator.animate" href="#specrel.graphics.simpgraph.BaseAnimator.animate">animate</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STAnimator.calc_frame_idx" href="#specrel.graphics.simpgraph.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STAnimator.calc_frame_val" href="#specrel.graphics.simpgraph.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STAnimator.clear" href="#specrel.graphics.simpgraph.BaseAnimator.clear">clear</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STAnimator.close" href="#specrel.graphics.simpgraph.FigureCreator.close">close</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STAnimator.draw_line_segment" href="#specrel.graphics.simpgraph.STPlotter.draw_line_segment">draw_line_segment</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STAnimator.draw_point" href="#specrel.graphics.simpgraph.STPlotter.draw_point">draw_point</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STAnimator.draw_shaded_polygon" href="#specrel.graphics.simpgraph.STPlotter.draw_shaded_polygon">draw_shaded_polygon</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STAnimator.get_frame_lim" href="#specrel.graphics.simpgraph.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STAnimator.init_func" href="#specrel.graphics.simpgraph.BaseAnimator.init_func">init_func</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STAnimator.resize" href="#specrel.graphics.simpgraph.STAnimator.resize">resize</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STAnimator.save" href="#specrel.graphics.simpgraph.BaseAnimator.save">save</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STAnimator.set_lims" href="#specrel.graphics.simpgraph.STPlotter.set_lims">set_lims</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STAnimator.show" href="#specrel.graphics.simpgraph.BaseAnimator.show">show</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STAnimator.update" href="#specrel.graphics.simpgraph.BaseAnimator.update">update</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="specrel.graphics.simpgraph.STAnimator"><code class="flex name class">
+<span>class <span class="ident">STAnimator</span></span>
+<span>(</span><span>fig=None, ax=None, grid=False, legend=False, legend_loc='best', ct_per_sec=1, instant_pause_time=1, fps=50, display_current_time=True, display_current_time_decimals=3, title=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>TimeAnimator that fulfills the <a title="specrel.graphics.simpgraph.STPlotter" href="#specrel.graphics.simpgraph.STPlotter"><code>STPlotter</code></a>
+interface, and hence can be used by
+<a title="specrel.geom.LorentzTransformable.draw" href="../geom.html#specrel.geom.LorentzTransformable.draw"><code>LorentzTransformable.draw()</code></a>.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>frame_pause_flags</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Maps frame indexes to a flag for whether or
+not the animation should pause on that frame.</dd>
+<dt><strong><code>frame_plotters</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Maps frame indexes to lists of plotting functions
+that should be called to draw that frame.</dd>
+<dt><strong><code>grid</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Flag for whether or not to plot background grid lines.</dd>
+<dt><strong><code>legend</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Flag for whether or not to plot a legend.</dd>
+<dt><strong><code>legend_loc</code></strong> :&ensp;<code>str</code></dt>
+<dd>Legend location according to the Matplotlib
+<code>loc</code> parameter. If <code>legend</code> is <code>False</code>, this attribute is ignored.</dd>
+<dt><strong><code>xlim</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>Position axis draw limits.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">class STAnimator(TimeAnimator, STPlotter, ABC):
+    &#34;&#34;&#34;TimeAnimator that fulfills the `specrel.graphics.simpgraph.STPlotter`
+    interface, and hence can be used by
+    `specrel.geom.LorentzTransformable.draw`.
+
+    Attributes:
+        frame_pause_flags (dict): Maps frame indexes to a flag for whether or
+            not the animation should pause on that frame.
+        frame_plotters (dict): Maps frame indexes to lists of plotting functions
+            that should be called to draw that frame.
+        grid (bool): Flag for whether or not to plot background grid lines.
+        legend (bool): Flag for whether or not to plot a legend.
+        legend_loc (str): Legend location according to the Matplotlib
+            `loc` parameter. If `legend` is `False`, this attribute is ignored.
+        xlim (tuple): Position axis draw limits.
+    &#34;&#34;&#34;
+    def __init__(self,
+        fig=graphrc[&#39;fig&#39;],
+        ax=graphrc[&#39;ax&#39;],
+        grid=graphrc[&#39;grid&#39;],
+        legend=graphrc[&#39;legend&#39;],
+        legend_loc=graphrc[&#39;legend_loc&#39;],
+        ct_per_sec=graphrc[&#39;anim.time.ct_per_sec&#39;],
+        instant_pause_time=graphrc[&#39;anim.time.instant_pause_time&#39;],
+        fps=graphrc[&#39;anim.fps&#39;],
+        display_current_time=graphrc[&#39;anim.display_current&#39;],
+        display_current_time_decimals=graphrc[&#39;anim.display_current_decimals&#39;],
+        title=graphrc[&#39;title&#39;]):
+
+        STPlotter.__init__(self, fig, ax)
+        TimeAnimator.__init__(self, self.fig, ct_per_sec, instant_pause_time,
+            fps, display_current_time, display_current_time_decimals, title)
+        self.grid = grid
+        self.legend = legend
+        self.legend_loc = legend_loc
+        self.clear()
+
+    def clear(self):
+        super().clear()
+        self.xlim = (0, 0)
+        # At each key corresponding to a frame index, a list of function
+        # handles to be called to plot the frame
+        self.frame_plotters = {}
+        # Flags for whether each frame should be paused
+        self.frame_pause_flags = {}
+
+    def _init_frame(self, idx):
+        &#34;&#34;&#34;Initialize the frame plotters at some frame index.&#34;&#34;&#34;
+        self.frame_plotters[idx] = []
+        # Set the given title, current time, both, or neither
+        titles = []
+        if self.title:
+            titles.append(self.title)
+        if self.display_current:
+            titles.append(
+                f&#39;Time = {{:.{self.display_current_decimals}f}} s&#39;.format(
+                    self.calc_frame_val(idx)))
+        if titles:
+            title_str = &#39;\n&#39;.join(titles)
+            self.frame_plotters[idx] += [lambda: self.ax.set_title(title_str)]
+        self.frame_pause_flags[idx] = False
+
+    def resize(self, tlim):
+        &#34;&#34;&#34;Expand the animator&#39;s stored frame range to accomodate a given time
+        range. Otherwise, the animator won&#39;t know how to plot an out-of-range
+        time value.
+
+        Args:
+            tlim (tuple): Time range to accomodate, in the form (min, max).
+        &#34;&#34;&#34;
+        # Convert tlim to frame indexes
+        flims = [
+            self.calc_frame_idx(tlim[0]),
+            self.calc_frame_idx(tlim[1]),
+        ]
+        if not self.frame_plotters:
+            # Initialize all frame within the limits
+            new_fidx = list(range(flims[0], flims[1]+1))
+        else:
+            # Initialize frames that don&#39;t exist yet
+            keys = self.frame_plotters.keys()
+            new_fidx = list(range(flims[0], min(keys))) \
+                + list(range(max(keys)+1, flims[1]+1))
+        # Initialize the necessary frames
+        for idx in new_fidx:
+            self._init_frame(idx)
+
+    def set_lims(self, tlim, xlim):
+        self.xlim = xlim
+        self._frame_lim = (
+            self.calc_frame_idx(tlim[0]),
+            self.calc_frame_idx(tlim[1]),
+        )
+        self.resize(tlim)
+
+    @abstractmethod
+    def draw_point(self, point, tag, **kwargs):
+        # Flush cache upon drawing a new thing
+        self._cached_anim = None
+
+        # Add any necessary new frames
+        self.resize(2*[point[0]])
+
+        # Pause if specified
+        if self._pause_frames:
+            frame = self.calc_frame_idx(point[0])
+            self.frame_pause_flags[frame] = True
+
+    @abstractmethod
+    def draw_line_segment(self, point1, point2, tag, **kwargs):
+        # Flush cache upon drawing a new thing
+        self._cached_anim = None
+
+        # Add any necessary new frames
+        self.resize([
+            min(point1[0], point2[0]),
+            max(point1[0], point2[0])
+        ])
+
+        # If the line is horizontal, treat it like an instantaneous point,
+        # and pause if specified
+        if point1[0] == point2[0]:
+            if self._pause_frames:
+                frame = self.calc_frame_idx(point1[0])
+                self.frame_pause_flags[frame] = True
+
+    @abstractmethod
+    def draw_shaded_polygon(self, vertices, tag, **kwargs):
+        # Flush cache upon drawing a new thing
+        self._cached_anim = None
+
+        # Add any necessary new frames
+        tvals = self._decouple_stvectors(vertices)[0]
+        if tvals:
+            self.resize([min(tvals), max(tvals)])
+
+    def init_func(self):
+        return [self.ax]
+
+    def update(self, frame):
+        for plotter in self.frame_plotters[frame]:
+            plotter()
+        return [self.ax]
+
+    def _get_frame_list(self):
+        # Prolong any frames that have been flagged for a pause
+        return [f for f in super()._get_frame_list() for repeat in range(
+            self._pause_frames if self.frame_pause_flags[f] else 1)]</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="specrel.graphics.simpgraph.TimeAnimator" href="#specrel.graphics.simpgraph.TimeAnimator">TimeAnimator</a></li>
+<li><a title="specrel.graphics.simpgraph.BaseAnimator" href="#specrel.graphics.simpgraph.BaseAnimator">BaseAnimator</a></li>
+<li><a title="specrel.graphics.simpgraph.STPlotter" href="#specrel.graphics.simpgraph.STPlotter">STPlotter</a></li>
+<li><a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="#specrel.graphics.simpgraph.SingleAxisFigureCreator">SingleAxisFigureCreator</a></li>
+<li><a title="specrel.graphics.simpgraph.FigureCreator" href="#specrel.graphics.simpgraph.FigureCreator">FigureCreator</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="specrel.graphics.simpgraph.WorldlineAnimator" href="#specrel.graphics.simpgraph.WorldlineAnimator">WorldlineAnimator</a></li>
+<li><a title="specrel.graphics.simpgraph.ObjectAnimator" href="#specrel.graphics.simpgraph.ObjectAnimator">ObjectAnimator</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="specrel.graphics.simpgraph.STAnimator.resize"><code class="name flex">
+<span>def <span class="ident">resize</span></span>(<span>self, tlim)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Expand the animator's stored frame range to accomodate a given time
+range. Otherwise, the animator won't know how to plot an out-of-range
+time value.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>tlim</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>Time range to accomodate, in the form (min, max).</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def resize(self, tlim):
+    &#34;&#34;&#34;Expand the animator&#39;s stored frame range to accomodate a given time
+    range. Otherwise, the animator won&#39;t know how to plot an out-of-range
+    time value.
+
+    Args:
+        tlim (tuple): Time range to accomodate, in the form (min, max).
+    &#34;&#34;&#34;
+    # Convert tlim to frame indexes
+    flims = [
+        self.calc_frame_idx(tlim[0]),
+        self.calc_frame_idx(tlim[1]),
+    ]
+    if not self.frame_plotters:
+        # Initialize all frame within the limits
+        new_fidx = list(range(flims[0], flims[1]+1))
+    else:
+        # Initialize frames that don&#39;t exist yet
+        keys = self.frame_plotters.keys()
+        new_fidx = list(range(flims[0], min(keys))) \
+            + list(range(max(keys)+1, flims[1]+1))
+    # Initialize the necessary frames
+    for idx in new_fidx:
+        self._init_frame(idx)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="specrel.graphics.simpgraph.TimeAnimator" href="#specrel.graphics.simpgraph.TimeAnimator">TimeAnimator</a></b></code>:
+<ul class="hlist">
+<li><code><a title="specrel.graphics.simpgraph.TimeAnimator.clear" href="#specrel.graphics.simpgraph.BaseAnimator.clear">clear</a></code></li>
+</ul>
+</li>
+<li><code><b><a title="specrel.graphics.simpgraph.TimeAnimator" href="#specrel.graphics.simpgraph.TimeAnimator">TimeAnimator</a></b></code>:
+<ul class="hlist">
+<li><code><a title="specrel.graphics.simpgraph.TimeAnimator.animate" href="#specrel.graphics.simpgraph.BaseAnimator.animate">animate</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.TimeAnimator.calc_frame_idx" href="#specrel.graphics.simpgraph.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.TimeAnimator.calc_frame_val" href="#specrel.graphics.simpgraph.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.TimeAnimator.get_frame_lim" href="#specrel.graphics.simpgraph.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.TimeAnimator.init_func" href="#specrel.graphics.simpgraph.BaseAnimator.init_func">init_func</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.TimeAnimator.save" href="#specrel.graphics.simpgraph.BaseAnimator.save">save</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.TimeAnimator.show" href="#specrel.graphics.simpgraph.BaseAnimator.show">show</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.TimeAnimator.update" href="#specrel.graphics.simpgraph.BaseAnimator.update">update</a></code></li>
+</ul>
+</li>
+<li><code><b><a title="specrel.graphics.simpgraph.STPlotter" href="#specrel.graphics.simpgraph.STPlotter">STPlotter</a></b></code>:
+<ul class="hlist">
+<li><code><a title="specrel.graphics.simpgraph.STPlotter.draw_line_segment" href="#specrel.graphics.simpgraph.STPlotter.draw_line_segment">draw_line_segment</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STPlotter.draw_point" href="#specrel.graphics.simpgraph.STPlotter.draw_point">draw_point</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STPlotter.draw_shaded_polygon" href="#specrel.graphics.simpgraph.STPlotter.draw_shaded_polygon">draw_shaded_polygon</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STPlotter.set_lims" href="#specrel.graphics.simpgraph.STPlotter.set_lims">set_lims</a></code></li>
+</ul>
+</li>
+<li><code><b><a title="specrel.graphics.simpgraph.STPlotter" href="#specrel.graphics.simpgraph.STPlotter">STPlotter</a></b></code>:
+<ul class="hlist">
+<li><code><a title="specrel.graphics.simpgraph.STPlotter.close" href="#specrel.graphics.simpgraph.FigureCreator.close">close</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="specrel.graphics.simpgraph.STPlotter"><code class="flex name class">
+<span>class <span class="ident">STPlotter</span></span>
+<span>(</span><span>fig=None, ax=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Base-level plotting interface.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">class STPlotter(SingleAxisFigureCreator, ABC):
+    &#34;&#34;&#34;Base-level plotting interface.&#34;&#34;&#34;
+
+    @abstractmethod
+    def draw_point(self, point, tag, **kwargs):
+        &#34;&#34;&#34;Draws a single spacetime point.
+
+        Args:
+            point (specrel.geom.STVector): Point to draw.
+            tag (str): Tag to draw with the point.
+            **kwargs: Matplotlib plot keyword arguments.
+
+        Raises:
+            NotImplementedError:
+                Abstract method.
+        &#34;&#34;&#34;
+        raise NotImplementedError
+
+    @abstractmethod
+    def draw_line_segment(self, point1, point2, tag, **kwargs):
+        &#34;&#34;&#34;Draws a line segment between two spacetime points.
+
+        Args:
+            point1 (specrel.geom.STVector): One line segment endpoint.
+            point2 (specrel.geom.STVector): Other line segment endpoint.
+            tag (str): Tag to draw with the point.
+            **kwargs: Matplotlib plot keyword arguments.
+
+        Raises:
+            NotImplementedError:
+                Abstract method.
+        &#34;&#34;&#34;
+        raise NotImplementedError
+
+    @abstractmethod
+    def draw_shaded_polygon(self, vertices, tag, **kwargs):
+        &#34;&#34;&#34;Draws a shaded polygon in spacetime.
+
+        Args:
+            vertices (list): List of `specrel.geom.STVector` objects defining
+                the polygon vertices.
+            tag (str): Tag to draw with the point.
+            **kwargs: Matplotlib plot keyword arguments.
+
+        Raises:
+            NotImplementedError:
+                Abstract method.
+        &#34;&#34;&#34;
+        raise NotImplementedError
+
+    @staticmethod
+    def _decouple_stvectors(stvectors):
+        &#34;&#34;&#34;Separate time and space values in a list of STVectors.&#34;&#34;&#34;
+        if stvectors:
+            return tuple(zip(*stvectors))
+        return tuple(), tuple()
+
+    @abstractmethod
+    def set_lims(self, tlim, xlim):
+        &#34;&#34;&#34;Sets the plotting limits for the plotter.
+
+        Args:
+            tlim (tuple): Minimum and maximum time values of the plot. `None`
+                values are filled automatically.
+            xlim (tuple): Minimum and maximum position values of the plot.
+                `None` values are filled automatically.
+
+        Raises:
+            NotImplementedError:
+                Abstract method.
+        &#34;&#34;&#34;
+        raise NotImplementedError
+
+    @abstractmethod
+    def show(self):
+        &#34;&#34;&#34;Shows the plot in interactive mode.
+
+        Raises:
+            NotImplementedError:
+                Abstract method.
+        &#34;&#34;&#34;
+        raise NotImplementedError
+
+    def save(self, filename, **kwargs):
+        &#34;&#34;&#34;Saves the plot to a file.
+
+        Args:
+            filename (str): Output file name.
+            **kwargs: Keyword arguments to `matplotlib.figure.Figure.savefig`.
+        &#34;&#34;&#34;
+        self.fig.savefig(filename, **kwargs)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="#specrel.graphics.simpgraph.SingleAxisFigureCreator">SingleAxisFigureCreator</a></li>
+<li><a title="specrel.graphics.simpgraph.FigureCreator" href="#specrel.graphics.simpgraph.FigureCreator">FigureCreator</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="specrel.graphics.simpgraph.WorldlinePlotter" href="#specrel.graphics.simpgraph.WorldlinePlotter">WorldlinePlotter</a></li>
+<li><a title="specrel.graphics.simpgraph.STAnimator" href="#specrel.graphics.simpgraph.STAnimator">STAnimator</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="specrel.graphics.simpgraph.STPlotter.draw_line_segment"><code class="name flex">
+<span>def <span class="ident">draw_line_segment</span></span>(<span>self, point1, point2, tag, **kwargs)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Draws a line segment between two spacetime points.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>point1</code></strong> :&ensp;<a title="specrel.geom.STVector" href="../geom.html#specrel.geom.STVector"><code>STVector</code></a></dt>
+<dd>One line segment endpoint.</dd>
+<dt><strong><code>point2</code></strong> :&ensp;<a title="specrel.geom.STVector" href="../geom.html#specrel.geom.STVector"><code>STVector</code></a></dt>
+<dd>Other line segment endpoint.</dd>
+<dt><strong><code>tag</code></strong> :&ensp;<code>str</code></dt>
+<dd>Tag to draw with the point.</dd>
+<dt><strong><code>**kwargs</code></strong></dt>
+<dd>Matplotlib plot keyword arguments.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>NotImplementedError</code>:</dt>
+<dd>Abstract method.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">@abstractmethod
+def draw_line_segment(self, point1, point2, tag, **kwargs):
+    &#34;&#34;&#34;Draws a line segment between two spacetime points.
+
+    Args:
+        point1 (specrel.geom.STVector): One line segment endpoint.
+        point2 (specrel.geom.STVector): Other line segment endpoint.
+        tag (str): Tag to draw with the point.
+        **kwargs: Matplotlib plot keyword arguments.
+
+    Raises:
+        NotImplementedError:
+            Abstract method.
+    &#34;&#34;&#34;
+    raise NotImplementedError</code></pre>
+</details>
+</dd>
+<dt id="specrel.graphics.simpgraph.STPlotter.draw_point"><code class="name flex">
+<span>def <span class="ident">draw_point</span></span>(<span>self, point, tag, **kwargs)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Draws a single spacetime point.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>point</code></strong> :&ensp;<a title="specrel.geom.STVector" href="../geom.html#specrel.geom.STVector"><code>STVector</code></a></dt>
+<dd>Point to draw.</dd>
+<dt><strong><code>tag</code></strong> :&ensp;<code>str</code></dt>
+<dd>Tag to draw with the point.</dd>
+<dt><strong><code>**kwargs</code></strong></dt>
+<dd>Matplotlib plot keyword arguments.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>NotImplementedError</code>:</dt>
+<dd>Abstract method.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">@abstractmethod
+def draw_point(self, point, tag, **kwargs):
+    &#34;&#34;&#34;Draws a single spacetime point.
+
+    Args:
+        point (specrel.geom.STVector): Point to draw.
+        tag (str): Tag to draw with the point.
+        **kwargs: Matplotlib plot keyword arguments.
+
+    Raises:
+        NotImplementedError:
+            Abstract method.
+    &#34;&#34;&#34;
+    raise NotImplementedError</code></pre>
+</details>
+</dd>
+<dt id="specrel.graphics.simpgraph.STPlotter.draw_shaded_polygon"><code class="name flex">
+<span>def <span class="ident">draw_shaded_polygon</span></span>(<span>self, vertices, tag, **kwargs)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Draws a shaded polygon in spacetime.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>vertices</code></strong> :&ensp;<code>list</code></dt>
+<dd>List of <a title="specrel.geom.STVector" href="../geom.html#specrel.geom.STVector"><code>STVector</code></a> objects defining
+the polygon vertices.</dd>
+<dt><strong><code>tag</code></strong> :&ensp;<code>str</code></dt>
+<dd>Tag to draw with the point.</dd>
+<dt><strong><code>**kwargs</code></strong></dt>
+<dd>Matplotlib plot keyword arguments.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>NotImplementedError</code>:</dt>
+<dd>Abstract method.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">@abstractmethod
+def draw_shaded_polygon(self, vertices, tag, **kwargs):
+    &#34;&#34;&#34;Draws a shaded polygon in spacetime.
+
+    Args:
+        vertices (list): List of `specrel.geom.STVector` objects defining
+            the polygon vertices.
+        tag (str): Tag to draw with the point.
+        **kwargs: Matplotlib plot keyword arguments.
+
+    Raises:
+        NotImplementedError:
+            Abstract method.
+    &#34;&#34;&#34;
+    raise NotImplementedError</code></pre>
+</details>
+</dd>
+<dt id="specrel.graphics.simpgraph.STPlotter.save"><code class="name flex">
+<span>def <span class="ident">save</span></span>(<span>self, filename, **kwargs)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Saves the plot to a file.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>filename</code></strong> :&ensp;<code>str</code></dt>
+<dd>Output file name.</dd>
+<dt><strong><code>**kwargs</code></strong></dt>
+<dd>Keyword arguments to <code>matplotlib.figure.Figure.savefig</code>.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def save(self, filename, **kwargs):
+    &#34;&#34;&#34;Saves the plot to a file.
+
+    Args:
+        filename (str): Output file name.
+        **kwargs: Keyword arguments to `matplotlib.figure.Figure.savefig`.
+    &#34;&#34;&#34;
+    self.fig.savefig(filename, **kwargs)</code></pre>
+</details>
+</dd>
+<dt id="specrel.graphics.simpgraph.STPlotter.set_lims"><code class="name flex">
+<span>def <span class="ident">set_lims</span></span>(<span>self, tlim, xlim)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Sets the plotting limits for the plotter.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>tlim</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>Minimum and maximum time values of the plot. <code>None</code>
+values are filled automatically.</dd>
+<dt><strong><code>xlim</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>Minimum and maximum position values of the plot.
+<code>None</code> values are filled automatically.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>NotImplementedError</code>:</dt>
+<dd>Abstract method.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">@abstractmethod
+def set_lims(self, tlim, xlim):
+    &#34;&#34;&#34;Sets the plotting limits for the plotter.
+
+    Args:
+        tlim (tuple): Minimum and maximum time values of the plot. `None`
+            values are filled automatically.
+        xlim (tuple): Minimum and maximum position values of the plot.
+            `None` values are filled automatically.
+
+    Raises:
+        NotImplementedError:
+            Abstract method.
+    &#34;&#34;&#34;
+    raise NotImplementedError</code></pre>
+</details>
+</dd>
+<dt id="specrel.graphics.simpgraph.STPlotter.show"><code class="name flex">
+<span>def <span class="ident">show</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Shows the plot in interactive mode.</p>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>NotImplementedError</code>:</dt>
+<dd>Abstract method.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">@abstractmethod
+def show(self):
+    &#34;&#34;&#34;Shows the plot in interactive mode.
+
+    Raises:
+        NotImplementedError:
+            Abstract method.
+    &#34;&#34;&#34;
+    raise NotImplementedError</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="#specrel.graphics.simpgraph.SingleAxisFigureCreator">SingleAxisFigureCreator</a></b></code>:
+<ul class="hlist">
+<li><code><a title="specrel.graphics.simpgraph.SingleAxisFigureCreator.close" href="#specrel.graphics.simpgraph.FigureCreator.close">close</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="specrel.graphics.simpgraph.SingleAxisFigureCreator"><code class="flex name class">
+<span>class <span class="ident">SingleAxisFigureCreator</span></span>
+<span>(</span><span>fig=None, ax=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Something that creates and owns a figure with a single axis
+(i.e. not a subplot).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.figure.Figure</code>, optional</dt>
+<dd>Figure window. If <code>None</code> and
+<code>ax</code> is not <code>None</code>, will be set to <code>ax.figure</code>. If both are <code>None</code>,
+a new figure will be created.</dd>
+<dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.axes.Axes</code>, optional</dt>
+<dd>Axes to draw on. If <code>None</code> and
+<code>fig</code> is not <code>None</code>, will be set to <code>fig.gca()</code>. If both are <code>None</code>,
+a new set of axes will be created.</dd>
+</dl>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.axes.Axes</code></dt>
+<dd>Axes to draw on.</dd>
+<dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.figure.Figure</code></dt>
+<dd>Figure window.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">class SingleAxisFigureCreator(FigureCreator):
+    &#34;&#34;&#34;Something that creates and owns a figure with a single axis
+    (i.e. not a subplot).
+
+    Args:
+        fig (matplotlib.figure.Figure, optional): Figure window. If `None` and
+            `ax` is not `None`, will be set to `ax.figure`. If both are `None`,
+            a new figure will be created.
+        ax (matplotlib.axes.Axes, optional): Axes to draw on. If `None` and
+            `fig` is not `None`, will be set to `fig.gca()`. If both are `None`,
+            a new set of axes will be created.
+
+    Attributes:
+        ax (matplotlib.axes.Axes): Axes to draw on.
+        fig (matplotlib.figure.Figure): Figure window.
+    &#34;&#34;&#34;
+    def __init__(self, fig=graphrc[&#39;fig&#39;], ax=graphrc[&#39;ax&#39;]):
+        super().__init__()
+        if fig is None and ax is None:
+            self.fig, self.ax = plt.subplots()
+            self._created_own_fig = True
+        elif fig is not None and ax is None:
+            self.fig = fig
+            self.ax = fig.gca()
+        elif fig is None and ax is not None:
+            self.fig = ax.figure
+            self.ax = ax
+        else:
+            self.fig = fig
+            self.ax = ax</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="specrel.graphics.simpgraph.FigureCreator" href="#specrel.graphics.simpgraph.FigureCreator">FigureCreator</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="specrel.graphics.simpgraph.STPlotter" href="#specrel.graphics.simpgraph.STPlotter">STPlotter</a></li>
+<li><a title="specrel.graphics.simpgraph.TransformAnimator" href="#specrel.graphics.simpgraph.TransformAnimator">TransformAnimator</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="specrel.graphics.simpgraph.FigureCreator" href="#specrel.graphics.simpgraph.FigureCreator">FigureCreator</a></b></code>:
+<ul class="hlist">
+<li><code><a title="specrel.graphics.simpgraph.FigureCreator.close" href="#specrel.graphics.simpgraph.FigureCreator.close">close</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="specrel.graphics.simpgraph.TimeAnimator"><code class="flex name class">
+<span>class <span class="ident">TimeAnimator</span></span>
+<span>(</span><span>fig=None, ct_per_sec=1, instant_pause_time=1, fps=50, display_current_time=True, display_current_time_decimals=3, title=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Animator where the frame variable is time, i.e. depicts a sequence
+evolving in time.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>ct_per_sec</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Amount of time to pass within an animation
+for every second of real time.</dd>
+<dt><strong><code>instant_pause_time</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Amount of pause time in seconds
+for instantaneous events (appear in a single instant of time).</dd>
+<dt><strong><code>display_current_time</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Same as <code>display_current</code> in
+<a title="specrel.graphics.simpgraph.BaseAnimator" href="#specrel.graphics.simpgraph.BaseAnimator"><code>BaseAnimator</code></a>.</dd>
+<dt><strong><code>display_current_time_decimals</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>Same as
+<code>display_current_decimals</code> in
+<a title="specrel.graphics.simpgraph.BaseAnimator" href="#specrel.graphics.simpgraph.BaseAnimator"><code>BaseAnimator</code></a>.</dd>
+<dt><strong><code>others</code></strong></dt>
+<dd>See <a title="specrel.graphics.simpgraph.BaseAnimator" href="#specrel.graphics.simpgraph.BaseAnimator"><code>BaseAnimator</code></a>.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">class TimeAnimator(BaseAnimator):
+    &#34;&#34;&#34;Animator where the frame variable is time, i.e. depicts a sequence
+    evolving in time.
+
+    Args:
+        ct_per_sec (float, optional): Amount of time to pass within an animation
+            for every second of real time.
+        instant_pause_time (float, optional): Amount of pause time in seconds
+            for instantaneous events (appear in a single instant of time).
+        display_current_time (bool, optional): Same as `display_current` in
+            `specrel.graphics.simpgraph.BaseAnimator`.
+        display_current_time_decimals (int, optional): Same as
+            `display_current_decimals` in
+            `specrel.graphics.simpgraph.BaseAnimator`.
+        others: See `specrel.graphics.simpgraph.BaseAnimator`.
+    &#34;&#34;&#34;
+    def __init__(self,
+        fig=graphrc[&#39;fig&#39;],
+        ct_per_sec=graphrc[&#39;anim.time.ct_per_sec&#39;],
+        instant_pause_time=graphrc[&#39;anim.time.instant_pause_time&#39;],
+        fps=graphrc[&#39;anim.fps&#39;],
+        display_current_time=graphrc[&#39;anim.display_current&#39;],
+        display_current_time_decimals=
+            graphrc[&#39;anim.display_current_decimals&#39;],
+        title=graphrc[&#39;title&#39;]):
+
+        super().__init__(fig, ct_per_sec / fps, fps, display_current_time,
+            display_current_time_decimals, title)
+        # Number of frames corresponding to the desired pause time
+        self._pause_frames = round(instant_pause_time * fps)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="specrel.graphics.simpgraph.BaseAnimator" href="#specrel.graphics.simpgraph.BaseAnimator">BaseAnimator</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="specrel.graphics.simpgraph.STAnimator" href="#specrel.graphics.simpgraph.STAnimator">STAnimator</a></li>
+<li><a title="specrel.graphics.compgraph.MultiTimeAnimator" href="compgraph.html#specrel.graphics.compgraph.MultiTimeAnimator">MultiTimeAnimator</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="specrel.graphics.simpgraph.BaseAnimator" href="#specrel.graphics.simpgraph.BaseAnimator">BaseAnimator</a></b></code>:
+<ul class="hlist">
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.animate" href="#specrel.graphics.simpgraph.BaseAnimator.animate">animate</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.calc_frame_idx" href="#specrel.graphics.simpgraph.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.calc_frame_val" href="#specrel.graphics.simpgraph.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.clear" href="#specrel.graphics.simpgraph.BaseAnimator.clear">clear</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.get_frame_lim" href="#specrel.graphics.simpgraph.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.init_func" href="#specrel.graphics.simpgraph.BaseAnimator.init_func">init_func</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.save" href="#specrel.graphics.simpgraph.BaseAnimator.save">save</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.show" href="#specrel.graphics.simpgraph.BaseAnimator.show">show</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.update" href="#specrel.graphics.simpgraph.BaseAnimator.update">update</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="specrel.graphics.simpgraph.TransformAnimator"><code class="flex name class">
+<span>class <span class="ident">TransformAnimator</span></span>
+<span>(</span><span>lorentz_transformable, velocity, origin=(0, 0), stanimator=<class 'specrel.graphics.simpgraph.WorldlineAnimator'>, stanimator_options={}, tlim=(None, None), xlim=(None, None), time=0, fig=None, ax=None, transition_duration=2, fps=50, display_current_velocity=True, display_current_velocity_decimals=3, title=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Animator where the frame variable is velocity, i.e. animates a spacetime
+transformation as the object is accelerated instantaneously.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>lorentz_transformable</code></strong> :&ensp;<a title="specrel.geom.LorentzTransformable" href="../geom.html#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a></dt>
+<dd>Object to
+animate.</dd>
+<dt><strong><code>velocity</code></strong> :&ensp;<code>float</code></dt>
+<dd>Relative velocity of the frame to transform to.</dd>
+<dt><strong><code>origin</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>See attributes.</dd>
+<dt><strong><code>stanimator</code></strong> :&ensp;<code>type</code>, optional</dt>
+<dd>initializer of the
+<a title="specrel.graphics.simpgraph.STAnimator" href="#specrel.graphics.simpgraph.STAnimator"><code>STAnimator</code></a> to take drawing
+functionality from.</dd>
+<dt><strong><code>stanimator_options</code></strong> :&ensp;<code>dict</code>, optional</dt>
+<dd>
+<p>Dictionary of certain keyword
+arguments for <code>stanimator</code>, <em>except</em> for the following:</p>
+<ul>
+<li><code>fig</code></li>
+<li><code>ax</code></li>
+<li><code>instant_pause_time</code></li>
+<li><code>fps</code></li>
+<li><code>display_current_time</code></li>
+<li><code>title</code></li>
+</ul>
+</dd>
+<dt><strong><code>tlim</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>See attributes.</dd>
+<dt><strong><code>xlim</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>See attributes.</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Frame-local time value to fix during
+transformation animation.</dd>
+<dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.figure.Figure</code>, optional</dt>
+<dd>See
+<a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="#specrel.graphics.simpgraph.SingleAxisFigureCreator"><code>SingleAxisFigureCreator</code></a>.</dd>
+<dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.axes.Axes</code>, optional</dt>
+<dd>See
+<a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="#specrel.graphics.simpgraph.SingleAxisFigureCreator"><code>SingleAxisFigureCreator</code></a>.</dd>
+<dt>transition_duration (float, optional):</dt>
+<dt><strong><code>fps</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Animation frames per second.</dd>
+<dt><strong><code>display_current_velocity</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Same as <code>display_current</code> in
+<a title="specrel.graphics.simpgraph.BaseAnimator" href="#specrel.graphics.simpgraph.BaseAnimator"><code>BaseAnimator</code></a>.</dd>
+<dt><strong><code>display_current_velocity_decimals</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>Same as
+<code>display_current_decimals</code> in
+<a title="specrel.graphics.simpgraph.BaseAnimator" href="#specrel.graphics.simpgraph.BaseAnimator"><code>BaseAnimator</code></a>.</dd>
+<dt><strong><code>title</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Animation title.</dd>
+</dl>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>origin</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>Origin used for Lorentz transformation, in the form
+(t, x).</dd>
+<dt><strong><code>tlim</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>Time drawing limits. See
+<a title="specrel.geom.LorentzTransformable.draw" href="../geom.html#specrel.geom.LorentzTransformable.draw"><code>LorentzTransformable.draw()</code></a>.</dd>
+<dt><strong><code>transformable</code></strong> :&ensp;<a title="specrel.geom.LorentzTransformable" href="../geom.html#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a></dt>
+<dd>Object to animate.</dd>
+<dt><strong><code>xlim</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>Position drawing limits. See
+<a title="specrel.geom.LorentzTransformable.draw" href="../geom.html#specrel.geom.LorentzTransformable.draw"><code>LorentzTransformable.draw()</code></a>.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">class TransformAnimator(BaseAnimator, SingleAxisFigureCreator):
+    &#34;&#34;&#34;Animator where the frame variable is velocity, i.e. animates a spacetime
+    transformation as the object is accelerated instantaneously.
+
+    Args:
+        lorentz_transformable (specrel.geom.LorentzTransformable): Object to
+            animate.
+        velocity (float): Relative velocity of the frame to transform to.
+        origin (tuple, optional): See attributes.
+        stanimator (type, optional): initializer of the
+            `specrel.graphics.simpgraph.STAnimator` to take drawing
+            functionality from.
+        stanimator_options (dict, optional): Dictionary of certain keyword
+            arguments for `stanimator`, *except* for the following:
+
+            - `fig`
+            - `ax`
+            - `instant_pause_time`
+            - `fps`
+            - `display_current_time`
+            - `title`
+
+        tlim (tuple, optional): See attributes.
+        xlim (tuple, optional): See attributes.
+        time (float, optional): Frame-local time value to fix during
+            transformation animation.
+        fig (matplotlib.figure.Figure, optional): See
+            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+        ax (matplotlib.axes.Axes, optional): See
+            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+        transition_duration (float, optional):
+        fps (float, optional): Animation frames per second.
+        display_current_velocity (bool, optional): Same as `display_current` in
+            `specrel.graphics.simpgraph.BaseAnimator`.
+        display_current_velocity_decimals (int, optional): Same as
+            `display_current_decimals` in
+            `specrel.graphics.simpgraph.BaseAnimator`.
+        title (str, optional): Animation title.
+
+    Attributes:
+        origin (tuple): Origin used for Lorentz transformation, in the form
+            (t, x).
+        tlim (tuple): Time drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+        transformable (specrel.geom.LorentzTransformable): Object to animate.
+        xlim (tuple): Position drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+    &#34;&#34;&#34;
+    def __init__(self,
+        lorentz_transformable,
+        velocity,
+        origin=(0, 0),
+        stanimator=WorldlineAnimator,
+        stanimator_options={},
+        tlim=(None, None),
+        xlim=(None, None),
+        time=graphrc[&#39;anim.transform.time&#39;],
+        fig=graphrc[&#39;fig&#39;],
+        ax=graphrc[&#39;ax&#39;],
+        transition_duration=graphrc[&#39;anim.transform.transition_duration&#39;],
+        fps=graphrc[&#39;anim.fps&#39;],
+        display_current_velocity=graphrc[&#39;anim.display_current&#39;],
+        display_current_velocity_decimals=
+            graphrc[&#39;anim.display_current_decimals&#39;],
+        title=graphrc[&#39;title&#39;]):
+
+        SingleAxisFigureCreator.__init__(self, fig, ax)
+        nsteps = round(transition_duration * fps)
+        BaseAnimator.__init__(self, self.fig, velocity / nsteps, fps,
+            display_current_velocity, display_current_velocity_decimals, title,
+            (0, nsteps))
+        self.transformable = lorentz_transformable
+        self.origin = origin
+        self.xlim = xlim
+        self.tlim = tlim
+
+        # Set up the STAnimator
+        anim_opts = dict(stanimator_options)
+        for omit in [&#39;fig&#39;, &#39;ax&#39;, &#39;instant_pause_time&#39;, &#39;fps&#39;,
+            &#39;display_current_time&#39;, &#39;title&#39;]:
+            anim_opts.pop(omit, None)
+        self._stanimator = stanimator(
+            fig=self.fig,
+            ax=self.ax,
+            instant_pause_time=0,
+            fps=self.fps,
+            display_current_time=False,
+            title=None,
+            **stanimator_options)
+        self._stanimator_frame = self._stanimator.calc_frame_idx(time)
+
+    def clear(self):
+        self._stanimator.clear()
+
+    def init_func(self):
+        return [self.ax]
+
+    def update(self, frame):
+        self._stanimator.clear()
+        # Transform the object with the current velocity and plot it with some
+        # STAnimator
+        v = self.calc_frame_val(frame)
+        obj = copy.deepcopy(self.transformable)
+        obj.lorentz_transform(v, origin=self.origin)
+        obj.draw(plotter=self._stanimator, tlim=self.tlim, xlim=self.xlim)
+        self._stanimator.init_func()
+        try:
+            artists = self._stanimator.update(self._stanimator_frame)
+        except KeyError:
+            # Don&#39;t know what to draw; the fixed time is out of the range of
+            # the plotter&#39;s tlim (either auto-generated or set manually)
+            warnings.warn(
+                &#39;Failed to draw. Fixed time value is outside of limits.&#39;)
+            artists = self.ax
+        # Display the given title, current velocity, both, or neither
+        titles = []
+        if self.title:
+            titles.append(self.title)
+        if self.display_current:
+            titles.append(
+                f&#39;$v = {{:.{self.display_current_decimals}f}}c$&#39;.format(v))
+        if titles:
+            self.ax.set_title(&#39;\n&#39;.join(titles))
+        return artists</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="specrel.graphics.simpgraph.BaseAnimator" href="#specrel.graphics.simpgraph.BaseAnimator">BaseAnimator</a></li>
+<li>abc.ABC</li>
+<li><a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="#specrel.graphics.simpgraph.SingleAxisFigureCreator">SingleAxisFigureCreator</a></li>
+<li><a title="specrel.graphics.simpgraph.FigureCreator" href="#specrel.graphics.simpgraph.FigureCreator">FigureCreator</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="specrel.graphics.simpgraph.BaseAnimator" href="#specrel.graphics.simpgraph.BaseAnimator">BaseAnimator</a></b></code>:
+<ul class="hlist">
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.animate" href="#specrel.graphics.simpgraph.BaseAnimator.animate">animate</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.calc_frame_idx" href="#specrel.graphics.simpgraph.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.calc_frame_val" href="#specrel.graphics.simpgraph.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.clear" href="#specrel.graphics.simpgraph.BaseAnimator.clear">clear</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.get_frame_lim" href="#specrel.graphics.simpgraph.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.init_func" href="#specrel.graphics.simpgraph.BaseAnimator.init_func">init_func</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.save" href="#specrel.graphics.simpgraph.BaseAnimator.save">save</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.show" href="#specrel.graphics.simpgraph.BaseAnimator.show">show</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.update" href="#specrel.graphics.simpgraph.BaseAnimator.update">update</a></code></li>
+</ul>
+</li>
+<li><code><b><a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="#specrel.graphics.simpgraph.SingleAxisFigureCreator">SingleAxisFigureCreator</a></b></code>:
+<ul class="hlist">
+<li><code><a title="specrel.graphics.simpgraph.SingleAxisFigureCreator.close" href="#specrel.graphics.simpgraph.FigureCreator.close">close</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="specrel.graphics.simpgraph.WorldlineAnimator"><code class="flex name class">
+<span>class <span class="ident">WorldlineAnimator</span></span>
+<span>(</span><span>fig=None, ax=None, grid=False, legend=False, legend_loc='best', ct_per_sec=1, instant_pause_time=1, fps=50, display_current_time=True, display_current_time_decimals=3, title=None, lim_padding=0.1, equal_lim_expand=1, current_time_style='--', current_time_color='red')</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Animates a spacetime plot with a sweeping horizontal line overlaid to
+indicate the current time.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>current_time_style</code></strong> :&ensp;<code>linestyle</code>, optional</dt>
+<dd>See attributes.</dd>
+<dt><strong><code>current_time_color</code></strong> :&ensp;<code>color</code>, optional</dt>
+<dd>See attributes.</dd>
+<dt><strong><code>lim_padding</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>See
+<a title="specrel.graphics.simpgraph.WorldlinePlotter" href="#specrel.graphics.simpgraph.WorldlinePlotter"><code>WorldlinePlotter</code></a>.</dd>
+<dt><strong><code>equal_lim_expand</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>See
+<a title="specrel.graphics.simpgraph.WorldlinePlotter" href="#specrel.graphics.simpgraph.WorldlinePlotter"><code>WorldlinePlotter</code></a>.</dd>
+<dt><strong><code>others</code></strong></dt>
+<dd>See <a title="specrel.graphics.simpgraph.STAnimator" href="#specrel.graphics.simpgraph.STAnimator"><code>STAnimator</code></a>.</dd>
+</dl>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>current_time_color</code></strong> :&ensp;<code>TYPE</code></dt>
+<dd>Matplotlib color for the line of current
+time.</dd>
+<dt><strong><code>current_time_style</code></strong> :&ensp;<code>TYPE</code></dt>
+<dd>Matplotlib linestyle for the line of current
+time.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">class WorldlineAnimator(STAnimator):
+    &#34;&#34;&#34;Animates a spacetime plot with a sweeping horizontal line overlaid to
+    indicate the current time.
+
+    Args:
+        current_time_style (linestyle, optional): See attributes.
+        current_time_color (color, optional): See attributes.
+        lim_padding (float, optional): See
+            `specrel.graphics.simpgraph.WorldlinePlotter`.
+        equal_lim_expand (float, optional): See
+            `specrel.graphics.simpgraph.WorldlinePlotter`.
+        others: See `specrel.graphics.simpgraph.STAnimator`.
+
+    Attributes:
+        current_time_color (TYPE): Matplotlib color for the line of current
+            time.
+        current_time_style (TYPE): Matplotlib linestyle for the line of current
+            time.
+    &#34;&#34;&#34;
+    def __init__(self,
+        fig=graphrc[&#39;fig&#39;],
+        ax=graphrc[&#39;ax&#39;],
+        grid=graphrc[&#39;grid&#39;],
+        legend=graphrc[&#39;legend&#39;],
+        legend_loc=graphrc[&#39;legend_loc&#39;],
+        ct_per_sec=graphrc[&#39;anim.time.ct_per_sec&#39;],
+        instant_pause_time=graphrc[&#39;anim.time.instant_pause_time&#39;],
+        fps=graphrc[&#39;anim.fps&#39;],
+        display_current_time=graphrc[&#39;anim.display_current&#39;],
+        display_current_time_decimals=graphrc[&#39;anim.display_current_decimals&#39;],
+        title=graphrc[&#39;title&#39;],
+        lim_padding=graphrc[&#39;worldline.lim_padding&#39;],
+        equal_lim_expand=graphrc[&#39;worldline.equal_lim_expand&#39;],
+        current_time_style=graphrc[&#39;anim.worldline.current_time_style&#39;],
+        current_time_color=graphrc[&#39;anim.worldline.current_time_color&#39;]):
+
+        super().__init__(fig,
+            ax=ax,
+            grid=grid,
+            legend=legend,
+            legend_loc=legend_loc,
+            ct_per_sec=ct_per_sec,
+            instant_pause_time=instant_pause_time,
+            fps=fps,
+            display_current_time=display_current_time,
+            display_current_time_decimals=display_current_time_decimals,
+            title=title)
+        # Form a WorldlinePlotter to meet the animator&#39;s needs
+        self._worldline_plotter = WorldlinePlotter(self.fig, self.ax,
+            self.grid, self.legend, self.legend_loc, lim_padding,
+            equal_lim_expand)
+        self.current_time_style = current_time_style
+        self.current_time_color = current_time_color
+
+    def clear(self):
+        super().clear()
+        # Plotters to call on all frames
+        self._plotters_all_frames = []
+        # Line object for current time
+        self._current_time = None
+
+    def _draw_current_time(self, t):
+        &#34;&#34;&#34;Draw the actual line marking the current time.&#34;&#34;&#34;
+        # Update the line&#39;s position
+        self._current_time.set_data(self.xlim, (t, t))
+
+    def _init_frame(self, idx):
+        super()._init_frame(idx)
+
+        # Draw the current line of constant time
+        self.frame_plotters[idx] += [
+            lambda: self._draw_current_time(self.calc_frame_val(idx))
+        ]
+
+    def draw_point(self, point, tag=None, **kwargs):
+        super().draw_point(point, tag, **kwargs)
+
+        # Draw the point in every frame
+        self._plotters_all_frames += [
+            lambda: self._worldline_plotter.draw_point(point, tag, **kwargs)
+        ]
+
+    def draw_line_segment(self, point1, point2, tag=None, **kwargs):
+        super().draw_line_segment(point1, point2, tag, **kwargs)
+
+        # Draw the line in every frame
+        self._plotters_all_frames += [
+            lambda: self._worldline_plotter.draw_line_segment(
+                point1, point2, tag, **kwargs)
+        ]
+
+    def draw_shaded_polygon(self, vertices, tag=None, **kwargs):
+        super().draw_shaded_polygon(vertices, tag, **kwargs)
+
+        # Draw the polygon in every frame
+        self._plotters_all_frames += [
+            lambda: self._worldline_plotter.draw_shaded_polygon(
+                vertices, tag, **kwargs)
+        ]
+
+    def init_func(self):
+        self.ax.clear()
+        tlim = [self.calc_frame_val(f) for f in self.get_frame_lim()]
+        # Do the all-frames plotting first
+        for plotter in self._plotters_all_frames:
+            plotter()
+        # Make sure the limits are set properly after calling the all-frames
+        # plotters
+        self._worldline_plotter.set_lims(tlim, self.xlim)
+        # Create the current time line
+        self._current_time, = self.ax.plot([], [],
+            linestyle=self.current_time_style,
+            color=self.current_time_color)
+        # Set axis labels for the plot
+        self._worldline_plotter.set_labels()
+        return [self.ax]</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="specrel.graphics.simpgraph.STAnimator" href="#specrel.graphics.simpgraph.STAnimator">STAnimator</a></li>
+<li><a title="specrel.graphics.simpgraph.TimeAnimator" href="#specrel.graphics.simpgraph.TimeAnimator">TimeAnimator</a></li>
+<li><a title="specrel.graphics.simpgraph.BaseAnimator" href="#specrel.graphics.simpgraph.BaseAnimator">BaseAnimator</a></li>
+<li><a title="specrel.graphics.simpgraph.STPlotter" href="#specrel.graphics.simpgraph.STPlotter">STPlotter</a></li>
+<li><a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="#specrel.graphics.simpgraph.SingleAxisFigureCreator">SingleAxisFigureCreator</a></li>
+<li><a title="specrel.graphics.simpgraph.FigureCreator" href="#specrel.graphics.simpgraph.FigureCreator">FigureCreator</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="specrel.graphics.simpgraph.STAnimator" href="#specrel.graphics.simpgraph.STAnimator">STAnimator</a></b></code>:
+<ul class="hlist">
+<li><code><a title="specrel.graphics.simpgraph.STAnimator.animate" href="#specrel.graphics.simpgraph.BaseAnimator.animate">animate</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STAnimator.calc_frame_idx" href="#specrel.graphics.simpgraph.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STAnimator.calc_frame_val" href="#specrel.graphics.simpgraph.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STAnimator.clear" href="#specrel.graphics.simpgraph.BaseAnimator.clear">clear</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STAnimator.close" href="#specrel.graphics.simpgraph.FigureCreator.close">close</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STAnimator.draw_line_segment" href="#specrel.graphics.simpgraph.STPlotter.draw_line_segment">draw_line_segment</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STAnimator.draw_point" href="#specrel.graphics.simpgraph.STPlotter.draw_point">draw_point</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STAnimator.draw_shaded_polygon" href="#specrel.graphics.simpgraph.STPlotter.draw_shaded_polygon">draw_shaded_polygon</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STAnimator.get_frame_lim" href="#specrel.graphics.simpgraph.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STAnimator.init_func" href="#specrel.graphics.simpgraph.BaseAnimator.init_func">init_func</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STAnimator.resize" href="#specrel.graphics.simpgraph.STAnimator.resize">resize</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STAnimator.save" href="#specrel.graphics.simpgraph.BaseAnimator.save">save</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STAnimator.set_lims" href="#specrel.graphics.simpgraph.STPlotter.set_lims">set_lims</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STAnimator.show" href="#specrel.graphics.simpgraph.BaseAnimator.show">show</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STAnimator.update" href="#specrel.graphics.simpgraph.BaseAnimator.update">update</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="specrel.graphics.simpgraph.WorldlinePlotter"><code class="flex name class">
+<span>class <span class="ident">WorldlinePlotter</span></span>
+<span>(</span><span>fig=None, ax=None, grid=False, legend=False, legend_loc='best', lim_padding=0.1, equal_lim_expand=1)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Plotter for creating static spacetime diagrams.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.figure.Figure</code>, optional</dt>
+<dd>See
+<a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="#specrel.graphics.simpgraph.SingleAxisFigureCreator"><code>SingleAxisFigureCreator</code></a>.</dd>
+<dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.axes.Axes</code>, optional</dt>
+<dd>See
+<a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="#specrel.graphics.simpgraph.SingleAxisFigureCreator"><code>SingleAxisFigureCreator</code></a>.</dd>
+<dt><strong><code>others</code></strong></dt>
+<dd>See attributes.</dd>
+</dl>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>equal_lim_expand</code></strong> :&ensp;<code>float</code></dt>
+<dd>If the limits on an axis are specified to be
+equal, they will be expanded symmetrically until the axis size is
+this value.</dd>
+<dt><strong><code>grid</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Flag for whether or not to plot background grid lines.</dd>
+<dt><strong><code>legend</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Flag for whether or not to plot a legend.</dd>
+<dt><strong><code>legend_loc</code></strong> :&ensp;<code>str</code></dt>
+<dd>Legend location according to the Matplotlib
+<code>loc</code> parameter. If <code>legend</code> is <code>False</code>, this attribute is ignored.</dd>
+<dt><strong><code>lim_padding</code></strong> :&ensp;<code>float</code></dt>
+<dd>Extra padding on spacetime diagram axis limits,
+relative to the axis sizes.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">class WorldlinePlotter(STPlotter):
+    &#34;&#34;&#34;Plotter for creating static spacetime diagrams.
+
+    Args:
+        fig (matplotlib.figure.Figure, optional): See
+            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+        ax (matplotlib.axes.Axes, optional): See
+            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+        others: See attributes.
+
+    Attributes:
+        equal_lim_expand (float): If the limits on an axis are specified to be
+            equal, they will be expanded symmetrically until the axis size is
+            this value.
+        grid (bool): Flag for whether or not to plot background grid lines.
+        legend (bool): Flag for whether or not to plot a legend.
+        legend_loc (str): Legend location according to the Matplotlib
+            `loc` parameter. If `legend` is `False`, this attribute is ignored.
+        lim_padding (float): Extra padding on spacetime diagram axis limits,
+            relative to the axis sizes.
+    &#34;&#34;&#34;
+
+    def __init__(self,
+        fig=graphrc[&#39;fig&#39;],
+        ax=graphrc[&#39;ax&#39;],
+        grid=graphrc[&#39;grid&#39;],
+        legend=graphrc[&#39;legend&#39;],
+        legend_loc=graphrc[&#39;legend_loc&#39;],
+        lim_padding=graphrc[&#39;worldline.lim_padding&#39;],
+        equal_lim_expand=graphrc[&#39;worldline.equal_lim_expand&#39;]):
+
+        super().__init__(fig, ax)
+        self.grid = grid
+        self.legend = legend
+        self.legend_loc = legend_loc
+        self.lim_padding = lim_padding
+        self.equal_lim_expand = equal_lim_expand
+
+    def _prepare_ax(self):
+        &#34;&#34;&#34;Do any axis preparation before drawing stuff.&#34;&#34;&#34;
+        self.ax.grid(self.grid)
+        # Ensure grid lines are behind other objects
+        self.ax.set_axisbelow(True)
+
+    def _set_legend(self):
+        &#34;&#34;&#34;Turn on the legend, or do nothing, depending on self.legend&#34;&#34;&#34;
+        if self.legend:
+            self.ax.legend(loc=self.legend_loc)
+
+    def draw_point(self, point, tag=None, **kwargs):
+        &#34;&#34;&#34;See `specrel.graphics.simpgraph.STPlotter.draw_point`.
+
+        Kwargs:
+            linestyle: Forced to be `&#39;None&#39;`
+            marker: Default is `&#39;.&#39;`.
+        &#34;&#34;&#34;
+        self._prepare_ax()
+        marker = kwargs.pop(&#39;marker&#39;, &#39;.&#39;)
+        # Force linestyle to be none for a point
+        kwargs[&#39;linestyle&#39;] = &#39;None&#39;
+        self.ax.plot(point[1], point[0], marker=marker, **kwargs)
+        if tag:
+            self.ax.text(point[1], point[0], tag)
+        self._set_legend()
+
+    def draw_line_segment(self, point1, point2, tag=None, **kwargs):
+        &#34;&#34;&#34;See `specrel.graphics.simpgraph.STPlotter.draw_line_segment`.
+
+        Kwargs:
+            marker: Forced to be `None`.
+        &#34;&#34;&#34;
+        self._prepare_ax()
+        # Ignore the &#34;marker&#34; parameter
+        kwargs.pop(&#39;marker&#39;, None)
+        self.ax.plot((point1[1], point2[1]), (point1[0], point2[0]), **kwargs)
+        # Put the tag at the midpoint
+        if tag:
+            self.ax.text((point1[1] + point2[1])/2, (point1[0] + point2[0])/2,
+                tag, ha=&#39;center&#39;, va=&#39;center&#39;, bbox={&#39;boxstyle&#39;: &#39;round&#39;,
+                    &#39;ec&#39;: &#39;black&#39;, &#39;fc&#39;: (1, 1, 1, 0.5)})
+        self._set_legend()
+
+    def draw_shaded_polygon(self, vertices, tag=None, **kwargs):
+        &#34;&#34;&#34;See `specrel.graphics.simpgraph.STPlotter.draw_shaded_polygon`.
+
+        Kwargs:
+            linewidth: Forced to be `None`.
+        &#34;&#34;&#34;
+        self._prepare_ax()
+        tvals, xvals = self._decouple_stvectors(vertices)
+        # Ignore the &#34;linewidth&#34; parameter
+        kwargs.pop(&#39;linewidth&#39;, None)
+        self.ax.fill(xvals, tvals, **kwargs)
+        # Put tag at the centroid
+        if vertices and tag:
+            self.ax.text(sum(xvals)/len(xvals), sum(tvals)/len(tvals), tag,
+                ha=&#39;center&#39;, va=&#39;center&#39;, bbox={&#39;boxstyle&#39;: &#39;round&#39;,
+                    &#39;ec&#39;: &#39;black&#39;, &#39;fc&#39;: (1, 1, 1, 0.5)})
+        self._set_legend()
+
+    def set_lims(self, tlim, xlim):
+        # Pad the limits
+        tpad = self.lim_padding/2 * (tlim[1] - tlim[0])
+        xpad = self.lim_padding/2 * (xlim[1] - xlim[0])
+        # If the limits are identical, expand them
+        if tlim[0] == tlim[1]:
+            tpad = self.equal_lim_expand/2
+        if xlim[0] == xlim[1]:
+            xpad = self.equal_lim_expand/2
+
+        padded_tlim = (tlim[0] - tpad, tlim[1] + tpad)
+        padded_xlim = (xlim[0] - xpad, xlim[1] + xpad)
+
+        # Set the actual limits
+        self.ax.set_xlim(padded_xlim)
+        self.ax.set_ylim(padded_tlim)
+
+        # Clip lines and polygons objects to the actual limits
+        clipbox = self.ax.fill([xlim[0], xlim[0], xlim[1], xlim[1]],
+            [tlim[0], tlim[1], tlim[1], tlim[0]], color=&#39;None&#39;)[0]
+        # Only clip lines, not points
+        for artist in [ln for ln in self.ax.lines if len(ln.get_xdata()) &gt; 1] \
+            + self.ax.patches[:-1]:
+            artist.set_clip_path(clipbox)
+        self.ax.patches.pop()
+
+    def show(self):
+        plt.show()
+
+    def set_labels(self):
+        &#34;&#34;&#34;Set labels for the time and space axes. See
+        `specrel.graphics.graphrc`.
+        &#34;&#34;&#34;
+        self.ax.set_xlabel(graphrc[&#39;xlabel&#39;])
+        self.ax.set_ylabel(graphrc[&#39;tlabel&#39;])</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="specrel.graphics.simpgraph.STPlotter" href="#specrel.graphics.simpgraph.STPlotter">STPlotter</a></li>
+<li><a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="#specrel.graphics.simpgraph.SingleAxisFigureCreator">SingleAxisFigureCreator</a></li>
+<li><a title="specrel.graphics.simpgraph.FigureCreator" href="#specrel.graphics.simpgraph.FigureCreator">FigureCreator</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="specrel.graphics.simpgraph.WorldlinePlotter.draw_line_segment"><code class="name flex">
+<span>def <span class="ident">draw_line_segment</span></span>(<span>self, point1, point2, tag=None, **kwargs)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>See <a title="specrel.graphics.simpgraph.STPlotter.draw_line_segment" href="#specrel.graphics.simpgraph.STPlotter.draw_line_segment"><code>STPlotter.draw_line_segment()</code></a>.</p>
+<h2 id="kwargs">Kwargs</h2>
+<dl>
+<dt><strong><code>marker</code></strong></dt>
+<dd>Forced to be <code>None</code>.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def draw_line_segment(self, point1, point2, tag=None, **kwargs):
+    &#34;&#34;&#34;See `specrel.graphics.simpgraph.STPlotter.draw_line_segment`.
+
+    Kwargs:
+        marker: Forced to be `None`.
+    &#34;&#34;&#34;
+    self._prepare_ax()
+    # Ignore the &#34;marker&#34; parameter
+    kwargs.pop(&#39;marker&#39;, None)
+    self.ax.plot((point1[1], point2[1]), (point1[0], point2[0]), **kwargs)
+    # Put the tag at the midpoint
+    if tag:
+        self.ax.text((point1[1] + point2[1])/2, (point1[0] + point2[0])/2,
+            tag, ha=&#39;center&#39;, va=&#39;center&#39;, bbox={&#39;boxstyle&#39;: &#39;round&#39;,
+                &#39;ec&#39;: &#39;black&#39;, &#39;fc&#39;: (1, 1, 1, 0.5)})
+    self._set_legend()</code></pre>
+</details>
+</dd>
+<dt id="specrel.graphics.simpgraph.WorldlinePlotter.draw_point"><code class="name flex">
+<span>def <span class="ident">draw_point</span></span>(<span>self, point, tag=None, **kwargs)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>See <a title="specrel.graphics.simpgraph.STPlotter.draw_point" href="#specrel.graphics.simpgraph.STPlotter.draw_point"><code>STPlotter.draw_point()</code></a>.</p>
+<h2 id="kwargs">Kwargs</h2>
+<dl>
+<dt><strong><code>linestyle</code></strong></dt>
+<dd>Forced to be <code>'None'</code></dd>
+<dt><strong><code>marker</code></strong></dt>
+<dd>Default is <code>'.'</code>.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def draw_point(self, point, tag=None, **kwargs):
+    &#34;&#34;&#34;See `specrel.graphics.simpgraph.STPlotter.draw_point`.
+
+    Kwargs:
+        linestyle: Forced to be `&#39;None&#39;`
+        marker: Default is `&#39;.&#39;`.
+    &#34;&#34;&#34;
+    self._prepare_ax()
+    marker = kwargs.pop(&#39;marker&#39;, &#39;.&#39;)
+    # Force linestyle to be none for a point
+    kwargs[&#39;linestyle&#39;] = &#39;None&#39;
+    self.ax.plot(point[1], point[0], marker=marker, **kwargs)
+    if tag:
+        self.ax.text(point[1], point[0], tag)
+    self._set_legend()</code></pre>
+</details>
+</dd>
+<dt id="specrel.graphics.simpgraph.WorldlinePlotter.draw_shaded_polygon"><code class="name flex">
+<span>def <span class="ident">draw_shaded_polygon</span></span>(<span>self, vertices, tag=None, **kwargs)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>See <a title="specrel.graphics.simpgraph.STPlotter.draw_shaded_polygon" href="#specrel.graphics.simpgraph.STPlotter.draw_shaded_polygon"><code>STPlotter.draw_shaded_polygon()</code></a>.</p>
+<h2 id="kwargs">Kwargs</h2>
+<dl>
+<dt><strong><code>linewidth</code></strong></dt>
+<dd>Forced to be <code>None</code>.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def draw_shaded_polygon(self, vertices, tag=None, **kwargs):
+    &#34;&#34;&#34;See `specrel.graphics.simpgraph.STPlotter.draw_shaded_polygon`.
+
+    Kwargs:
+        linewidth: Forced to be `None`.
+    &#34;&#34;&#34;
+    self._prepare_ax()
+    tvals, xvals = self._decouple_stvectors(vertices)
+    # Ignore the &#34;linewidth&#34; parameter
+    kwargs.pop(&#39;linewidth&#39;, None)
+    self.ax.fill(xvals, tvals, **kwargs)
+    # Put tag at the centroid
+    if vertices and tag:
+        self.ax.text(sum(xvals)/len(xvals), sum(tvals)/len(tvals), tag,
+            ha=&#39;center&#39;, va=&#39;center&#39;, bbox={&#39;boxstyle&#39;: &#39;round&#39;,
+                &#39;ec&#39;: &#39;black&#39;, &#39;fc&#39;: (1, 1, 1, 0.5)})
+    self._set_legend()</code></pre>
+</details>
+</dd>
+<dt id="specrel.graphics.simpgraph.WorldlinePlotter.set_labels"><code class="name flex">
+<span>def <span class="ident">set_labels</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Set labels for the time and space axes. See
+<a title="specrel.graphics.graphrc" href="graphrc.html"><code>specrel.graphics.graphrc</code></a>.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def set_labels(self):
+    &#34;&#34;&#34;Set labels for the time and space axes. See
+    `specrel.graphics.graphrc`.
+    &#34;&#34;&#34;
+    self.ax.set_xlabel(graphrc[&#39;xlabel&#39;])
+    self.ax.set_ylabel(graphrc[&#39;tlabel&#39;])</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="specrel.graphics.simpgraph.STPlotter" href="#specrel.graphics.simpgraph.STPlotter">STPlotter</a></b></code>:
+<ul class="hlist">
+<li><code><a title="specrel.graphics.simpgraph.STPlotter.close" href="#specrel.graphics.simpgraph.FigureCreator.close">close</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STPlotter.save" href="#specrel.graphics.simpgraph.STPlotter.save">save</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STPlotter.set_lims" href="#specrel.graphics.simpgraph.STPlotter.set_lims">set_lims</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STPlotter.show" href="#specrel.graphics.simpgraph.STPlotter.show">show</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="specrel.graphics" href="index.html">specrel.graphics</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="specrel.graphics.simpgraph.BaseAnimator" href="#specrel.graphics.simpgraph.BaseAnimator">BaseAnimator</a></code></h4>
+<ul class="two-column">
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.animate" href="#specrel.graphics.simpgraph.BaseAnimator.animate">animate</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.calc_frame_idx" href="#specrel.graphics.simpgraph.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.calc_frame_val" href="#specrel.graphics.simpgraph.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.clear" href="#specrel.graphics.simpgraph.BaseAnimator.clear">clear</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.get_frame_lim" href="#specrel.graphics.simpgraph.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.init_func" href="#specrel.graphics.simpgraph.BaseAnimator.init_func">init_func</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.save" href="#specrel.graphics.simpgraph.BaseAnimator.save">save</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.show" href="#specrel.graphics.simpgraph.BaseAnimator.show">show</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.update" href="#specrel.graphics.simpgraph.BaseAnimator.update">update</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="specrel.graphics.simpgraph.FigureCreator" href="#specrel.graphics.simpgraph.FigureCreator">FigureCreator</a></code></h4>
+<ul class="">
+<li><code><a title="specrel.graphics.simpgraph.FigureCreator.close" href="#specrel.graphics.simpgraph.FigureCreator.close">close</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="specrel.graphics.simpgraph.ObjectAnimator" href="#specrel.graphics.simpgraph.ObjectAnimator">ObjectAnimator</a></code></h4>
+</li>
+<li>
+<h4><code><a title="specrel.graphics.simpgraph.STAnimator" href="#specrel.graphics.simpgraph.STAnimator">STAnimator</a></code></h4>
+<ul class="">
+<li><code><a title="specrel.graphics.simpgraph.STAnimator.resize" href="#specrel.graphics.simpgraph.STAnimator.resize">resize</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="specrel.graphics.simpgraph.STPlotter" href="#specrel.graphics.simpgraph.STPlotter">STPlotter</a></code></h4>
+<ul class="two-column">
+<li><code><a title="specrel.graphics.simpgraph.STPlotter.draw_line_segment" href="#specrel.graphics.simpgraph.STPlotter.draw_line_segment">draw_line_segment</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STPlotter.draw_point" href="#specrel.graphics.simpgraph.STPlotter.draw_point">draw_point</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STPlotter.draw_shaded_polygon" href="#specrel.graphics.simpgraph.STPlotter.draw_shaded_polygon">draw_shaded_polygon</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STPlotter.save" href="#specrel.graphics.simpgraph.STPlotter.save">save</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STPlotter.set_lims" href="#specrel.graphics.simpgraph.STPlotter.set_lims">set_lims</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.STPlotter.show" href="#specrel.graphics.simpgraph.STPlotter.show">show</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="#specrel.graphics.simpgraph.SingleAxisFigureCreator">SingleAxisFigureCreator</a></code></h4>
+</li>
+<li>
+<h4><code><a title="specrel.graphics.simpgraph.TimeAnimator" href="#specrel.graphics.simpgraph.TimeAnimator">TimeAnimator</a></code></h4>
+</li>
+<li>
+<h4><code><a title="specrel.graphics.simpgraph.TransformAnimator" href="#specrel.graphics.simpgraph.TransformAnimator">TransformAnimator</a></code></h4>
+</li>
+<li>
+<h4><code><a title="specrel.graphics.simpgraph.WorldlineAnimator" href="#specrel.graphics.simpgraph.WorldlineAnimator">WorldlineAnimator</a></code></h4>
+</li>
+<li>
+<h4><code><a title="specrel.graphics.simpgraph.WorldlinePlotter" href="#specrel.graphics.simpgraph.WorldlinePlotter">WorldlinePlotter</a></code></h4>
+<ul class="">
+<li><code><a title="specrel.graphics.simpgraph.WorldlinePlotter.draw_line_segment" href="#specrel.graphics.simpgraph.WorldlinePlotter.draw_line_segment">draw_line_segment</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.WorldlinePlotter.draw_point" href="#specrel.graphics.simpgraph.WorldlinePlotter.draw_point">draw_point</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.WorldlinePlotter.draw_shaded_polygon" href="#specrel.graphics.simpgraph.WorldlinePlotter.draw_shaded_polygon">draw_shaded_polygon</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.WorldlinePlotter.set_labels" href="#specrel.graphics.simpgraph.WorldlinePlotter.set_labels">set_labels</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.6.3</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

@@ -1,0 +1,3072 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.6.3" />
+<title>specrel.geom API documentation</title>
+<meta name="description" content="Defines the geometry of special relativity, meaning core geometry classes and
+relevant transformation operations on them …" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase;cursor:pointer}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>specrel.geom</code></h1>
+</header>
+<section id="section-intro">
+<p>Defines the geometry of special relativity, meaning core geometry classes and
+relevant transformation operations on them.</p>
+<p>All concrete geometry classes are subclasses of
+<a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a>.</p>
+<p>Object drawing is done abstractly, with concrete graphics code delegated to
+<a title="specrel.graphics" href="graphics/index.html"><code>specrel.graphics</code></a>.</p>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">&#34;&#34;&#34;
+Defines the geometry of special relativity, meaning core geometry classes and
+relevant transformation operations on them.
+
+All concrete geometry classes are subclasses of
+`specrel.geom.LorentzTransformable`.
+
+Object drawing is done abstractly, with concrete graphics code delegated to
+`specrel.graphics`.
+&#34;&#34;&#34;
+
+from abc import ABC, abstractmethod
+import copy
+from math import atan2
+import warnings
+
+geomrc = {
+    &#39;origin&#39;: (0, 0),
+    &#39;tlim&#39;: (None, None),
+    &#39;xlim&#39;: (None, None),
+    &#39;tag&#39;: None,
+    &#39;precision&#39;: 7,
+    &#39;draw_options&#39;: {}, # Okay to have a mutable dict here; ctors will copy
+    &#39;ribbon.default_edgecolor&#39;: &#39;black&#39;,
+}
+&#34;&#34;&#34;
+Contains default parameters shared by various classes and functions in `geom`.
+
+## Items
+- **origin**: `(0, 0)`
+    - Origin used for Lorentz transformations, in the form (t, x).
+- **tlim**: `(None, None)`
+    - Time drawing limits. See `specrel.geom.LorentzTransformable.draw`.
+- **xlim**: `(None, None)`
+    - Position drawing limits. See `specrel.geom.LorentzTransformable.draw`.
+- **precision**: `7`
+    - Floating-point precision (number of decimal places) for internal
+    comparisons.
+- **tag**: `None`
+    - Object tag, see `specrel.geom.LorentzTransformable`.
+- **draw_options**: `{}`
+    - Object draw options, see `specrel.geom.LorentzTransformable`.
+- **ribbon.default_edgecolor**: `&#39;black&#39;`
+    - Default edge color for drawing `specrel.geom.Ribbon` objects.
+&#34;&#34;&#34;
+
+class LorentzTransformable(ABC):
+    &#34;&#34;&#34;Something that obeys Lorentz transformations.
+
+    Attributes:
+        draw_options (dict): Keyword arguments to forward to Matplotlib when
+            drawing an object. For example, `{&#39;color&#39;: &#39;red&#39;}` would set the
+            keyword argument `color=red` when internally calling Matplotlib
+            plotting functions. Note that options here can be overridden by
+            keyword arguments in `specrel.geom.LorentzTransformable.draw`.
+        tag (str): A tag or &#34;name&#34; associated with an object. Can be used by
+            certain plotters to add a custom type of label when drawing an
+            object.
+
+            For a legend entry, instead use the Matplotlib draw option `label`
+            in the `draw_options` property/parameter.
+    &#34;&#34;&#34;
+
+    @abstractmethod
+    def __init__(self, tag, draw_options):
+        self.tag = tag
+        self.draw_options = dict(draw_options)
+
+    @abstractmethod
+    def lorentz_transform(self, velocity, origin):
+        &#34;&#34;&#34;Lorentz transform the object with some velocity about some origin.
+
+        Args:
+            velocity (float): Lorentz transformation velocity.
+            origin (tuple): Origin of Lorentz transformation.
+
+        Raises:
+            NotImplementedError:
+                Abstract method.
+        &#34;&#34;&#34;
+        raise NotImplementedError
+
+    def lorentz_boost(self, velocity, origin=geomrc[&#39;origin&#39;]):
+        &#34;&#34;&#34;Lorentz boost the object with some velocity about some origin.
+        Equivalent to lorentz transforming with `-velocity`. See
+        `specrel.geom.LorentzTransformable.lorentz_transform`.
+        &#34;&#34;&#34;
+        self.lorentz_transform(-velocity, origin)
+
+    &#34;&#34;&#34;Drawing logic for an object, contingent on a DI for boilerplate plotting
+    implementation via plotter (a graphics.simpgraph.STPlotter instance)&#34;&#34;&#34;
+    @abstractmethod
+    def draw(self, plotter, tlim, xlim, **kwargs):
+        &#34;&#34;&#34;Drawing logic for an object, contingent on a plotter object.
+
+        Args:
+            plotter (`specrel.graphics.simpgraph.STPlotter`): Plotter object to
+                implement plotting functionality.
+            tlim (tuple): Minimum and maximum time values when drawing the
+                object. Any `None` entries are replaced with a class-specific
+                default.
+            xlim (tuple): Minimum and maximum position values when drawing the
+                object. Any `None` entries are replaced with a class-specific
+                default.
+            **kwargs: Keyword arguments to forward to Matplotlib when drawing
+                the object.
+
+        Raises:
+            NotImplementedError:
+                Abstract method.
+        &#34;&#34;&#34;
+        raise NotImplementedError
+
+    @abstractmethod
+    def _auto_draw_lims(self):
+        &#34;&#34;&#34;Determine automatic draw limits if one or more aren&#39;t given,
+        in the format (tmin, tmax), (xmin, xmax)&#34;&#34;&#34;
+        raise NotImplementedError
+
+    def _fill_auto_lims(self, tlim, xlim):
+        &#34;&#34;&#34;Fill in automatic limits only where explicit limits aren&#39;t given, and
+        return in the format (tmin, tmax), (xmin, xmax)&#34;&#34;&#34;
+        tmin, tmax, xmin, xmax = tlim + xlim
+        if None in tlim + xlim:
+            # Only compute automatic limits if needed
+            (tminauto, tmaxauto), (xminauto, xmaxauto) = self._auto_draw_lims()
+            if tmin is None:
+                tmin = tminauto
+            if tmax is None:
+                tmax = tmaxauto
+            if xmin is None:
+                xmin = xminauto
+            if xmax is None:
+                xmax = xmaxauto
+        return (tmin, tmax), (xmin, xmax)
+
+&#34;&#34;&#34;Return a Lorentz transformed copy of a LorentzTransformable&#34;&#34;&#34;
+def lorentz_transformed(transformable, velocity, origin=geomrc[&#39;origin&#39;]):
+    &#34;&#34;&#34;Lorentz transforms an object and returns a copy.
+
+    Args:
+        transformable (specrel.geom.LorentzTransformable): Object to Lorentz
+            transform.
+        velocity (float): Lorentz transformation velocity.
+        origin (tuple, optional): Origin of Lorentz transformation, in the form
+            (t, x).
+
+    Returns:
+        specrel.geom.LorentzTransformable:
+            Transformed copy of `transformable`.
+    &#34;&#34;&#34;
+    transformed = copy.deepcopy(transformable)
+    transformed.lorentz_transform(velocity, origin)
+    return transformed
+
+&#34;&#34;&#34;Return a Lorentz-boosted copy of a LorentzTransformable&#34;&#34;&#34;
+def lorentz_boosted(transformable, velocity, origin=geomrc[&#39;origin&#39;]):
+    &#34;&#34;&#34;Lorentz boosts an object and returns a copy. Equivalent to a Lorentz
+    transform with `-velocity`. See `specrel.geom.lorentz_transformed`.
+    &#34;&#34;&#34;
+    boosted = copy.deepcopy(transformable)
+    boosted.lorentz_boost(velocity, origin)
+    return boosted
+
+class STVector(LorentzTransformable):
+    &#34;&#34;&#34;A vector in spacetime (t, x). `*args` can be one of two options
+    (see below). `**kwargs` are for attributes other than `t` and `x`, and
+    default to corresponding items in `specrel.geom.geomrc` if unspecified.
+
+    An `STVector`-convertible type is any type that can be used for the `stvec`
+    parameter in the second initialization list (see below).
+
+    Args:
+        t (float): Time value.
+        x (float): Position value.
+
+    Args:
+        stvec (specrel.geom.STVector or iterable): Existing `STVector` or some
+            other iterable (t, x) to copy. If an `STVector`, will copy over all
+            attributes not overridden by explicit keyword arguments.
+
+    Attributes:
+        draw_options (dict): See `specrel.geom.LorentzTransformable`.
+        precision (int): Floating-point precision for comparisons. Two
+            `STVector` are equal if the components agree to this many decimal
+            places.
+        t (float): Time value of the vector.
+        tag (str): See `specrel.geom.LorentzTransformable`.
+        x (float): Position value of the vector.
+    &#34;&#34;&#34;
+
+    def __init__(self, *args, **kwargs):
+        # args can either be:
+        #   - 2 arguments: [t, x]
+        #   - 1 argument: an existing STVector() to copy
+        #   - 1 argument: some other iterable representing (t, x)
+        # kwargs can include: &#39;tag&#39;, &#39;precision&#39;, &#39;draw_options&#39;
+        if len(args) == 2:
+            # t and x were individually provided
+            self._constructor(*args, **kwargs)
+        elif len(args) == 1:
+            # An iterable representing (t, x) was provided
+            # This can function as a copy ctor if said iterable was an STVector
+            self._constructor(*args[0], **kwargs)
+            # If no tag is given explicitly, copy over the old tag if it exists
+            # i.e. if the object is an STVector, not just a tuple or something
+            if &#39;tag&#39; not in kwargs:
+                try:
+                    self.tag = args[0].tag
+                except:
+                    pass
+            # If no precision given, copy over the old precision if it exists
+            if &#39;precision&#39; not in kwargs:
+                try:
+                    self.precision = args[0].precision
+                except:
+                    pass
+            # If no draw options given, copy over the old ones if they exist
+            if &#39;draw_options&#39; not in kwargs:
+                try:
+                    self.draw_options = dict(args[0].draw_options)
+                except:
+                    pass
+        else:
+            raise TypeError(&#39;Too many positional arguments.&#39;)
+
+    def _constructor(self, time, position, tag=geomrc[&#39;tag&#39;],
+        precision=geomrc[&#39;precision&#39;], draw_options=geomrc[&#39;draw_options&#39;]):
+        &#34;&#34;&#34;The actual constructor underlying __init__&#34;&#34;&#34;
+        super().__init__(tag=tag, draw_options=draw_options)
+        self.t = time
+        self.x = position
+        self.precision = precision
+
+    def __getitem__(self, key):
+        &#34;&#34;&#34;The order is (t, x), consistent with standard notation for 4-position
+        in physics&#34;&#34;&#34;
+        return [self.t, self.x][key]
+
+    def __str__(self):
+        &#34;&#34;&#34;String representation of vector components as an ordered pair,
+        (t, x)&#34;&#34;&#34;
+        return f&#39;STVector({round(self.t, self.precision)}, &#39; \
+            + f&#39;{round(self.x, self.precision)})&#39;
+
+    def __iter__(self):
+        yield self.t
+        yield self.x
+
+    def __eq__(self, other):
+        &#34;&#34;&#34;Equality within internal precision settings&#34;&#34;&#34;
+        # Compare up to the precision of the two objects
+        try:
+            precision = min(self.precision, other.precision)
+        except AttributeError:  # other has no precision field
+            precision = self.precision
+
+        for selfcmp, othercmp in zip(self, other):
+            if round(selfcmp, precision) != round(othercmp, precision):
+                return False
+        return True
+
+    def __ne__(self, other):
+        return not (self == other)
+
+    def __neg__(self):
+        return STVector((-cmp for cmp in self))
+
+    def __add__(self, other):
+        &#34;&#34;&#34;Vector-vector addition&#34;&#34;&#34;
+        return STVector((left + right for left, right in zip(self, other)))
+
+    def __sub__(self, other):
+        &#34;&#34;&#34;Vector-vector subtraction&#34;&#34;&#34;
+        return self + -other
+
+    def __abs__(self):
+        &#34;&#34;&#34;Spacetime interval&#34;&#34;&#34;
+        return -self.t**2 + self.x**2
+
+    def lorentz_transform(self, velocity, origin=geomrc[&#39;origin&#39;]):
+        gamma = self.gamma_factor(velocity)
+        t, x = self
+        t0, x0 = origin
+        self.t = gamma*((t - t0) - velocity*(x - x0)) + t0
+        self.x = gamma*((x - x0) - velocity*(t - t0)) + x0
+
+    def draw(self, plotter, tlim=geomrc[&#39;tlim&#39;], xlim=geomrc[&#39;xlim&#39;], **kwargs):
+        # Only draw if in bounds
+        tlim, xlim = self._fill_auto_lims(tlim, xlim)
+        if self._in_bounds(tlim, xlim):
+            kwargs = {**self.draw_options, **kwargs}
+            plotter.draw_point(self, tag=self.tag, **kwargs)
+            plotter.set_lims(tlim, xlim)
+
+    def _auto_draw_lims(self):
+        return (self.t, self.t), (self.x, self.x)
+
+    def _in_bounds(self, tlim, xlim):
+        &#34;&#34;&#34;Check if the point is in a given set of bounds&#34;&#34;&#34;
+        return (round(self.t, self.precision) &gt;= round(tlim[0], self.precision) \
+            and round(self.t, self.precision) &lt;= round(tlim[1], self.precision) \
+            and round(self.x, self.precision) &gt;= round(xlim[0], self.precision) \
+            and round(self.x, self.precision) &lt;= round(xlim[1], self.precision))
+
+    @staticmethod
+    def gamma_factor(velocity):
+        &#34;&#34;&#34;Calculates the relativistic gamma factor for a given velocity.
+
+        Args:
+            velocity (float): Relative velocity.
+
+        Returns:
+            float:
+                Gamma factor for `velocity`.
+        &#34;&#34;&#34;
+        return 1/(1 - velocity**2)**0.5
+
+class Collection(LorentzTransformable):
+    &#34;&#34;&#34;Collection of `specrel.geom.LorentzTransformable` objects. Holds
+    references, rather than copies, similar to a `list`. Operations like
+    `Collection.lorentz_transform` and `Collection.draw` act on all elements in
+    the `Collection`.
+
+    Has similar API to the `list`, such as indexing, iteration, using `len()`,
+    appending entries, and popping entries.
+
+    Attributes:
+        transformables (list): list of `specrel.geom.LorentzTransformable`
+            references.
+    &#34;&#34;&#34;
+
+    def __init__(self, transformables=(), tag=geomrc[&#39;tag&#39;],
+        draw_options=geomrc[&#39;draw_options&#39;]):
+        super().__init__(tag=tag, draw_options=draw_options)
+        self.transformables = []
+        for tr in transformables:
+            self.transformables.append(tr)
+
+    def __getitem__(self, key):
+        return self.transformables[key]
+
+    def __iter__(self):
+        yield from self.transformables
+
+    def __len__(self):
+        return len(self.transformables)
+
+    def append(self, transformable):
+        &#34;&#34;&#34;Append an element to the `Collection`.
+
+        Args:
+            transformable (`specrel.geom.LorentzTransformable`): Reference to
+                append to the `Collection`.
+
+        Raises:
+            ValueError:
+                If appended object is not a `specrel.geom.LorentzTransformable`.
+        &#34;&#34;&#34;
+        if not isinstance(transformable, LorentzTransformable):
+            raise ValueError(&#39;Appended object must be LorentzTransformable&#39;)
+        self.transformables.append(transformable)
+
+    def pop(self, pos=-1):
+        &#34;&#34;&#34;Pop an element from the `Collection`.
+
+        Args:
+            pos (int, optional): Position of element to pop.
+
+        Returns:
+            specrel.geom.LorentzTransformable:
+                Element at `pos`.
+        &#34;&#34;&#34;
+        return self.transformables.pop(pos)
+
+    def lorentz_transform(self, velocity, origin=geomrc[&#39;origin&#39;]):
+        for tr in self:
+            tr.lorentz_transform(velocity, origin)
+
+    def draw(self, plotter, tlim=geomrc[&#39;tlim&#39;], xlim=geomrc[&#39;xlim&#39;], **kwargs):
+        # Cannot draw an empty collection, so just do nothing
+        if len(self) == 0:
+            warnings.warn(&#39;Nothing to draw&#39;)
+            return
+        kwargs = {**self.draw_options, **kwargs}
+        # Fill in automatic limits
+        tlim, xlim = self._fill_auto_lims(tlim, xlim)
+        # Plot each transformable with the same limits
+        for tr in self:
+            tr.draw(plotter, tlim, xlim, **kwargs)
+        # Make sure plot limits are properly set
+        plotter.set_lims(tlim, xlim)
+
+    def _auto_draw_lims(self):
+        tmin, tmax, xmin, xmax = None, None, None, None
+        for tr in self:
+            (new_tmin, new_tmax), (new_xmin, new_xmax) = tr._auto_draw_lims()
+            tmin = new_tmin if tmin is None else min(tmin, new_tmin)
+            tmax = new_tmax if tmax is None else max(tmax, new_tmax)
+            xmin = new_xmin if xmin is None else min(xmin, new_xmin)
+            xmax = new_xmax if xmax is None else max(xmax, new_xmax)
+        return (tmin, tmax), (xmin, xmax)
+
+class PointGroup(Collection):
+    &#34;&#34;&#34;Collection of specifically `specrel.geom.STVector` references.
+
+    Allowed modes are defined by class variables `PointGroup.&lt;mode&gt;`
+    (see below).
+
+    Modes:
+        CONNECT (int): Specifies points connected by line segments.
+        POINT (int): Specifies individual, disconnected points.
+        POLYGON (int): Specifies points defining the vertices of a polygon.
+
+    Args:
+        points (list): List of `specrel.geom.STVector` references.
+        mode (int, optional): See attributes.
+        tag (str, optional): See `specrel.geom.LorentzTransformable`.
+        draw_options (dict, optional): See `specrel.geom.LorentzTransformable`.
+
+    Attributes:
+        mode (int): Drawing mode of the `PointGroup`.
+    &#34;&#34;&#34;
+
+    # Modes for how to treat a PointGroup
+    POINT = 0   # Individual points
+    CONNECT = 1 # Points connected by line segments
+    POLYGON = 2 # Points define vertices of a polygon
+
+    def __init__(self, points, mode=POINT, tag=geomrc[&#39;tag&#39;],
+        draw_options=geomrc[&#39;draw_options&#39;]):
+        # Registered drawing methods for each mode
+        self._MODE_DRAW_METHODS = {
+            PointGroup.POINT: self._draw_point,
+            PointGroup.CONNECT: self._draw_connect,
+            PointGroup.POLYGON: self._draw_polygon
+        }
+        self.mode = mode
+        super().__init__([STVector(p) for p in points],
+            tag=tag, draw_options=draw_options)
+
+    def draw(self, plotter, tlim=geomrc[&#39;tlim&#39;], xlim=geomrc[&#39;xlim&#39;], **kwargs):
+        kwargs = {**self.draw_options, **kwargs}
+        # Fill in automatic limits
+        tlim, xlim = self._fill_auto_lims(tlim, xlim)
+        # Dispatch based on mode
+        self._MODE_DRAW_METHODS[self.mode](plotter, tlim, xlim, **kwargs)
+        # Make sure plot limits are properly set
+        plotter.set_lims(tlim, xlim)
+
+    def _draw_point(self, plotter, tlim, xlim, **kwargs):
+        &#34;&#34;&#34;Drawing for unconnected points&#34;&#34;&#34;
+        super().draw(plotter, tlim, xlim, **kwargs)
+
+    def _draw_connect(self, plotter, tlim, xlim, **kwargs):
+        &#34;&#34;&#34;Drawing for connected line segments&#34;&#34;&#34;
+        # Use the overall collection&#39;s tag on each line segment
+        for p1, p2 in zip(self[:-1], self[1:]):
+            plotter.draw_line_segment(p1, p2, tag=self.tag, **kwargs)
+
+    def _draw_polygon(self, plotter, tlim, xlim, **kwargs):
+        &#34;&#34;&#34;Drawing for points specifying polygon vertices&#34;&#34;&#34;
+        # Use the overall collection&#39;s tag
+        plotter.draw_shaded_polygon(self, tag=self.tag, **kwargs)
+
+def line_segment(point1, point2, tag=geomrc[&#39;tag&#39;],
+    draw_options=geomrc[&#39;draw_options&#39;]):
+    &#34;&#34;&#34;Creates a finite line segment.
+
+    Args:
+        point1 (STVector or iterable): First line segment endpoint.
+        point2 (STVector or iterable): Second line segment endpoint.
+        tag (str, optional): See `specrel.geom.LorentzTransformable`.
+        draw_options (dict, optional): See `specrel.geom.LorentzTransformable`.
+
+    Returns:
+        specrel.geom.PointGroup:
+            Line segment conneting `point1` and `point2`.
+    &#34;&#34;&#34;
+    return PointGroup([point1, point2], PointGroup.CONNECT, tag, draw_options)
+
+def polygon(points, tag=geomrc[&#39;tag&#39;], draw_options=geomrc[&#39;draw_options&#39;]):
+    &#34;&#34;&#34;Creates a finite polygon.
+
+    Args:
+        points (list): Polygon vertices (`specrel.geom.STVector`-convertible).
+        tag (str, optional): See`specrel.geom.LorentzTransformable`.
+        draw_options (dict, optional): See `specrel.geom.LorentzTransformable`.
+
+    Returns:
+        specrel.geom.PointGroup:
+            Polygon with vertices in `points`.
+    &#34;&#34;&#34;
+    return PointGroup(points, PointGroup.POLYGON, tag, draw_options)
+
+class Line(Collection):
+    &#34;&#34;&#34;An infinite line in spacetime.
+
+    Args:
+        direction (specrel.geom.STVector or iterable): Direction vector
+            (dt, dx).
+        point (specrel.geom.STVector or iterable): Point that the line passes
+            through (t0, x0).
+        tag (str, optional): See `specrel.geom.LorentzTransformable`.
+        precision (int, optional): Precision of internal `specrel.geom.STVector`
+            objects.
+        draw_options (str, optional): See `specrel.geom.LorentzTransformable`.
+
+    Attributes:
+        transformables (list): `[direction, point]`.
+
+    Raises:
+        ValueError:
+            Direction vector is zero.
+    &#34;&#34;&#34;
+
+    def __init__(self, direction, point, tag=geomrc[&#39;tag&#39;],
+        precision=geomrc[&#39;precision&#39;], draw_options=geomrc[&#39;draw_options&#39;]):
+        # Zero direction would give a point geometrically, but would make
+        # intersection calculation, etc. more annoying
+        if STVector(direction, precision=precision) == (0, 0):
+            raise ValueError(&#39;Direction vector cannot be zero&#39;)
+        super().__init__([STVector(direction, precision=precision),
+            STVector(point, precision=precision)],
+            tag=tag, draw_options=draw_options)
+
+    def __str__(self):
+        &#34;&#34;&#34;Vector parameterization of the line as a string.
+        E.g. Line( [t, x] = [3, 4] + k*[1, 1] )&#34;&#34;&#34;
+        precision = self.precision()
+        return f&#39;Line( [t, x] = [{round(self.point()[0], precision)}, &#39; \
+            + f&#39;{round(self.point()[1], precision)}]&#39; \
+            + f&#39; + k*[{round(self.direction()[0], precision)}, &#39; \
+            + f&#39;{round(self.direction()[1], precision)}] )&#39;
+
+    def __eq__(self, other):
+        # Equality is just one of the outcomes in the intersection method
+        # The returned value will be a Line iff the lines are equal
+        return isinstance(self.intersect(other), Line)
+
+    def __ne__(self, other):
+        return not (self == other)
+
+    def append(self, other):
+        &#34;&#34;&#34;Disabled; will raise a `TypeError`.&#34;&#34;&#34;
+        raise TypeError(&#34;Cannot append to object of type &#39;Line&#39;&#34;)
+
+    def lorentz_transform(self, velocity, origin=geomrc[&#39;origin&#39;]):
+        # If the origin is shifted, apply the shifted transform only to the
+        # point, and not the direction
+        self.point().lorentz_transform(velocity, origin)
+        self.direction().lorentz_transform(velocity)
+
+    def direction(self):
+        &#34;&#34;&#34;
+        Returns:
+            specrel.geom.STVector:
+                Line direction vector.
+        &#34;&#34;&#34;
+        return self[0]
+
+    &#34;&#34;&#34;A point that the line passes through&#34;&#34;&#34;
+    def point(self):
+        &#34;&#34;&#34;
+        Returns:
+            specrel.geom.STVector:
+                Some point the line passes through.
+        &#34;&#34;&#34;
+        return self[1]
+
+    def precision(self):
+        &#34;&#34;&#34;
+        Returns:
+            int:
+                Floating-point precision of internal `specrel.geom.STVector`
+                objects.
+        &#34;&#34;&#34;
+        return min([p.precision for p in self])
+
+    def slope(self):
+        &#34;&#34;&#34;
+        Returns:
+            float:
+                Slope of the line dt/dx if not vertical.
+            NoneType:
+                `None` if vertical.
+        &#34;&#34;&#34;
+        if self.direction().x == 0:
+            return None
+        return self.direction().t / self.direction().x
+
+    def intersect(self, other):
+        &#34;&#34;&#34;Calculates intersection between two lines.
+
+        Args:
+            other (specrel.geom.Line): Other line to intersect with.
+
+        Returns:
+            specrel.geom.STVector:
+                Single intersection point if the lines meet at a point.
+            Line:
+                Line of intersection if the lines are equal.
+            NoneType:
+                `None` if the lines don&#39;t intersect.
+        &#34;&#34;&#34;
+        # Compare up to the precision of the two lines
+        precision = min(self.precision(), other.precision())
+
+        # Solution for the parameterization variable at the intersection point
+        # from doing algebra
+        # self is the line: self.point() + lineparam * self.direction()
+        lineparam_numerator = (
+            other.point().x * other.direction().t
+            - other.point().t * other.direction().x
+            + other.direction().x * self.point().t
+            - other.direction().t * self.point().x)
+        lineparam_denominator = (
+            self.direction().x * other.direction().t
+            - self.direction().t * other.direction().x)
+
+        # Zero denominator means the lines have equal slope
+        if round(lineparam_denominator, precision) == 0:
+            # 0/0 means the lines are equal
+            # otherwise, the lines are parallel
+            if round(lineparam_numerator, precision) == 0:
+                return copy.deepcopy(self)
+            else:
+                return None
+
+        # Lines intersect at a point
+        lineparam = lineparam_numerator / lineparam_denominator
+        return STVector(
+            self.point().t + lineparam * self.direction().t,
+            self.point().x + lineparam * self.direction().x,
+            precision=precision)
+
+    def _boundary_intersections(self, tlim, xlim):
+        &#34;&#34;&#34;Returns a list of point intersections of a line with the time and
+        space boundaries, sorted in ascending order by time, then space&#34;&#34;&#34;
+        # The four sides of the bounding box
+        boundaries = [
+            fixedtime(tlim[0]), fixedtime(tlim[1]),
+            fixedspace(xlim[0]), fixedspace(xlim[1])
+        ]
+        boundary_points = []    # Intersected points on the bounding box
+        for bound in boundaries:
+            # If the line is parallel to one set of bounds, it will cross the
+            # perpendicular bounds; just skip
+            crossing = self.intersect(bound)
+            if isinstance(crossing, Line) or crossing is None:
+                continue
+            # Add it to the boundary point list if it&#39;s not already there
+            if crossing not in boundary_points:
+                boundary_points.append(crossing)
+        return sorted(boundary_points, key=lambda p:(p.t, p.x))
+
+    def draw(self, plotter, tlim=geomrc[&#39;tlim&#39;], xlim=geomrc[&#39;xlim&#39;], **kwargs):
+        kwargs = {**self.draw_options, **kwargs}
+        # Fill in automatic limits
+        tlim, xlim = self._fill_auto_lims(tlim, xlim)
+
+        # Clip to the bounding box, and add keep points if they&#39;re in-bounds
+        boundary_points = [p for p in self._boundary_intersections(tlim, xlim)
+            if p._in_bounds(tlim, xlim)]
+        # This shouldn&#39;t happen, but issue a warning and fall back to the first
+        # and last points if it does
+        if len(boundary_points) &gt; 2:
+            warnings.warn(&#39;Clipped line has more than two endpoints. &#39;
+                &#39;Floating point error with a corner clip?&#39;)
+            boundary_points = [boundary_points[0], boundary_points[-1]]
+
+        # Plot the clipped line segment
+        if len(boundary_points) == 2:
+            plotter.draw_line_segment(*boundary_points, tag=self.tag, **kwargs)
+        # One boundary point means the line clips a corner; just plot the point
+        elif len(boundary_points) == 1:
+            # Use the line&#39;s tag
+            STVector(boundary_points[0], tag=self.tag).draw(
+                plotter, tlim, xlim, **kwargs)
+        # No boundary points means the line is completely out of frame, so
+        # do nothing
+
+        # Make sure plot limits are properly set
+        plotter.set_lims(tlim, xlim)
+
+    def _auto_draw_lims(self):
+        # Go one step of the direction vector forward and backward from the
+        # anchor point
+        forward = self.point() + self.direction()
+        backward = self.point() - self.direction()
+        tmin = min(forward.t, backward.t)
+        tmax = max(forward.t, backward.t)
+        xmin = min(forward.x, backward.x)
+        xmax = max(forward.x, backward.x)
+        return (tmin, tmax), (xmin, xmax)
+
+def fixedspace(position, tag=geomrc[&#39;tag&#39;],
+    draw_options=geomrc[&#39;draw_options&#39;]):
+    &#34;&#34;&#34;Creates a line of fixed space at some position value (vertical line)
+    across all time.
+
+    Args:
+        position (float): Constant position value of the line.
+        tag (str, optional): See `specrel.geom.LorentzTransformable`.
+        draw_options (dict, optional): See `specrel.geom.LorentzTransformable`.
+
+    Returns:
+        specrel.geom.Line:
+            Line of fixed space, x = `position`.
+    &#34;&#34;&#34;
+    return Line((1, 0), (0, position), tag=tag, draw_options=draw_options)
+
+def fixedtime(time, tag=geomrc[&#39;tag&#39;], draw_options=geomrc[&#39;draw_options&#39;]):
+    &#34;&#34;&#34;Creates a line of fixed space at some position value (vertical line)
+    across all space.
+
+    Args:
+        time (float): Constant time value of the line.
+        tag (str, optional): See `specrel.geom.LorentzTransformable`.
+        draw_options (dict, optional): See `specrel.geom.LorentzTransformable`.
+
+    Returns:
+        specrel.geom.Line:
+            Line of fixed time, t = `time`.
+    &#34;&#34;&#34;
+    return Line((0, 1), (time, 0), tag=tag, draw_options=draw_options)
+
+class Ray(Line):
+    &#34;&#34;&#34;An infinite ray in spacetime. Starting from `point`.&#34;&#34;&#34;
+
+    def __str__(self):
+        &#34;&#34;&#34;Same format as a line, but with a qualifier that k &gt;= 0.&#34;&#34;&#34;
+        raystr = super().__str__().replace(&#39;Line&#39;, &#39;Ray&#39;)
+        close_paren = raystr.rfind(&#39;)&#39;)
+        return raystr[:close_paren] + &#39;where k &gt;= 0 &#39; + raystr[close_paren:]
+
+    def __eq__(self, other):
+        return (
+            self.point() == other.point() and
+            self.slope() == other.slope() and
+            self.direction().t * other.direction().t &gt;= 0 and
+            self.direction().x * other.direction().x &gt;= 0
+        )
+
+    def __ne__(self, other):
+        return not (self == other)
+
+    def append(self, other):
+        raise TypeError(&#34;Cannot append to object of type &#39;Ray&#39;&#34;)
+
+    def point_dotprod(self, point):
+        &#34;&#34;&#34;Calculates the dot product between the vector from the Ray&#39;s anchor
+        to a point, and the Ray&#39;s direction vector.
+
+        Args:
+            point (`specrel.geom.STVector`): Endpoint defining one of the dot
+                product arguments.
+
+        Returns:
+            float:
+                Dot product between the anchor-point and direction vectors.
+        &#34;&#34;&#34;
+        return sum([(x - p)*d for x, p, d in zip(
+            point, self.point(), self.direction())])
+
+    def intersect(self, line):
+        &#34;&#34;&#34;Intersection point between a ray and a line. Similar to
+        `specrel.geom.Line.intersect`, but returns never returns a
+        `specrel.geom.Line`, and returns a `Ray` if the ray and line coincide.
+        &#34;&#34;&#34;
+        # Pretend this is a full line to start
+        ll_intersect = super().intersect(line)
+        if ll_intersect is None:
+            # If no intersection, one object being a Ray won&#39;t change anything
+            return ll_intersect
+        if isinstance(ll_intersect, Line):
+            return copy.deepcopy(self)  # Replace the full line with the Ray
+
+        precision = min(self.precision(), line.precision())
+        if round(self.point_dotprod(ll_intersect), precision) &lt; 0:
+            # The intersection is opposite to the Ray&#39;s direction; i.e. no
+            # actual intersection
+            return None
+        return ll_intersect
+
+    def _auto_draw_lims(self):
+        # Go one step of the direction vector forward from the anchor point
+        forward = self.point() + self.direction()
+        tmin = min(forward.t, self.point().t)
+        tmax = max(forward.t, self.point().t)
+        xmin = min(forward.x, self.point().x)
+        xmax = max(forward.x, self.point().x)
+        return (tmin, tmax), (xmin, xmax)
+
+    def _boundary_intersections(self, tlim, xlim):
+        &#34;&#34;&#34;Returns a list of point intersections of a ray with the time and
+        space boundaries, sorted in ascending order by time, then space,
+        including the ray endpoint&#34;&#34;&#34;
+        boundary_points = super()._boundary_intersections(tlim, xlim)
+        # Add the ray endpoint
+        if self.point() not in boundary_points:
+            boundary_points.append(self.point())
+        # Re-sort, since a new point was added
+        return sorted(boundary_points, key=lambda p:(p.t, p.x))
+
+class Ribbon(Collection):
+    &#34;&#34;&#34;The region between two parallel spacetime lines.
+
+    Args:
+        line1 (specrel.geom.Line): First line defining the ribbon.
+        line2 (specrel.geom.Line): Second line defining the ribbon.
+        tag (str, optional): See `specrel.geom.LorentzTransformable`.
+        draw_options (dict, optional): See `specrel.geom.LorentzTransformable`.
+
+    Attributes:
+        transformables (list): `[line1, line2]`
+
+    Raises:
+        ValueError:
+            Lines are not parallel.
+    &#34;&#34;&#34;
+    def __init__(self, line1, line2, tag=geomrc[&#39;tag&#39;],
+        draw_options=geomrc[&#39;draw_options&#39;]):
+        if line1.slope() != line2.slope():
+            raise ValueError(&#39;Lines must be parallel&#39;)
+        super().__init__([copy.deepcopy(line1), copy.deepcopy(line2)],
+            tag=tag, draw_options=draw_options)
+
+    def append(self, other):
+        &#34;&#34;&#34;Disabled; will raise a `TypeError`.&#34;&#34;&#34;
+        raise TypeError(&#34;Cannot append to object of type &#39;Ribbon&#39;&#34;)
+
+    def _point_inside(self, point):
+        &#34;&#34;&#34;Test whether a point lies inside the two line boundaries&#34;&#34;&#34;
+        # Compare up to the precision of the two lines and the point
+        precision = min(self[0].precision(), self[1].precision())
+        try:    # If point is an STVector
+            precision = min(precision, point.precision)
+        except:
+            pass
+
+        # The lines will be parallel, so just take the direction vector from
+        # the first line
+        direction = self[0].direction()
+        # Lines follow the equation dx*t - dt*x = k
+        # The constant &#34;k&#34; of the point (t, x) must be between those of the two
+        # line boundaries
+        def calc_line_constant(p):
+            return round(direction.x * p[0] - direction.t * p[1], precision)
+        boundary_constants = sorted(
+            [calc_line_constant(line.point()) for line in self]
+        )
+        point_constant = calc_line_constant(point)
+        return (round(point_constant, precision)
+            &gt;= round(boundary_constants[0], precision)
+            and round(point_constant, precision)
+            &lt;= round(boundary_constants[1], precision))
+
+    def _boundaries(self):
+        &#34;&#34;&#34;Get a list of hard boundaries (i.e. the line boundaries)&#34;&#34;&#34;
+        return list(self)
+
+    def _get_vertices(self, tlim, xlim):
+        &#34;&#34;&#34;Get the polygon vertices for drawing the ribbon in a given view
+        range&#34;&#34;&#34;
+        vertices = []
+        # Gather all the unique candidates for vertices; all intersections
+        # between all boundaries, essentially
+        for line in self._boundaries():
+            for p in line._boundary_intersections(tlim, xlim):
+                if p not in vertices:
+                    vertices.append(p)
+        # Corners of the bounds, too
+        for tcorner in tlim:
+            for xcorner in xlim:
+                corner = STVector(tcorner, xcorner)
+                if corner not in vertices:
+                    vertices.append(corner)
+
+        # Filter out candidate points, keeping only those that are both in
+        # bounds, and inside the HalfRibbon region
+        vertices = [p for p in vertices if
+            (p._in_bounds(tlim, xlim) and self._point_inside(p))]
+        # If no vertices, just return empty
+        if not vertices:
+            return vertices
+        # Otherwise, order the vertices by the angle they make with the
+        # centroid of the polygon
+        tvals, xvals = tuple(zip(*vertices))
+        t_center = sum(tvals) / len(tvals)
+        x_center = sum(xvals) / len(xvals)
+        return sorted(vertices, key=lambda v: atan2(
+            v.t - t_center, v.x - x_center))
+
+    def draw(self, plotter, tlim=geomrc[&#39;tlim&#39;], xlim=geomrc[&#39;xlim&#39;], **kwargs):
+        kwargs = {**self.draw_options, **kwargs}
+        tlim, xlim = self._fill_auto_lims(tlim, xlim)
+
+        # If the two lines are equal, treat it like a line, but use the main
+        # ribbon tag
+        if self[0] == self[1]:
+            ln = copy.deepcopy(self[0])
+            ln.tag = self.tag
+            ln.draw(plotter, tlim, xlim, **kwargs)
+            return
+
+        # Only draw if there are vertices in bounds
+        vertices = self._get_vertices(tlim, xlim)
+        if not vertices:
+            return
+
+        # Set aside &#34;edgecolor&#34; for special treatment
+        edgecolor = kwargs.pop(&#39;edgecolor&#39;, geomrc[&#39;ribbon.default_edgecolor&#39;])
+        plotter.draw_shaded_polygon(vertices, tag=self.tag, **kwargs)
+        # Plot the ribbon edges
+        if edgecolor.lower() != &#39;none&#39;:
+            # Remove facecolor
+            kwargs.pop(&#39;facecolor&#39;, None)
+            # Only include a label for the face, not the edges
+            kwargs.pop(&#39;label&#39;, None)
+            # If color was given, override edgecolor
+            if &#39;color&#39; in kwargs:
+                edgecolor = kwargs.pop(&#39;color&#39;)
+            # Make the zorder of the borders match that of the patch
+            # zorder of 1 by default
+            zorder = kwargs.pop(&#39;zorder&#39;, 1)
+            for line in self:
+                line.draw(plotter, tlim, xlim, color=edgecolor, zorder=zorder,
+                    **kwargs)
+
+class HalfRibbon(Ribbon):
+    &#34;&#34;&#34;The region between two parallel spacetime rays. See
+    `specrel.geom.Ribbon`.
+    &#34;&#34;&#34;
+    def __init__(self, ray1, ray2, tag=geomrc[&#39;tag&#39;],
+        draw_options=geomrc[&#39;draw_options&#39;]):
+        # PARALLEL; antiparallel isn&#39;t good enough
+        if (ray1.slope() != ray2.slope() or
+            ray1.direction().t * ray2.direction().t &lt; 0 or
+            ray1.direction().x * ray2.direction().x &lt; 0):
+            raise ValueError(&#39;Rays must be parallel&#39;)
+        super().__init__(copy.deepcopy(ray1), copy.deepcopy(ray2),
+            tag=tag, draw_options=draw_options)
+
+    def append(self, other):
+        raise TypeError(&#34;Cannot append to object of type &#39;HalfRibbon&#39;&#34;)
+
+    &#34;&#34;&#34;Get a list of hard boundaries (ray anchors and line boundaries)&#34;&#34;&#34;
+    def _boundaries(self):
+        # Add the separation line between the two Ray anchors as a hard
+        # boundary
+        direction = self[1].point() - self[0].point()
+        return super()._boundaries() + [Line(direction, self[0].point())]
+
+    &#34;&#34;&#34;Test whether a point lies between the two ray boundaries&#34;&#34;&#34;
+    def _point_inside(self, point):
+        def dotprod(vec1, vec2):
+            return sum([v1*v2 for v1, v2 in zip(vec1, vec2)])
+
+        # Compare up to the precision of the two rays and the point
+        precision = min(self[0].precision(), self[1].precision())
+        try:    # If point is an STVector
+            precision = min(precision, point.precision)
+        except:
+            pass
+
+        # Get a normal vector to the line connecting the two anchors of the
+        # HalfRibbon&#39;s rays. Namely, get the separation vector, then swap the
+        # components and make one of them negative. There are two options.
+        # Pick the normal vector that points outwards from the interior;
+        # i.e. the dot product between the normal vector and the ray direction
+        # vectors should be negative.
+        sep_vec = self[1].point() - self[0].point()
+        normal_vecs = [STVector(-sep_vec[1], sep_vec[0]),
+                       STVector(sep_vec[1], -sep_vec[0])]
+        # Pick the normal vector that points outward.
+        # The equality is for when the two rays coincide; the normal vectors
+        # will both either be zero or orthogonal to the rays, so neither will
+        # get filtered out. Just pick the first one; it won&#39;t matter in this
+        # case.
+        normal_vec = [n for n in normal_vecs
+            if dotprod(n, self[0].direction()) &lt;= 0][0]
+
+        # Get the displacement vector from the point to one of the ray&#39;s
+        # anchors (it doesn&#39;t matter which). The point is on the &#34;interior&#34;
+        # side of the anchors if and only if the dot product between this
+        # separation vector and the normal vector is nonnegative.
+        #
+        # The full Ribbon&#39;s _point_inside method can check for whether or not
+        # the point lies laterally between the two rays
+        disp_vec = self[0].point() - STVector(point)
+        return (round(dotprod(disp_vec, normal_vec), precision) &gt;= 0
+            and super()._point_inside(point))</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-variables">Global variables</h2>
+<dl>
+<dt id="specrel.geom.geomrc"><code class="name">var <span class="ident">geomrc</span></code></dt>
+<dd>
+<section class="desc"><p>Contains default parameters shared by various classes and functions in <code>geom</code>.</p>
+<h2 id="items">Items</h2>
+<ul>
+<li><strong>origin</strong>: <code>(0, 0)</code><ul>
+<li>Origin used for Lorentz transformations, in the form (t, x).</li>
+</ul>
+</li>
+<li><strong>tlim</strong>: <code>(None, None)</code><ul>
+<li>Time drawing limits. See <a title="specrel.geom.LorentzTransformable.draw" href="#specrel.geom.LorentzTransformable.draw"><code>LorentzTransformable.draw()</code></a>.</li>
+</ul>
+</li>
+<li><strong>xlim</strong>: <code>(None, None)</code><ul>
+<li>Position drawing limits. See <a title="specrel.geom.LorentzTransformable.draw" href="#specrel.geom.LorentzTransformable.draw"><code>LorentzTransformable.draw()</code></a>.</li>
+</ul>
+</li>
+<li><strong>precision</strong>: <code>7</code><ul>
+<li>Floating-point precision (number of decimal places) for internal
+comparisons.</li>
+</ul>
+</li>
+<li><strong>tag</strong>: <code>None</code><ul>
+<li>Object tag, see <a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a>.</li>
+</ul>
+</li>
+<li><strong>draw_options</strong>: <code>{}</code><ul>
+<li>Object draw options, see <a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a>.</li>
+</ul>
+</li>
+<li><strong>ribbon.default_edgecolor</strong>: <code>'black'</code><ul>
+<li>Default edge color for drawing <a title="specrel.geom.Ribbon" href="#specrel.geom.Ribbon"><code>Ribbon</code></a> objects.</li>
+</ul>
+</li>
+</ul></section>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="specrel.geom.fixedspace"><code class="name flex">
+<span>def <span class="ident">fixedspace</span></span>(<span>position, tag=None, draw_options={})</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Creates a line of fixed space at some position value (vertical line)
+across all time.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>position</code></strong> :&ensp;<code>float</code></dt>
+<dd>Constant position value of the line.</dd>
+<dt><strong><code>tag</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>See <a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a>.</dd>
+<dt><strong><code>draw_options</code></strong> :&ensp;<code>dict</code>, optional</dt>
+<dd>See <a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a>.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="specrel.geom.Line" href="#specrel.geom.Line"><code>Line</code></a>:</dt>
+<dd>Line of fixed space, x = <code>position</code>.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def fixedspace(position, tag=geomrc[&#39;tag&#39;],
+    draw_options=geomrc[&#39;draw_options&#39;]):
+    &#34;&#34;&#34;Creates a line of fixed space at some position value (vertical line)
+    across all time.
+
+    Args:
+        position (float): Constant position value of the line.
+        tag (str, optional): See `specrel.geom.LorentzTransformable`.
+        draw_options (dict, optional): See `specrel.geom.LorentzTransformable`.
+
+    Returns:
+        specrel.geom.Line:
+            Line of fixed space, x = `position`.
+    &#34;&#34;&#34;
+    return Line((1, 0), (0, position), tag=tag, draw_options=draw_options)</code></pre>
+</details>
+</dd>
+<dt id="specrel.geom.fixedtime"><code class="name flex">
+<span>def <span class="ident">fixedtime</span></span>(<span>time, tag=None, draw_options={})</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Creates a line of fixed space at some position value (vertical line)
+across all space.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>time</code></strong> :&ensp;<code>float</code></dt>
+<dd>Constant time value of the line.</dd>
+<dt><strong><code>tag</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>See <a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a>.</dd>
+<dt><strong><code>draw_options</code></strong> :&ensp;<code>dict</code>, optional</dt>
+<dd>See <a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a>.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="specrel.geom.Line" href="#specrel.geom.Line"><code>Line</code></a>:</dt>
+<dd>Line of fixed time, t = <code>time</code>.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def fixedtime(time, tag=geomrc[&#39;tag&#39;], draw_options=geomrc[&#39;draw_options&#39;]):
+    &#34;&#34;&#34;Creates a line of fixed space at some position value (vertical line)
+    across all space.
+
+    Args:
+        time (float): Constant time value of the line.
+        tag (str, optional): See `specrel.geom.LorentzTransformable`.
+        draw_options (dict, optional): See `specrel.geom.LorentzTransformable`.
+
+    Returns:
+        specrel.geom.Line:
+            Line of fixed time, t = `time`.
+    &#34;&#34;&#34;
+    return Line((0, 1), (time, 0), tag=tag, draw_options=draw_options)</code></pre>
+</details>
+</dd>
+<dt id="specrel.geom.line_segment"><code class="name flex">
+<span>def <span class="ident">line_segment</span></span>(<span>point1, point2, tag=None, draw_options={})</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Creates a finite line segment.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>point1</code></strong> :&ensp;<a title="specrel.geom.STVector" href="#specrel.geom.STVector"><code>STVector</code></a> or <code>iterable</code></dt>
+<dd>First line segment endpoint.</dd>
+<dt><strong><code>point2</code></strong> :&ensp;<a title="specrel.geom.STVector" href="#specrel.geom.STVector"><code>STVector</code></a> or <code>iterable</code></dt>
+<dd>Second line segment endpoint.</dd>
+<dt><strong><code>tag</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>See <a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a>.</dd>
+<dt><strong><code>draw_options</code></strong> :&ensp;<code>dict</code>, optional</dt>
+<dd>See <a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a>.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="specrel.geom.PointGroup" href="#specrel.geom.PointGroup"><code>PointGroup</code></a>:</dt>
+<dd>Line segment conneting <code>point1</code> and <code>point2</code>.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def line_segment(point1, point2, tag=geomrc[&#39;tag&#39;],
+    draw_options=geomrc[&#39;draw_options&#39;]):
+    &#34;&#34;&#34;Creates a finite line segment.
+
+    Args:
+        point1 (STVector or iterable): First line segment endpoint.
+        point2 (STVector or iterable): Second line segment endpoint.
+        tag (str, optional): See `specrel.geom.LorentzTransformable`.
+        draw_options (dict, optional): See `specrel.geom.LorentzTransformable`.
+
+    Returns:
+        specrel.geom.PointGroup:
+            Line segment conneting `point1` and `point2`.
+    &#34;&#34;&#34;
+    return PointGroup([point1, point2], PointGroup.CONNECT, tag, draw_options)</code></pre>
+</details>
+</dd>
+<dt id="specrel.geom.lorentz_boosted"><code class="name flex">
+<span>def <span class="ident">lorentz_boosted</span></span>(<span>transformable, velocity, origin=(0, 0))</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Lorentz boosts an object and returns a copy. Equivalent to a Lorentz
+transform with <code>-velocity</code>. See <a title="specrel.geom.lorentz_transformed" href="#specrel.geom.lorentz_transformed"><code>lorentz_transformed()</code></a>.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def lorentz_boosted(transformable, velocity, origin=geomrc[&#39;origin&#39;]):
+    &#34;&#34;&#34;Lorentz boosts an object and returns a copy. Equivalent to a Lorentz
+    transform with `-velocity`. See `specrel.geom.lorentz_transformed`.
+    &#34;&#34;&#34;
+    boosted = copy.deepcopy(transformable)
+    boosted.lorentz_boost(velocity, origin)
+    return boosted</code></pre>
+</details>
+</dd>
+<dt id="specrel.geom.lorentz_transformed"><code class="name flex">
+<span>def <span class="ident">lorentz_transformed</span></span>(<span>transformable, velocity, origin=(0, 0))</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Lorentz transforms an object and returns a copy.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>transformable</code></strong> :&ensp;<a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a></dt>
+<dd>Object to Lorentz
+transform.</dd>
+<dt><strong><code>velocity</code></strong> :&ensp;<code>float</code></dt>
+<dd>Lorentz transformation velocity.</dd>
+<dt><strong><code>origin</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>Origin of Lorentz transformation, in the form
+(t, x).</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a>:</dt>
+<dd>Transformed copy of <code>transformable</code>.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def lorentz_transformed(transformable, velocity, origin=geomrc[&#39;origin&#39;]):
+    &#34;&#34;&#34;Lorentz transforms an object and returns a copy.
+
+    Args:
+        transformable (specrel.geom.LorentzTransformable): Object to Lorentz
+            transform.
+        velocity (float): Lorentz transformation velocity.
+        origin (tuple, optional): Origin of Lorentz transformation, in the form
+            (t, x).
+
+    Returns:
+        specrel.geom.LorentzTransformable:
+            Transformed copy of `transformable`.
+    &#34;&#34;&#34;
+    transformed = copy.deepcopy(transformable)
+    transformed.lorentz_transform(velocity, origin)
+    return transformed</code></pre>
+</details>
+</dd>
+<dt id="specrel.geom.polygon"><code class="name flex">
+<span>def <span class="ident">polygon</span></span>(<span>points, tag=None, draw_options={})</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Creates a finite polygon.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>points</code></strong> :&ensp;<code>list</code></dt>
+<dd>Polygon vertices (<a title="specrel.geom.STVector" href="#specrel.geom.STVector"><code>STVector</code></a>-convertible).</dd>
+<dt><strong><code>tag</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>See<a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a>.</dd>
+<dt><strong><code>draw_options</code></strong> :&ensp;<code>dict</code>, optional</dt>
+<dd>See <a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a>.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="specrel.geom.PointGroup" href="#specrel.geom.PointGroup"><code>PointGroup</code></a>:</dt>
+<dd>Polygon with vertices in <code>points</code>.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def polygon(points, tag=geomrc[&#39;tag&#39;], draw_options=geomrc[&#39;draw_options&#39;]):
+    &#34;&#34;&#34;Creates a finite polygon.
+
+    Args:
+        points (list): Polygon vertices (`specrel.geom.STVector`-convertible).
+        tag (str, optional): See`specrel.geom.LorentzTransformable`.
+        draw_options (dict, optional): See `specrel.geom.LorentzTransformable`.
+
+    Returns:
+        specrel.geom.PointGroup:
+            Polygon with vertices in `points`.
+    &#34;&#34;&#34;
+    return PointGroup(points, PointGroup.POLYGON, tag, draw_options)</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="specrel.geom.Collection"><code class="flex name class">
+<span>class <span class="ident">Collection</span></span>
+<span>(</span><span>transformables=(), tag=None, draw_options={})</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Collection of <a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a> objects. Holds
+references, rather than copies, similar to a <code>list</code>. Operations like
+<a title="specrel.geom.Collection.lorentz_transform" href="#specrel.geom.LorentzTransformable.lorentz_transform"><code>Collection.lorentz_transform()</code></a> and <a title="specrel.geom.Collection.draw" href="#specrel.geom.LorentzTransformable.draw"><code>Collection.draw()</code></a> act on all elements in
+the <a title="specrel.geom.Collection" href="#specrel.geom.Collection"><code>Collection</code></a>.</p>
+<p>Has similar API to the <code>list</code>, such as indexing, iteration, using <code>len()</code>,
+appending entries, and popping entries.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>transformables</code></strong> :&ensp;<code>list</code></dt>
+<dd>list of <a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a>
+references.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">class Collection(LorentzTransformable):
+    &#34;&#34;&#34;Collection of `specrel.geom.LorentzTransformable` objects. Holds
+    references, rather than copies, similar to a `list`. Operations like
+    `Collection.lorentz_transform` and `Collection.draw` act on all elements in
+    the `Collection`.
+
+    Has similar API to the `list`, such as indexing, iteration, using `len()`,
+    appending entries, and popping entries.
+
+    Attributes:
+        transformables (list): list of `specrel.geom.LorentzTransformable`
+            references.
+    &#34;&#34;&#34;
+
+    def __init__(self, transformables=(), tag=geomrc[&#39;tag&#39;],
+        draw_options=geomrc[&#39;draw_options&#39;]):
+        super().__init__(tag=tag, draw_options=draw_options)
+        self.transformables = []
+        for tr in transformables:
+            self.transformables.append(tr)
+
+    def __getitem__(self, key):
+        return self.transformables[key]
+
+    def __iter__(self):
+        yield from self.transformables
+
+    def __len__(self):
+        return len(self.transformables)
+
+    def append(self, transformable):
+        &#34;&#34;&#34;Append an element to the `Collection`.
+
+        Args:
+            transformable (`specrel.geom.LorentzTransformable`): Reference to
+                append to the `Collection`.
+
+        Raises:
+            ValueError:
+                If appended object is not a `specrel.geom.LorentzTransformable`.
+        &#34;&#34;&#34;
+        if not isinstance(transformable, LorentzTransformable):
+            raise ValueError(&#39;Appended object must be LorentzTransformable&#39;)
+        self.transformables.append(transformable)
+
+    def pop(self, pos=-1):
+        &#34;&#34;&#34;Pop an element from the `Collection`.
+
+        Args:
+            pos (int, optional): Position of element to pop.
+
+        Returns:
+            specrel.geom.LorentzTransformable:
+                Element at `pos`.
+        &#34;&#34;&#34;
+        return self.transformables.pop(pos)
+
+    def lorentz_transform(self, velocity, origin=geomrc[&#39;origin&#39;]):
+        for tr in self:
+            tr.lorentz_transform(velocity, origin)
+
+    def draw(self, plotter, tlim=geomrc[&#39;tlim&#39;], xlim=geomrc[&#39;xlim&#39;], **kwargs):
+        # Cannot draw an empty collection, so just do nothing
+        if len(self) == 0:
+            warnings.warn(&#39;Nothing to draw&#39;)
+            return
+        kwargs = {**self.draw_options, **kwargs}
+        # Fill in automatic limits
+        tlim, xlim = self._fill_auto_lims(tlim, xlim)
+        # Plot each transformable with the same limits
+        for tr in self:
+            tr.draw(plotter, tlim, xlim, **kwargs)
+        # Make sure plot limits are properly set
+        plotter.set_lims(tlim, xlim)
+
+    def _auto_draw_lims(self):
+        tmin, tmax, xmin, xmax = None, None, None, None
+        for tr in self:
+            (new_tmin, new_tmax), (new_xmin, new_xmax) = tr._auto_draw_lims()
+            tmin = new_tmin if tmin is None else min(tmin, new_tmin)
+            tmax = new_tmax if tmax is None else max(tmax, new_tmax)
+            xmin = new_xmin if xmin is None else min(xmin, new_xmin)
+            xmax = new_xmax if xmax is None else max(xmax, new_xmax)
+        return (tmin, tmax), (xmin, xmax)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable">LorentzTransformable</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="specrel.geom.PointGroup" href="#specrel.geom.PointGroup">PointGroup</a></li>
+<li><a title="specrel.geom.Line" href="#specrel.geom.Line">Line</a></li>
+<li><a title="specrel.geom.Ribbon" href="#specrel.geom.Ribbon">Ribbon</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="specrel.geom.Collection.append"><code class="name flex">
+<span>def <span class="ident">append</span></span>(<span>self, transformable)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Append an element to the <a title="specrel.geom.Collection" href="#specrel.geom.Collection"><code>Collection</code></a>.</p>
+<h2 id="args">Args</h2>
+<p>transformable (<a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a>): Reference to
+append to the <a title="specrel.geom.Collection" href="#specrel.geom.Collection"><code>Collection</code></a>.</p>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>ValueError</code>:</dt>
+<dd>If appended object is not a <a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a>.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def append(self, transformable):
+    &#34;&#34;&#34;Append an element to the `Collection`.
+
+    Args:
+        transformable (`specrel.geom.LorentzTransformable`): Reference to
+            append to the `Collection`.
+
+    Raises:
+        ValueError:
+            If appended object is not a `specrel.geom.LorentzTransformable`.
+    &#34;&#34;&#34;
+    if not isinstance(transformable, LorentzTransformable):
+        raise ValueError(&#39;Appended object must be LorentzTransformable&#39;)
+    self.transformables.append(transformable)</code></pre>
+</details>
+</dd>
+<dt id="specrel.geom.Collection.pop"><code class="name flex">
+<span>def <span class="ident">pop</span></span>(<span>self, pos=-1)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Pop an element from the <a title="specrel.geom.Collection" href="#specrel.geom.Collection"><code>Collection</code></a>.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>pos</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>Position of element to pop.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a>:</dt>
+<dd>Element at <code>pos</code>.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def pop(self, pos=-1):
+    &#34;&#34;&#34;Pop an element from the `Collection`.
+
+    Args:
+        pos (int, optional): Position of element to pop.
+
+    Returns:
+        specrel.geom.LorentzTransformable:
+            Element at `pos`.
+    &#34;&#34;&#34;
+    return self.transformables.pop(pos)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable">LorentzTransformable</a></b></code>:
+<ul class="hlist">
+<li><code><a title="specrel.geom.LorentzTransformable.draw" href="#specrel.geom.LorentzTransformable.draw">draw</a></code></li>
+<li><code><a title="specrel.geom.LorentzTransformable.lorentz_boost" href="#specrel.geom.LorentzTransformable.lorentz_boost">lorentz_boost</a></code></li>
+<li><code><a title="specrel.geom.LorentzTransformable.lorentz_transform" href="#specrel.geom.LorentzTransformable.lorentz_transform">lorentz_transform</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="specrel.geom.HalfRibbon"><code class="flex name class">
+<span>class <span class="ident">HalfRibbon</span></span>
+<span>(</span><span>ray1, ray2, tag=None, draw_options={})</span>
+</code></dt>
+<dd>
+<section class="desc"><p>The region between two parallel spacetime rays. See
+<a title="specrel.geom.Ribbon" href="#specrel.geom.Ribbon"><code>Ribbon</code></a>.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">class HalfRibbon(Ribbon):
+    &#34;&#34;&#34;The region between two parallel spacetime rays. See
+    `specrel.geom.Ribbon`.
+    &#34;&#34;&#34;
+    def __init__(self, ray1, ray2, tag=geomrc[&#39;tag&#39;],
+        draw_options=geomrc[&#39;draw_options&#39;]):
+        # PARALLEL; antiparallel isn&#39;t good enough
+        if (ray1.slope() != ray2.slope() or
+            ray1.direction().t * ray2.direction().t &lt; 0 or
+            ray1.direction().x * ray2.direction().x &lt; 0):
+            raise ValueError(&#39;Rays must be parallel&#39;)
+        super().__init__(copy.deepcopy(ray1), copy.deepcopy(ray2),
+            tag=tag, draw_options=draw_options)
+
+    def append(self, other):
+        raise TypeError(&#34;Cannot append to object of type &#39;HalfRibbon&#39;&#34;)
+
+    &#34;&#34;&#34;Get a list of hard boundaries (ray anchors and line boundaries)&#34;&#34;&#34;
+    def _boundaries(self):
+        # Add the separation line between the two Ray anchors as a hard
+        # boundary
+        direction = self[1].point() - self[0].point()
+        return super()._boundaries() + [Line(direction, self[0].point())]
+
+    &#34;&#34;&#34;Test whether a point lies between the two ray boundaries&#34;&#34;&#34;
+    def _point_inside(self, point):
+        def dotprod(vec1, vec2):
+            return sum([v1*v2 for v1, v2 in zip(vec1, vec2)])
+
+        # Compare up to the precision of the two rays and the point
+        precision = min(self[0].precision(), self[1].precision())
+        try:    # If point is an STVector
+            precision = min(precision, point.precision)
+        except:
+            pass
+
+        # Get a normal vector to the line connecting the two anchors of the
+        # HalfRibbon&#39;s rays. Namely, get the separation vector, then swap the
+        # components and make one of them negative. There are two options.
+        # Pick the normal vector that points outwards from the interior;
+        # i.e. the dot product between the normal vector and the ray direction
+        # vectors should be negative.
+        sep_vec = self[1].point() - self[0].point()
+        normal_vecs = [STVector(-sep_vec[1], sep_vec[0]),
+                       STVector(sep_vec[1], -sep_vec[0])]
+        # Pick the normal vector that points outward.
+        # The equality is for when the two rays coincide; the normal vectors
+        # will both either be zero or orthogonal to the rays, so neither will
+        # get filtered out. Just pick the first one; it won&#39;t matter in this
+        # case.
+        normal_vec = [n for n in normal_vecs
+            if dotprod(n, self[0].direction()) &lt;= 0][0]
+
+        # Get the displacement vector from the point to one of the ray&#39;s
+        # anchors (it doesn&#39;t matter which). The point is on the &#34;interior&#34;
+        # side of the anchors if and only if the dot product between this
+        # separation vector and the normal vector is nonnegative.
+        #
+        # The full Ribbon&#39;s _point_inside method can check for whether or not
+        # the point lies laterally between the two rays
+        disp_vec = self[0].point() - STVector(point)
+        return (round(dotprod(disp_vec, normal_vec), precision) &gt;= 0
+            and super()._point_inside(point))</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="specrel.geom.Ribbon" href="#specrel.geom.Ribbon">Ribbon</a></li>
+<li><a title="specrel.geom.Collection" href="#specrel.geom.Collection">Collection</a></li>
+<li><a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable">LorentzTransformable</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="specrel.geom.Ribbon" href="#specrel.geom.Ribbon">Ribbon</a></b></code>:
+<ul class="hlist">
+<li><code><a title="specrel.geom.Ribbon.append" href="#specrel.geom.Ribbon.append">append</a></code></li>
+<li><code><a title="specrel.geom.Ribbon.draw" href="#specrel.geom.LorentzTransformable.draw">draw</a></code></li>
+<li><code><a title="specrel.geom.Ribbon.lorentz_boost" href="#specrel.geom.LorentzTransformable.lorentz_boost">lorentz_boost</a></code></li>
+<li><code><a title="specrel.geom.Ribbon.lorentz_transform" href="#specrel.geom.LorentzTransformable.lorentz_transform">lorentz_transform</a></code></li>
+<li><code><a title="specrel.geom.Ribbon.pop" href="#specrel.geom.Collection.pop">pop</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="specrel.geom.Line"><code class="flex name class">
+<span>class <span class="ident">Line</span></span>
+<span>(</span><span>direction, point, tag=None, precision=7, draw_options={})</span>
+</code></dt>
+<dd>
+<section class="desc"><p>An infinite line in spacetime.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>direction</code></strong> :&ensp;<a title="specrel.geom.STVector" href="#specrel.geom.STVector"><code>STVector</code></a> or <code>iterable</code></dt>
+<dd>Direction vector
+(dt, dx).</dd>
+<dt><strong><code>point</code></strong> :&ensp;<a title="specrel.geom.STVector" href="#specrel.geom.STVector"><code>STVector</code></a> or <code>iterable</code></dt>
+<dd>Point that the line passes
+through (t0, x0).</dd>
+<dt><strong><code>tag</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>See <a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a>.</dd>
+<dt><strong><code>precision</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>Precision of internal <a title="specrel.geom.STVector" href="#specrel.geom.STVector"><code>STVector</code></a>
+objects.</dd>
+<dt><strong><code>draw_options</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>See <a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a>.</dd>
+</dl>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>transformables</code></strong> :&ensp;<code>list</code></dt>
+<dd><code>[direction, point]</code>.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>ValueError</code>:</dt>
+<dd>Direction vector is zero.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">class Line(Collection):
+    &#34;&#34;&#34;An infinite line in spacetime.
+
+    Args:
+        direction (specrel.geom.STVector or iterable): Direction vector
+            (dt, dx).
+        point (specrel.geom.STVector or iterable): Point that the line passes
+            through (t0, x0).
+        tag (str, optional): See `specrel.geom.LorentzTransformable`.
+        precision (int, optional): Precision of internal `specrel.geom.STVector`
+            objects.
+        draw_options (str, optional): See `specrel.geom.LorentzTransformable`.
+
+    Attributes:
+        transformables (list): `[direction, point]`.
+
+    Raises:
+        ValueError:
+            Direction vector is zero.
+    &#34;&#34;&#34;
+
+    def __init__(self, direction, point, tag=geomrc[&#39;tag&#39;],
+        precision=geomrc[&#39;precision&#39;], draw_options=geomrc[&#39;draw_options&#39;]):
+        # Zero direction would give a point geometrically, but would make
+        # intersection calculation, etc. more annoying
+        if STVector(direction, precision=precision) == (0, 0):
+            raise ValueError(&#39;Direction vector cannot be zero&#39;)
+        super().__init__([STVector(direction, precision=precision),
+            STVector(point, precision=precision)],
+            tag=tag, draw_options=draw_options)
+
+    def __str__(self):
+        &#34;&#34;&#34;Vector parameterization of the line as a string.
+        E.g. Line( [t, x] = [3, 4] + k*[1, 1] )&#34;&#34;&#34;
+        precision = self.precision()
+        return f&#39;Line( [t, x] = [{round(self.point()[0], precision)}, &#39; \
+            + f&#39;{round(self.point()[1], precision)}]&#39; \
+            + f&#39; + k*[{round(self.direction()[0], precision)}, &#39; \
+            + f&#39;{round(self.direction()[1], precision)}] )&#39;
+
+    def __eq__(self, other):
+        # Equality is just one of the outcomes in the intersection method
+        # The returned value will be a Line iff the lines are equal
+        return isinstance(self.intersect(other), Line)
+
+    def __ne__(self, other):
+        return not (self == other)
+
+    def append(self, other):
+        &#34;&#34;&#34;Disabled; will raise a `TypeError`.&#34;&#34;&#34;
+        raise TypeError(&#34;Cannot append to object of type &#39;Line&#39;&#34;)
+
+    def lorentz_transform(self, velocity, origin=geomrc[&#39;origin&#39;]):
+        # If the origin is shifted, apply the shifted transform only to the
+        # point, and not the direction
+        self.point().lorentz_transform(velocity, origin)
+        self.direction().lorentz_transform(velocity)
+
+    def direction(self):
+        &#34;&#34;&#34;
+        Returns:
+            specrel.geom.STVector:
+                Line direction vector.
+        &#34;&#34;&#34;
+        return self[0]
+
+    &#34;&#34;&#34;A point that the line passes through&#34;&#34;&#34;
+    def point(self):
+        &#34;&#34;&#34;
+        Returns:
+            specrel.geom.STVector:
+                Some point the line passes through.
+        &#34;&#34;&#34;
+        return self[1]
+
+    def precision(self):
+        &#34;&#34;&#34;
+        Returns:
+            int:
+                Floating-point precision of internal `specrel.geom.STVector`
+                objects.
+        &#34;&#34;&#34;
+        return min([p.precision for p in self])
+
+    def slope(self):
+        &#34;&#34;&#34;
+        Returns:
+            float:
+                Slope of the line dt/dx if not vertical.
+            NoneType:
+                `None` if vertical.
+        &#34;&#34;&#34;
+        if self.direction().x == 0:
+            return None
+        return self.direction().t / self.direction().x
+
+    def intersect(self, other):
+        &#34;&#34;&#34;Calculates intersection between two lines.
+
+        Args:
+            other (specrel.geom.Line): Other line to intersect with.
+
+        Returns:
+            specrel.geom.STVector:
+                Single intersection point if the lines meet at a point.
+            Line:
+                Line of intersection if the lines are equal.
+            NoneType:
+                `None` if the lines don&#39;t intersect.
+        &#34;&#34;&#34;
+        # Compare up to the precision of the two lines
+        precision = min(self.precision(), other.precision())
+
+        # Solution for the parameterization variable at the intersection point
+        # from doing algebra
+        # self is the line: self.point() + lineparam * self.direction()
+        lineparam_numerator = (
+            other.point().x * other.direction().t
+            - other.point().t * other.direction().x
+            + other.direction().x * self.point().t
+            - other.direction().t * self.point().x)
+        lineparam_denominator = (
+            self.direction().x * other.direction().t
+            - self.direction().t * other.direction().x)
+
+        # Zero denominator means the lines have equal slope
+        if round(lineparam_denominator, precision) == 0:
+            # 0/0 means the lines are equal
+            # otherwise, the lines are parallel
+            if round(lineparam_numerator, precision) == 0:
+                return copy.deepcopy(self)
+            else:
+                return None
+
+        # Lines intersect at a point
+        lineparam = lineparam_numerator / lineparam_denominator
+        return STVector(
+            self.point().t + lineparam * self.direction().t,
+            self.point().x + lineparam * self.direction().x,
+            precision=precision)
+
+    def _boundary_intersections(self, tlim, xlim):
+        &#34;&#34;&#34;Returns a list of point intersections of a line with the time and
+        space boundaries, sorted in ascending order by time, then space&#34;&#34;&#34;
+        # The four sides of the bounding box
+        boundaries = [
+            fixedtime(tlim[0]), fixedtime(tlim[1]),
+            fixedspace(xlim[0]), fixedspace(xlim[1])
+        ]
+        boundary_points = []    # Intersected points on the bounding box
+        for bound in boundaries:
+            # If the line is parallel to one set of bounds, it will cross the
+            # perpendicular bounds; just skip
+            crossing = self.intersect(bound)
+            if isinstance(crossing, Line) or crossing is None:
+                continue
+            # Add it to the boundary point list if it&#39;s not already there
+            if crossing not in boundary_points:
+                boundary_points.append(crossing)
+        return sorted(boundary_points, key=lambda p:(p.t, p.x))
+
+    def draw(self, plotter, tlim=geomrc[&#39;tlim&#39;], xlim=geomrc[&#39;xlim&#39;], **kwargs):
+        kwargs = {**self.draw_options, **kwargs}
+        # Fill in automatic limits
+        tlim, xlim = self._fill_auto_lims(tlim, xlim)
+
+        # Clip to the bounding box, and add keep points if they&#39;re in-bounds
+        boundary_points = [p for p in self._boundary_intersections(tlim, xlim)
+            if p._in_bounds(tlim, xlim)]
+        # This shouldn&#39;t happen, but issue a warning and fall back to the first
+        # and last points if it does
+        if len(boundary_points) &gt; 2:
+            warnings.warn(&#39;Clipped line has more than two endpoints. &#39;
+                &#39;Floating point error with a corner clip?&#39;)
+            boundary_points = [boundary_points[0], boundary_points[-1]]
+
+        # Plot the clipped line segment
+        if len(boundary_points) == 2:
+            plotter.draw_line_segment(*boundary_points, tag=self.tag, **kwargs)
+        # One boundary point means the line clips a corner; just plot the point
+        elif len(boundary_points) == 1:
+            # Use the line&#39;s tag
+            STVector(boundary_points[0], tag=self.tag).draw(
+                plotter, tlim, xlim, **kwargs)
+        # No boundary points means the line is completely out of frame, so
+        # do nothing
+
+        # Make sure plot limits are properly set
+        plotter.set_lims(tlim, xlim)
+
+    def _auto_draw_lims(self):
+        # Go one step of the direction vector forward and backward from the
+        # anchor point
+        forward = self.point() + self.direction()
+        backward = self.point() - self.direction()
+        tmin = min(forward.t, backward.t)
+        tmax = max(forward.t, backward.t)
+        xmin = min(forward.x, backward.x)
+        xmax = max(forward.x, backward.x)
+        return (tmin, tmax), (xmin, xmax)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="specrel.geom.Collection" href="#specrel.geom.Collection">Collection</a></li>
+<li><a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable">LorentzTransformable</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="specrel.geom.Ray" href="#specrel.geom.Ray">Ray</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="specrel.geom.Line.append"><code class="name flex">
+<span>def <span class="ident">append</span></span>(<span>self, other)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Disabled; will raise a <code>TypeError</code>.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def append(self, other):
+    &#34;&#34;&#34;Disabled; will raise a `TypeError`.&#34;&#34;&#34;
+    raise TypeError(&#34;Cannot append to object of type &#39;Line&#39;&#34;)</code></pre>
+</details>
+</dd>
+<dt id="specrel.geom.Line.direction"><code class="name flex">
+<span>def <span class="ident">direction</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="specrel.geom.STVector" href="#specrel.geom.STVector"><code>STVector</code></a>:</dt>
+<dd>Line direction vector.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def direction(self):
+    &#34;&#34;&#34;
+    Returns:
+        specrel.geom.STVector:
+            Line direction vector.
+    &#34;&#34;&#34;
+    return self[0]</code></pre>
+</details>
+</dd>
+<dt id="specrel.geom.Line.intersect"><code class="name flex">
+<span>def <span class="ident">intersect</span></span>(<span>self, other)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Calculates intersection between two lines.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>other</code></strong> :&ensp;<a title="specrel.geom.Line" href="#specrel.geom.Line"><code>Line</code></a></dt>
+<dd>Other line to intersect with.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="specrel.geom.STVector" href="#specrel.geom.STVector"><code>STVector</code></a>:</dt>
+<dd>Single intersection point if the lines meet at a point.</dd>
+<dt><a title="specrel.geom.Line" href="#specrel.geom.Line"><code>Line</code></a>:</dt>
+<dd>Line of intersection if the lines are equal.</dd>
+<dt><code>NoneType</code>:</dt>
+<dd><code>None</code> if the lines don't intersect.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def intersect(self, other):
+    &#34;&#34;&#34;Calculates intersection between two lines.
+
+    Args:
+        other (specrel.geom.Line): Other line to intersect with.
+
+    Returns:
+        specrel.geom.STVector:
+            Single intersection point if the lines meet at a point.
+        Line:
+            Line of intersection if the lines are equal.
+        NoneType:
+            `None` if the lines don&#39;t intersect.
+    &#34;&#34;&#34;
+    # Compare up to the precision of the two lines
+    precision = min(self.precision(), other.precision())
+
+    # Solution for the parameterization variable at the intersection point
+    # from doing algebra
+    # self is the line: self.point() + lineparam * self.direction()
+    lineparam_numerator = (
+        other.point().x * other.direction().t
+        - other.point().t * other.direction().x
+        + other.direction().x * self.point().t
+        - other.direction().t * self.point().x)
+    lineparam_denominator = (
+        self.direction().x * other.direction().t
+        - self.direction().t * other.direction().x)
+
+    # Zero denominator means the lines have equal slope
+    if round(lineparam_denominator, precision) == 0:
+        # 0/0 means the lines are equal
+        # otherwise, the lines are parallel
+        if round(lineparam_numerator, precision) == 0:
+            return copy.deepcopy(self)
+        else:
+            return None
+
+    # Lines intersect at a point
+    lineparam = lineparam_numerator / lineparam_denominator
+    return STVector(
+        self.point().t + lineparam * self.direction().t,
+        self.point().x + lineparam * self.direction().x,
+        precision=precision)</code></pre>
+</details>
+</dd>
+<dt id="specrel.geom.Line.point"><code class="name flex">
+<span>def <span class="ident">point</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="specrel.geom.STVector" href="#specrel.geom.STVector"><code>STVector</code></a>:</dt>
+<dd>Some point the line passes through.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def point(self):
+    &#34;&#34;&#34;
+    Returns:
+        specrel.geom.STVector:
+            Some point the line passes through.
+    &#34;&#34;&#34;
+    return self[1]</code></pre>
+</details>
+</dd>
+<dt id="specrel.geom.Line.precision"><code class="name flex">
+<span>def <span class="ident">precision</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><h2 id="returns">Returns</h2>
+<dl>
+<dt><code>int</code>:</dt>
+<dd>Floating-point precision of internal <a title="specrel.geom.STVector" href="#specrel.geom.STVector"><code>STVector</code></a>
+objects.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def precision(self):
+    &#34;&#34;&#34;
+    Returns:
+        int:
+            Floating-point precision of internal `specrel.geom.STVector`
+            objects.
+    &#34;&#34;&#34;
+    return min([p.precision for p in self])</code></pre>
+</details>
+</dd>
+<dt id="specrel.geom.Line.slope"><code class="name flex">
+<span>def <span class="ident">slope</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float</code>:</dt>
+<dd>Slope of the line dt/dx if not vertical.</dd>
+<dt><code>NoneType</code>:</dt>
+<dd><code>None</code> if vertical.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def slope(self):
+    &#34;&#34;&#34;
+    Returns:
+        float:
+            Slope of the line dt/dx if not vertical.
+        NoneType:
+            `None` if vertical.
+    &#34;&#34;&#34;
+    if self.direction().x == 0:
+        return None
+    return self.direction().t / self.direction().x</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="specrel.geom.Collection" href="#specrel.geom.Collection">Collection</a></b></code>:
+<ul class="hlist">
+<li><code><a title="specrel.geom.Collection.draw" href="#specrel.geom.LorentzTransformable.draw">draw</a></code></li>
+<li><code><a title="specrel.geom.Collection.lorentz_boost" href="#specrel.geom.LorentzTransformable.lorentz_boost">lorentz_boost</a></code></li>
+<li><code><a title="specrel.geom.Collection.lorentz_transform" href="#specrel.geom.LorentzTransformable.lorentz_transform">lorentz_transform</a></code></li>
+<li><code><a title="specrel.geom.Collection.pop" href="#specrel.geom.Collection.pop">pop</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="specrel.geom.LorentzTransformable"><code class="flex name class">
+<span>class <span class="ident">LorentzTransformable</span></span>
+<span>(</span><span>tag, draw_options)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Something that obeys Lorentz transformations.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>draw_options</code></strong> :&ensp;<code>dict</code></dt>
+<dd>Keyword arguments to forward to Matplotlib when
+drawing an object. For example, <code>{'color': 'red'}</code> would set the
+keyword argument <code>color=red</code> when internally calling Matplotlib
+plotting functions. Note that options here can be overridden by
+keyword arguments in <a title="specrel.geom.LorentzTransformable.draw" href="#specrel.geom.LorentzTransformable.draw"><code>LorentzTransformable.draw()</code></a>.</dd>
+<dt><strong><code>tag</code></strong> :&ensp;<code>str</code></dt>
+<dd>
+<p>A tag or "name" associated with an object. Can be used by
+certain plotters to add a custom type of label when drawing an
+object.</p>
+<p>For a legend entry, instead use the Matplotlib draw option <code>label</code>
+in the <code>draw_options</code> property/parameter.</p>
+</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">class LorentzTransformable(ABC):
+    &#34;&#34;&#34;Something that obeys Lorentz transformations.
+
+    Attributes:
+        draw_options (dict): Keyword arguments to forward to Matplotlib when
+            drawing an object. For example, `{&#39;color&#39;: &#39;red&#39;}` would set the
+            keyword argument `color=red` when internally calling Matplotlib
+            plotting functions. Note that options here can be overridden by
+            keyword arguments in `specrel.geom.LorentzTransformable.draw`.
+        tag (str): A tag or &#34;name&#34; associated with an object. Can be used by
+            certain plotters to add a custom type of label when drawing an
+            object.
+
+            For a legend entry, instead use the Matplotlib draw option `label`
+            in the `draw_options` property/parameter.
+    &#34;&#34;&#34;
+
+    @abstractmethod
+    def __init__(self, tag, draw_options):
+        self.tag = tag
+        self.draw_options = dict(draw_options)
+
+    @abstractmethod
+    def lorentz_transform(self, velocity, origin):
+        &#34;&#34;&#34;Lorentz transform the object with some velocity about some origin.
+
+        Args:
+            velocity (float): Lorentz transformation velocity.
+            origin (tuple): Origin of Lorentz transformation.
+
+        Raises:
+            NotImplementedError:
+                Abstract method.
+        &#34;&#34;&#34;
+        raise NotImplementedError
+
+    def lorentz_boost(self, velocity, origin=geomrc[&#39;origin&#39;]):
+        &#34;&#34;&#34;Lorentz boost the object with some velocity about some origin.
+        Equivalent to lorentz transforming with `-velocity`. See
+        `specrel.geom.LorentzTransformable.lorentz_transform`.
+        &#34;&#34;&#34;
+        self.lorentz_transform(-velocity, origin)
+
+    &#34;&#34;&#34;Drawing logic for an object, contingent on a DI for boilerplate plotting
+    implementation via plotter (a graphics.simpgraph.STPlotter instance)&#34;&#34;&#34;
+    @abstractmethod
+    def draw(self, plotter, tlim, xlim, **kwargs):
+        &#34;&#34;&#34;Drawing logic for an object, contingent on a plotter object.
+
+        Args:
+            plotter (`specrel.graphics.simpgraph.STPlotter`): Plotter object to
+                implement plotting functionality.
+            tlim (tuple): Minimum and maximum time values when drawing the
+                object. Any `None` entries are replaced with a class-specific
+                default.
+            xlim (tuple): Minimum and maximum position values when drawing the
+                object. Any `None` entries are replaced with a class-specific
+                default.
+            **kwargs: Keyword arguments to forward to Matplotlib when drawing
+                the object.
+
+        Raises:
+            NotImplementedError:
+                Abstract method.
+        &#34;&#34;&#34;
+        raise NotImplementedError
+
+    @abstractmethod
+    def _auto_draw_lims(self):
+        &#34;&#34;&#34;Determine automatic draw limits if one or more aren&#39;t given,
+        in the format (tmin, tmax), (xmin, xmax)&#34;&#34;&#34;
+        raise NotImplementedError
+
+    def _fill_auto_lims(self, tlim, xlim):
+        &#34;&#34;&#34;Fill in automatic limits only where explicit limits aren&#39;t given, and
+        return in the format (tmin, tmax), (xmin, xmax)&#34;&#34;&#34;
+        tmin, tmax, xmin, xmax = tlim + xlim
+        if None in tlim + xlim:
+            # Only compute automatic limits if needed
+            (tminauto, tmaxauto), (xminauto, xmaxauto) = self._auto_draw_lims()
+            if tmin is None:
+                tmin = tminauto
+            if tmax is None:
+                tmax = tmaxauto
+            if xmin is None:
+                xmin = xminauto
+            if xmax is None:
+                xmax = xmaxauto
+        return (tmin, tmax), (xmin, xmax)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>abc.ABC</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="specrel.geom.STVector" href="#specrel.geom.STVector">STVector</a></li>
+<li><a title="specrel.geom.Collection" href="#specrel.geom.Collection">Collection</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="specrel.geom.LorentzTransformable.draw"><code class="name flex">
+<span>def <span class="ident">draw</span></span>(<span>self, plotter, tlim, xlim, **kwargs)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Drawing logic for an object, contingent on a plotter object.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt>plotter (<a title="specrel.graphics.simpgraph.STPlotter" href="graphics/simpgraph.html#specrel.graphics.simpgraph.STPlotter"><code>STPlotter</code></a>): Plotter object to</dt>
+<dt>implement plotting functionality.</dt>
+<dt><strong><code>tlim</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>Minimum and maximum time values when drawing the
+object. Any <code>None</code> entries are replaced with a class-specific
+default.</dd>
+<dt><strong><code>xlim</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>Minimum and maximum position values when drawing the
+object. Any <code>None</code> entries are replaced with a class-specific
+default.</dd>
+<dt><strong><code>**kwargs</code></strong></dt>
+<dd>Keyword arguments to forward to Matplotlib when drawing
+the object.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>NotImplementedError</code>:</dt>
+<dd>Abstract method.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">@abstractmethod
+def draw(self, plotter, tlim, xlim, **kwargs):
+    &#34;&#34;&#34;Drawing logic for an object, contingent on a plotter object.
+
+    Args:
+        plotter (`specrel.graphics.simpgraph.STPlotter`): Plotter object to
+            implement plotting functionality.
+        tlim (tuple): Minimum and maximum time values when drawing the
+            object. Any `None` entries are replaced with a class-specific
+            default.
+        xlim (tuple): Minimum and maximum position values when drawing the
+            object. Any `None` entries are replaced with a class-specific
+            default.
+        **kwargs: Keyword arguments to forward to Matplotlib when drawing
+            the object.
+
+    Raises:
+        NotImplementedError:
+            Abstract method.
+    &#34;&#34;&#34;
+    raise NotImplementedError</code></pre>
+</details>
+</dd>
+<dt id="specrel.geom.LorentzTransformable.lorentz_boost"><code class="name flex">
+<span>def <span class="ident">lorentz_boost</span></span>(<span>self, velocity, origin=(0, 0))</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Lorentz boost the object with some velocity about some origin.
+Equivalent to lorentz transforming with <code>-velocity</code>. See
+<a title="specrel.geom.LorentzTransformable.lorentz_transform" href="#specrel.geom.LorentzTransformable.lorentz_transform"><code>LorentzTransformable.lorentz_transform()</code></a>.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def lorentz_boost(self, velocity, origin=geomrc[&#39;origin&#39;]):
+    &#34;&#34;&#34;Lorentz boost the object with some velocity about some origin.
+    Equivalent to lorentz transforming with `-velocity`. See
+    `specrel.geom.LorentzTransformable.lorentz_transform`.
+    &#34;&#34;&#34;
+    self.lorentz_transform(-velocity, origin)</code></pre>
+</details>
+</dd>
+<dt id="specrel.geom.LorentzTransformable.lorentz_transform"><code class="name flex">
+<span>def <span class="ident">lorentz_transform</span></span>(<span>self, velocity, origin)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Lorentz transform the object with some velocity about some origin.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>velocity</code></strong> :&ensp;<code>float</code></dt>
+<dd>Lorentz transformation velocity.</dd>
+<dt><strong><code>origin</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>Origin of Lorentz transformation.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>NotImplementedError</code>:</dt>
+<dd>Abstract method.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">@abstractmethod
+def lorentz_transform(self, velocity, origin):
+    &#34;&#34;&#34;Lorentz transform the object with some velocity about some origin.
+
+    Args:
+        velocity (float): Lorentz transformation velocity.
+        origin (tuple): Origin of Lorentz transformation.
+
+    Raises:
+        NotImplementedError:
+            Abstract method.
+    &#34;&#34;&#34;
+    raise NotImplementedError</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="specrel.geom.PointGroup"><code class="flex name class">
+<span>class <span class="ident">PointGroup</span></span>
+<span>(</span><span>points, mode=0, tag=None, draw_options={})</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Collection of specifically <a title="specrel.geom.STVector" href="#specrel.geom.STVector"><code>STVector</code></a> references.</p>
+<p>Allowed modes are defined by class variables <code>PointGroup.&lt;mode&gt;</code>
+(see below).</p>
+<h2 id="modes">Modes</h2>
+<dl>
+<dt><strong><code>CONNECT</code></strong> :&ensp;<code>int</code></dt>
+<dd>Specifies points connected by line segments.</dd>
+<dt><strong><code>POINT</code></strong> :&ensp;<code>int</code></dt>
+<dd>Specifies individual, disconnected points.</dd>
+<dt><strong><code>POLYGON</code></strong> :&ensp;<code>int</code></dt>
+<dd>Specifies points defining the vertices of a polygon.</dd>
+</dl>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>points</code></strong> :&ensp;<code>list</code></dt>
+<dd>List of <a title="specrel.geom.STVector" href="#specrel.geom.STVector"><code>STVector</code></a> references.</dd>
+<dt><strong><code>mode</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>See attributes.</dd>
+<dt><strong><code>tag</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>See <a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a>.</dd>
+<dt><strong><code>draw_options</code></strong> :&ensp;<code>dict</code>, optional</dt>
+<dd>See <a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a>.</dd>
+</dl>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>mode</code></strong> :&ensp;<code>int</code></dt>
+<dd>Drawing mode of the <a title="specrel.geom.PointGroup" href="#specrel.geom.PointGroup"><code>PointGroup</code></a>.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">class PointGroup(Collection):
+    &#34;&#34;&#34;Collection of specifically `specrel.geom.STVector` references.
+
+    Allowed modes are defined by class variables `PointGroup.&lt;mode&gt;`
+    (see below).
+
+    Modes:
+        CONNECT (int): Specifies points connected by line segments.
+        POINT (int): Specifies individual, disconnected points.
+        POLYGON (int): Specifies points defining the vertices of a polygon.
+
+    Args:
+        points (list): List of `specrel.geom.STVector` references.
+        mode (int, optional): See attributes.
+        tag (str, optional): See `specrel.geom.LorentzTransformable`.
+        draw_options (dict, optional): See `specrel.geom.LorentzTransformable`.
+
+    Attributes:
+        mode (int): Drawing mode of the `PointGroup`.
+    &#34;&#34;&#34;
+
+    # Modes for how to treat a PointGroup
+    POINT = 0   # Individual points
+    CONNECT = 1 # Points connected by line segments
+    POLYGON = 2 # Points define vertices of a polygon
+
+    def __init__(self, points, mode=POINT, tag=geomrc[&#39;tag&#39;],
+        draw_options=geomrc[&#39;draw_options&#39;]):
+        # Registered drawing methods for each mode
+        self._MODE_DRAW_METHODS = {
+            PointGroup.POINT: self._draw_point,
+            PointGroup.CONNECT: self._draw_connect,
+            PointGroup.POLYGON: self._draw_polygon
+        }
+        self.mode = mode
+        super().__init__([STVector(p) for p in points],
+            tag=tag, draw_options=draw_options)
+
+    def draw(self, plotter, tlim=geomrc[&#39;tlim&#39;], xlim=geomrc[&#39;xlim&#39;], **kwargs):
+        kwargs = {**self.draw_options, **kwargs}
+        # Fill in automatic limits
+        tlim, xlim = self._fill_auto_lims(tlim, xlim)
+        # Dispatch based on mode
+        self._MODE_DRAW_METHODS[self.mode](plotter, tlim, xlim, **kwargs)
+        # Make sure plot limits are properly set
+        plotter.set_lims(tlim, xlim)
+
+    def _draw_point(self, plotter, tlim, xlim, **kwargs):
+        &#34;&#34;&#34;Drawing for unconnected points&#34;&#34;&#34;
+        super().draw(plotter, tlim, xlim, **kwargs)
+
+    def _draw_connect(self, plotter, tlim, xlim, **kwargs):
+        &#34;&#34;&#34;Drawing for connected line segments&#34;&#34;&#34;
+        # Use the overall collection&#39;s tag on each line segment
+        for p1, p2 in zip(self[:-1], self[1:]):
+            plotter.draw_line_segment(p1, p2, tag=self.tag, **kwargs)
+
+    def _draw_polygon(self, plotter, tlim, xlim, **kwargs):
+        &#34;&#34;&#34;Drawing for points specifying polygon vertices&#34;&#34;&#34;
+        # Use the overall collection&#39;s tag
+        plotter.draw_shaded_polygon(self, tag=self.tag, **kwargs)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="specrel.geom.Collection" href="#specrel.geom.Collection">Collection</a></li>
+<li><a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable">LorentzTransformable</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="specrel.geom.PointGroup.CONNECT"><code class="name">var <span class="ident">CONNECT</span></code></dt>
+<dd>
+<section class="desc"></section>
+</dd>
+<dt id="specrel.geom.PointGroup.POINT"><code class="name">var <span class="ident">POINT</span></code></dt>
+<dd>
+<section class="desc"></section>
+</dd>
+<dt id="specrel.geom.PointGroup.POLYGON"><code class="name">var <span class="ident">POLYGON</span></code></dt>
+<dd>
+<section class="desc"></section>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="specrel.geom.Collection" href="#specrel.geom.Collection">Collection</a></b></code>:
+<ul class="hlist">
+<li><code><a title="specrel.geom.Collection.append" href="#specrel.geom.Collection.append">append</a></code></li>
+<li><code><a title="specrel.geom.Collection.draw" href="#specrel.geom.LorentzTransformable.draw">draw</a></code></li>
+<li><code><a title="specrel.geom.Collection.lorentz_boost" href="#specrel.geom.LorentzTransformable.lorentz_boost">lorentz_boost</a></code></li>
+<li><code><a title="specrel.geom.Collection.lorentz_transform" href="#specrel.geom.LorentzTransformable.lorentz_transform">lorentz_transform</a></code></li>
+<li><code><a title="specrel.geom.Collection.pop" href="#specrel.geom.Collection.pop">pop</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="specrel.geom.Ray"><code class="flex name class">
+<span>class <span class="ident">Ray</span></span>
+<span>(</span><span>direction, point, tag=None, precision=7, draw_options={})</span>
+</code></dt>
+<dd>
+<section class="desc"><p>An infinite ray in spacetime. Starting from <code>point</code>.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">class Ray(Line):
+    &#34;&#34;&#34;An infinite ray in spacetime. Starting from `point`.&#34;&#34;&#34;
+
+    def __str__(self):
+        &#34;&#34;&#34;Same format as a line, but with a qualifier that k &gt;= 0.&#34;&#34;&#34;
+        raystr = super().__str__().replace(&#39;Line&#39;, &#39;Ray&#39;)
+        close_paren = raystr.rfind(&#39;)&#39;)
+        return raystr[:close_paren] + &#39;where k &gt;= 0 &#39; + raystr[close_paren:]
+
+    def __eq__(self, other):
+        return (
+            self.point() == other.point() and
+            self.slope() == other.slope() and
+            self.direction().t * other.direction().t &gt;= 0 and
+            self.direction().x * other.direction().x &gt;= 0
+        )
+
+    def __ne__(self, other):
+        return not (self == other)
+
+    def append(self, other):
+        raise TypeError(&#34;Cannot append to object of type &#39;Ray&#39;&#34;)
+
+    def point_dotprod(self, point):
+        &#34;&#34;&#34;Calculates the dot product between the vector from the Ray&#39;s anchor
+        to a point, and the Ray&#39;s direction vector.
+
+        Args:
+            point (`specrel.geom.STVector`): Endpoint defining one of the dot
+                product arguments.
+
+        Returns:
+            float:
+                Dot product between the anchor-point and direction vectors.
+        &#34;&#34;&#34;
+        return sum([(x - p)*d for x, p, d in zip(
+            point, self.point(), self.direction())])
+
+    def intersect(self, line):
+        &#34;&#34;&#34;Intersection point between a ray and a line. Similar to
+        `specrel.geom.Line.intersect`, but returns never returns a
+        `specrel.geom.Line`, and returns a `Ray` if the ray and line coincide.
+        &#34;&#34;&#34;
+        # Pretend this is a full line to start
+        ll_intersect = super().intersect(line)
+        if ll_intersect is None:
+            # If no intersection, one object being a Ray won&#39;t change anything
+            return ll_intersect
+        if isinstance(ll_intersect, Line):
+            return copy.deepcopy(self)  # Replace the full line with the Ray
+
+        precision = min(self.precision(), line.precision())
+        if round(self.point_dotprod(ll_intersect), precision) &lt; 0:
+            # The intersection is opposite to the Ray&#39;s direction; i.e. no
+            # actual intersection
+            return None
+        return ll_intersect
+
+    def _auto_draw_lims(self):
+        # Go one step of the direction vector forward from the anchor point
+        forward = self.point() + self.direction()
+        tmin = min(forward.t, self.point().t)
+        tmax = max(forward.t, self.point().t)
+        xmin = min(forward.x, self.point().x)
+        xmax = max(forward.x, self.point().x)
+        return (tmin, tmax), (xmin, xmax)
+
+    def _boundary_intersections(self, tlim, xlim):
+        &#34;&#34;&#34;Returns a list of point intersections of a ray with the time and
+        space boundaries, sorted in ascending order by time, then space,
+        including the ray endpoint&#34;&#34;&#34;
+        boundary_points = super()._boundary_intersections(tlim, xlim)
+        # Add the ray endpoint
+        if self.point() not in boundary_points:
+            boundary_points.append(self.point())
+        # Re-sort, since a new point was added
+        return sorted(boundary_points, key=lambda p:(p.t, p.x))</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="specrel.geom.Line" href="#specrel.geom.Line">Line</a></li>
+<li><a title="specrel.geom.Collection" href="#specrel.geom.Collection">Collection</a></li>
+<li><a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable">LorentzTransformable</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="specrel.geom.Ray.intersect"><code class="name flex">
+<span>def <span class="ident">intersect</span></span>(<span>self, line)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Intersection point between a ray and a line. Similar to
+<a title="specrel.geom.Line.intersect" href="#specrel.geom.Line.intersect"><code>Line.intersect()</code></a>, but returns never returns a
+<a title="specrel.geom.Line" href="#specrel.geom.Line"><code>Line</code></a>, and returns a <a title="specrel.geom.Ray" href="#specrel.geom.Ray"><code>Ray</code></a> if the ray and line coincide.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def intersect(self, line):
+    &#34;&#34;&#34;Intersection point between a ray and a line. Similar to
+    `specrel.geom.Line.intersect`, but returns never returns a
+    `specrel.geom.Line`, and returns a `Ray` if the ray and line coincide.
+    &#34;&#34;&#34;
+    # Pretend this is a full line to start
+    ll_intersect = super().intersect(line)
+    if ll_intersect is None:
+        # If no intersection, one object being a Ray won&#39;t change anything
+        return ll_intersect
+    if isinstance(ll_intersect, Line):
+        return copy.deepcopy(self)  # Replace the full line with the Ray
+
+    precision = min(self.precision(), line.precision())
+    if round(self.point_dotprod(ll_intersect), precision) &lt; 0:
+        # The intersection is opposite to the Ray&#39;s direction; i.e. no
+        # actual intersection
+        return None
+    return ll_intersect</code></pre>
+</details>
+</dd>
+<dt id="specrel.geom.Ray.point_dotprod"><code class="name flex">
+<span>def <span class="ident">point_dotprod</span></span>(<span>self, point)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Calculates the dot product between the vector from the Ray's anchor
+to a point, and the Ray's direction vector.</p>
+<h2 id="args">Args</h2>
+<p>point (<a title="specrel.geom.STVector" href="#specrel.geom.STVector"><code>STVector</code></a>): Endpoint defining one of the dot
+product arguments.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float</code>:</dt>
+<dd>Dot product between the anchor-point and direction vectors.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def point_dotprod(self, point):
+    &#34;&#34;&#34;Calculates the dot product between the vector from the Ray&#39;s anchor
+    to a point, and the Ray&#39;s direction vector.
+
+    Args:
+        point (`specrel.geom.STVector`): Endpoint defining one of the dot
+            product arguments.
+
+    Returns:
+        float:
+            Dot product between the anchor-point and direction vectors.
+    &#34;&#34;&#34;
+    return sum([(x - p)*d for x, p, d in zip(
+        point, self.point(), self.direction())])</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="specrel.geom.Line" href="#specrel.geom.Line">Line</a></b></code>:
+<ul class="hlist">
+<li><code><a title="specrel.geom.Line.append" href="#specrel.geom.Line.append">append</a></code></li>
+<li><code><a title="specrel.geom.Line.direction" href="#specrel.geom.Line.direction">direction</a></code></li>
+<li><code><a title="specrel.geom.Line.draw" href="#specrel.geom.LorentzTransformable.draw">draw</a></code></li>
+<li><code><a title="specrel.geom.Line.lorentz_boost" href="#specrel.geom.LorentzTransformable.lorentz_boost">lorentz_boost</a></code></li>
+<li><code><a title="specrel.geom.Line.lorentz_transform" href="#specrel.geom.LorentzTransformable.lorentz_transform">lorentz_transform</a></code></li>
+<li><code><a title="specrel.geom.Line.point" href="#specrel.geom.Line.point">point</a></code></li>
+<li><code><a title="specrel.geom.Line.pop" href="#specrel.geom.Collection.pop">pop</a></code></li>
+<li><code><a title="specrel.geom.Line.precision" href="#specrel.geom.Line.precision">precision</a></code></li>
+<li><code><a title="specrel.geom.Line.slope" href="#specrel.geom.Line.slope">slope</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="specrel.geom.Ribbon"><code class="flex name class">
+<span>class <span class="ident">Ribbon</span></span>
+<span>(</span><span>line1, line2, tag=None, draw_options={})</span>
+</code></dt>
+<dd>
+<section class="desc"><p>The region between two parallel spacetime lines.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>line1</code></strong> :&ensp;<a title="specrel.geom.Line" href="#specrel.geom.Line"><code>Line</code></a></dt>
+<dd>First line defining the ribbon.</dd>
+<dt><strong><code>line2</code></strong> :&ensp;<a title="specrel.geom.Line" href="#specrel.geom.Line"><code>Line</code></a></dt>
+<dd>Second line defining the ribbon.</dd>
+<dt><strong><code>tag</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>See <a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a>.</dd>
+<dt><strong><code>draw_options</code></strong> :&ensp;<code>dict</code>, optional</dt>
+<dd>See <a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a>.</dd>
+</dl>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>transformables</code></strong> :&ensp;<code>list</code></dt>
+<dd><code>[line1, line2]</code></dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>ValueError</code>:</dt>
+<dd>Lines are not parallel.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">class Ribbon(Collection):
+    &#34;&#34;&#34;The region between two parallel spacetime lines.
+
+    Args:
+        line1 (specrel.geom.Line): First line defining the ribbon.
+        line2 (specrel.geom.Line): Second line defining the ribbon.
+        tag (str, optional): See `specrel.geom.LorentzTransformable`.
+        draw_options (dict, optional): See `specrel.geom.LorentzTransformable`.
+
+    Attributes:
+        transformables (list): `[line1, line2]`
+
+    Raises:
+        ValueError:
+            Lines are not parallel.
+    &#34;&#34;&#34;
+    def __init__(self, line1, line2, tag=geomrc[&#39;tag&#39;],
+        draw_options=geomrc[&#39;draw_options&#39;]):
+        if line1.slope() != line2.slope():
+            raise ValueError(&#39;Lines must be parallel&#39;)
+        super().__init__([copy.deepcopy(line1), copy.deepcopy(line2)],
+            tag=tag, draw_options=draw_options)
+
+    def append(self, other):
+        &#34;&#34;&#34;Disabled; will raise a `TypeError`.&#34;&#34;&#34;
+        raise TypeError(&#34;Cannot append to object of type &#39;Ribbon&#39;&#34;)
+
+    def _point_inside(self, point):
+        &#34;&#34;&#34;Test whether a point lies inside the two line boundaries&#34;&#34;&#34;
+        # Compare up to the precision of the two lines and the point
+        precision = min(self[0].precision(), self[1].precision())
+        try:    # If point is an STVector
+            precision = min(precision, point.precision)
+        except:
+            pass
+
+        # The lines will be parallel, so just take the direction vector from
+        # the first line
+        direction = self[0].direction()
+        # Lines follow the equation dx*t - dt*x = k
+        # The constant &#34;k&#34; of the point (t, x) must be between those of the two
+        # line boundaries
+        def calc_line_constant(p):
+            return round(direction.x * p[0] - direction.t * p[1], precision)
+        boundary_constants = sorted(
+            [calc_line_constant(line.point()) for line in self]
+        )
+        point_constant = calc_line_constant(point)
+        return (round(point_constant, precision)
+            &gt;= round(boundary_constants[0], precision)
+            and round(point_constant, precision)
+            &lt;= round(boundary_constants[1], precision))
+
+    def _boundaries(self):
+        &#34;&#34;&#34;Get a list of hard boundaries (i.e. the line boundaries)&#34;&#34;&#34;
+        return list(self)
+
+    def _get_vertices(self, tlim, xlim):
+        &#34;&#34;&#34;Get the polygon vertices for drawing the ribbon in a given view
+        range&#34;&#34;&#34;
+        vertices = []
+        # Gather all the unique candidates for vertices; all intersections
+        # between all boundaries, essentially
+        for line in self._boundaries():
+            for p in line._boundary_intersections(tlim, xlim):
+                if p not in vertices:
+                    vertices.append(p)
+        # Corners of the bounds, too
+        for tcorner in tlim:
+            for xcorner in xlim:
+                corner = STVector(tcorner, xcorner)
+                if corner not in vertices:
+                    vertices.append(corner)
+
+        # Filter out candidate points, keeping only those that are both in
+        # bounds, and inside the HalfRibbon region
+        vertices = [p for p in vertices if
+            (p._in_bounds(tlim, xlim) and self._point_inside(p))]
+        # If no vertices, just return empty
+        if not vertices:
+            return vertices
+        # Otherwise, order the vertices by the angle they make with the
+        # centroid of the polygon
+        tvals, xvals = tuple(zip(*vertices))
+        t_center = sum(tvals) / len(tvals)
+        x_center = sum(xvals) / len(xvals)
+        return sorted(vertices, key=lambda v: atan2(
+            v.t - t_center, v.x - x_center))
+
+    def draw(self, plotter, tlim=geomrc[&#39;tlim&#39;], xlim=geomrc[&#39;xlim&#39;], **kwargs):
+        kwargs = {**self.draw_options, **kwargs}
+        tlim, xlim = self._fill_auto_lims(tlim, xlim)
+
+        # If the two lines are equal, treat it like a line, but use the main
+        # ribbon tag
+        if self[0] == self[1]:
+            ln = copy.deepcopy(self[0])
+            ln.tag = self.tag
+            ln.draw(plotter, tlim, xlim, **kwargs)
+            return
+
+        # Only draw if there are vertices in bounds
+        vertices = self._get_vertices(tlim, xlim)
+        if not vertices:
+            return
+
+        # Set aside &#34;edgecolor&#34; for special treatment
+        edgecolor = kwargs.pop(&#39;edgecolor&#39;, geomrc[&#39;ribbon.default_edgecolor&#39;])
+        plotter.draw_shaded_polygon(vertices, tag=self.tag, **kwargs)
+        # Plot the ribbon edges
+        if edgecolor.lower() != &#39;none&#39;:
+            # Remove facecolor
+            kwargs.pop(&#39;facecolor&#39;, None)
+            # Only include a label for the face, not the edges
+            kwargs.pop(&#39;label&#39;, None)
+            # If color was given, override edgecolor
+            if &#39;color&#39; in kwargs:
+                edgecolor = kwargs.pop(&#39;color&#39;)
+            # Make the zorder of the borders match that of the patch
+            # zorder of 1 by default
+            zorder = kwargs.pop(&#39;zorder&#39;, 1)
+            for line in self:
+                line.draw(plotter, tlim, xlim, color=edgecolor, zorder=zorder,
+                    **kwargs)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="specrel.geom.Collection" href="#specrel.geom.Collection">Collection</a></li>
+<li><a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable">LorentzTransformable</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="specrel.geom.HalfRibbon" href="#specrel.geom.HalfRibbon">HalfRibbon</a></li>
+<li><a title="specrel.spacetime.MovingObject" href="spacetime.html#specrel.spacetime.MovingObject">MovingObject</a></li>
+<li><a title="specrel.spacetime.TimeInterval" href="spacetime.html#specrel.spacetime.TimeInterval">TimeInterval</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="specrel.geom.Ribbon.append"><code class="name flex">
+<span>def <span class="ident">append</span></span>(<span>self, other)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Disabled; will raise a <code>TypeError</code>.</p></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def append(self, other):
+    &#34;&#34;&#34;Disabled; will raise a `TypeError`.&#34;&#34;&#34;
+    raise TypeError(&#34;Cannot append to object of type &#39;Ribbon&#39;&#34;)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="specrel.geom.Collection" href="#specrel.geom.Collection">Collection</a></b></code>:
+<ul class="hlist">
+<li><code><a title="specrel.geom.Collection.draw" href="#specrel.geom.LorentzTransformable.draw">draw</a></code></li>
+<li><code><a title="specrel.geom.Collection.lorentz_boost" href="#specrel.geom.LorentzTransformable.lorentz_boost">lorentz_boost</a></code></li>
+<li><code><a title="specrel.geom.Collection.lorentz_transform" href="#specrel.geom.LorentzTransformable.lorentz_transform">lorentz_transform</a></code></li>
+<li><code><a title="specrel.geom.Collection.pop" href="#specrel.geom.Collection.pop">pop</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="specrel.geom.STVector"><code class="flex name class">
+<span>class <span class="ident">STVector</span></span>
+<span>(</span><span>*args, **kwargs)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>A vector in spacetime (t, x). <code>*args</code> can be one of two options
+(see below). <code>**kwargs</code> are for attributes other than <code>t</code> and <code>x</code>, and
+default to corresponding items in <a title="specrel.geom.geomrc" href="#specrel.geom.geomrc"><code>geomrc</code></a> if unspecified.</p>
+<p>An <a title="specrel.geom.STVector" href="#specrel.geom.STVector"><code>STVector</code></a>-convertible type is any type that can be used for the <code>stvec</code>
+parameter in the second initialization list (see below).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>t</code></strong> :&ensp;<code>float</code></dt>
+<dd>Time value.</dd>
+<dt><strong><code>x</code></strong> :&ensp;<code>float</code></dt>
+<dd>Position value.</dd>
+</dl>
+<h2 id="args_1">Args</h2>
+<dl>
+<dt><strong><code>stvec</code></strong> :&ensp;<a title="specrel.geom.STVector" href="#specrel.geom.STVector"><code>STVector</code></a> or <code>iterable</code></dt>
+<dd>Existing <a title="specrel.geom.STVector" href="#specrel.geom.STVector"><code>STVector</code></a> or some
+other iterable (t, x) to copy. If an <a title="specrel.geom.STVector" href="#specrel.geom.STVector"><code>STVector</code></a>, will copy over all
+attributes not overridden by explicit keyword arguments.</dd>
+</dl>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>draw_options</code></strong> :&ensp;<code>dict</code></dt>
+<dd>See <a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a>.</dd>
+<dt><strong><code>precision</code></strong> :&ensp;<code>int</code></dt>
+<dd>Floating-point precision for comparisons. Two
+<a title="specrel.geom.STVector" href="#specrel.geom.STVector"><code>STVector</code></a> are equal if the components agree to this many decimal
+places.</dd>
+<dt><strong><code>t</code></strong> :&ensp;<code>float</code></dt>
+<dd>Time value of the vector.</dd>
+<dt><strong><code>tag</code></strong> :&ensp;<code>str</code></dt>
+<dd>See <a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a>.</dd>
+<dt><strong><code>x</code></strong> :&ensp;<code>float</code></dt>
+<dd>Position value of the vector.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">class STVector(LorentzTransformable):
+    &#34;&#34;&#34;A vector in spacetime (t, x). `*args` can be one of two options
+    (see below). `**kwargs` are for attributes other than `t` and `x`, and
+    default to corresponding items in `specrel.geom.geomrc` if unspecified.
+
+    An `STVector`-convertible type is any type that can be used for the `stvec`
+    parameter in the second initialization list (see below).
+
+    Args:
+        t (float): Time value.
+        x (float): Position value.
+
+    Args:
+        stvec (specrel.geom.STVector or iterable): Existing `STVector` or some
+            other iterable (t, x) to copy. If an `STVector`, will copy over all
+            attributes not overridden by explicit keyword arguments.
+
+    Attributes:
+        draw_options (dict): See `specrel.geom.LorentzTransformable`.
+        precision (int): Floating-point precision for comparisons. Two
+            `STVector` are equal if the components agree to this many decimal
+            places.
+        t (float): Time value of the vector.
+        tag (str): See `specrel.geom.LorentzTransformable`.
+        x (float): Position value of the vector.
+    &#34;&#34;&#34;
+
+    def __init__(self, *args, **kwargs):
+        # args can either be:
+        #   - 2 arguments: [t, x]
+        #   - 1 argument: an existing STVector() to copy
+        #   - 1 argument: some other iterable representing (t, x)
+        # kwargs can include: &#39;tag&#39;, &#39;precision&#39;, &#39;draw_options&#39;
+        if len(args) == 2:
+            # t and x were individually provided
+            self._constructor(*args, **kwargs)
+        elif len(args) == 1:
+            # An iterable representing (t, x) was provided
+            # This can function as a copy ctor if said iterable was an STVector
+            self._constructor(*args[0], **kwargs)
+            # If no tag is given explicitly, copy over the old tag if it exists
+            # i.e. if the object is an STVector, not just a tuple or something
+            if &#39;tag&#39; not in kwargs:
+                try:
+                    self.tag = args[0].tag
+                except:
+                    pass
+            # If no precision given, copy over the old precision if it exists
+            if &#39;precision&#39; not in kwargs:
+                try:
+                    self.precision = args[0].precision
+                except:
+                    pass
+            # If no draw options given, copy over the old ones if they exist
+            if &#39;draw_options&#39; not in kwargs:
+                try:
+                    self.draw_options = dict(args[0].draw_options)
+                except:
+                    pass
+        else:
+            raise TypeError(&#39;Too many positional arguments.&#39;)
+
+    def _constructor(self, time, position, tag=geomrc[&#39;tag&#39;],
+        precision=geomrc[&#39;precision&#39;], draw_options=geomrc[&#39;draw_options&#39;]):
+        &#34;&#34;&#34;The actual constructor underlying __init__&#34;&#34;&#34;
+        super().__init__(tag=tag, draw_options=draw_options)
+        self.t = time
+        self.x = position
+        self.precision = precision
+
+    def __getitem__(self, key):
+        &#34;&#34;&#34;The order is (t, x), consistent with standard notation for 4-position
+        in physics&#34;&#34;&#34;
+        return [self.t, self.x][key]
+
+    def __str__(self):
+        &#34;&#34;&#34;String representation of vector components as an ordered pair,
+        (t, x)&#34;&#34;&#34;
+        return f&#39;STVector({round(self.t, self.precision)}, &#39; \
+            + f&#39;{round(self.x, self.precision)})&#39;
+
+    def __iter__(self):
+        yield self.t
+        yield self.x
+
+    def __eq__(self, other):
+        &#34;&#34;&#34;Equality within internal precision settings&#34;&#34;&#34;
+        # Compare up to the precision of the two objects
+        try:
+            precision = min(self.precision, other.precision)
+        except AttributeError:  # other has no precision field
+            precision = self.precision
+
+        for selfcmp, othercmp in zip(self, other):
+            if round(selfcmp, precision) != round(othercmp, precision):
+                return False
+        return True
+
+    def __ne__(self, other):
+        return not (self == other)
+
+    def __neg__(self):
+        return STVector((-cmp for cmp in self))
+
+    def __add__(self, other):
+        &#34;&#34;&#34;Vector-vector addition&#34;&#34;&#34;
+        return STVector((left + right for left, right in zip(self, other)))
+
+    def __sub__(self, other):
+        &#34;&#34;&#34;Vector-vector subtraction&#34;&#34;&#34;
+        return self + -other
+
+    def __abs__(self):
+        &#34;&#34;&#34;Spacetime interval&#34;&#34;&#34;
+        return -self.t**2 + self.x**2
+
+    def lorentz_transform(self, velocity, origin=geomrc[&#39;origin&#39;]):
+        gamma = self.gamma_factor(velocity)
+        t, x = self
+        t0, x0 = origin
+        self.t = gamma*((t - t0) - velocity*(x - x0)) + t0
+        self.x = gamma*((x - x0) - velocity*(t - t0)) + x0
+
+    def draw(self, plotter, tlim=geomrc[&#39;tlim&#39;], xlim=geomrc[&#39;xlim&#39;], **kwargs):
+        # Only draw if in bounds
+        tlim, xlim = self._fill_auto_lims(tlim, xlim)
+        if self._in_bounds(tlim, xlim):
+            kwargs = {**self.draw_options, **kwargs}
+            plotter.draw_point(self, tag=self.tag, **kwargs)
+            plotter.set_lims(tlim, xlim)
+
+    def _auto_draw_lims(self):
+        return (self.t, self.t), (self.x, self.x)
+
+    def _in_bounds(self, tlim, xlim):
+        &#34;&#34;&#34;Check if the point is in a given set of bounds&#34;&#34;&#34;
+        return (round(self.t, self.precision) &gt;= round(tlim[0], self.precision) \
+            and round(self.t, self.precision) &lt;= round(tlim[1], self.precision) \
+            and round(self.x, self.precision) &gt;= round(xlim[0], self.precision) \
+            and round(self.x, self.precision) &lt;= round(xlim[1], self.precision))
+
+    @staticmethod
+    def gamma_factor(velocity):
+        &#34;&#34;&#34;Calculates the relativistic gamma factor for a given velocity.
+
+        Args:
+            velocity (float): Relative velocity.
+
+        Returns:
+            float:
+                Gamma factor for `velocity`.
+        &#34;&#34;&#34;
+        return 1/(1 - velocity**2)**0.5</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable">LorentzTransformable</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="specrel.geom.STVector.gamma_factor"><code class="name flex">
+<span>def <span class="ident">gamma_factor</span></span>(<span>velocity)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Calculates the relativistic gamma factor for a given velocity.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>velocity</code></strong> :&ensp;<code>float</code></dt>
+<dd>Relative velocity.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>float</code>:</dt>
+<dd>Gamma factor for <code>velocity</code>.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">@staticmethod
+def gamma_factor(velocity):
+    &#34;&#34;&#34;Calculates the relativistic gamma factor for a given velocity.
+
+    Args:
+        velocity (float): Relative velocity.
+
+    Returns:
+        float:
+            Gamma factor for `velocity`.
+    &#34;&#34;&#34;
+    return 1/(1 - velocity**2)**0.5</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable">LorentzTransformable</a></b></code>:
+<ul class="hlist">
+<li><code><a title="specrel.geom.LorentzTransformable.draw" href="#specrel.geom.LorentzTransformable.draw">draw</a></code></li>
+<li><code><a title="specrel.geom.LorentzTransformable.lorentz_boost" href="#specrel.geom.LorentzTransformable.lorentz_boost">lorentz_boost</a></code></li>
+<li><code><a title="specrel.geom.LorentzTransformable.lorentz_transform" href="#specrel.geom.LorentzTransformable.lorentz_transform">lorentz_transform</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="specrel" href="index.html">specrel</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-variables">Global variables</a></h3>
+<ul class="">
+<li><code><a title="specrel.geom.geomrc" href="#specrel.geom.geomrc">geomrc</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="two-column">
+<li><code><a title="specrel.geom.fixedspace" href="#specrel.geom.fixedspace">fixedspace</a></code></li>
+<li><code><a title="specrel.geom.fixedtime" href="#specrel.geom.fixedtime">fixedtime</a></code></li>
+<li><code><a title="specrel.geom.line_segment" href="#specrel.geom.line_segment">line_segment</a></code></li>
+<li><code><a title="specrel.geom.lorentz_boosted" href="#specrel.geom.lorentz_boosted">lorentz_boosted</a></code></li>
+<li><code><a title="specrel.geom.lorentz_transformed" href="#specrel.geom.lorentz_transformed">lorentz_transformed</a></code></li>
+<li><code><a title="specrel.geom.polygon" href="#specrel.geom.polygon">polygon</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="specrel.geom.Collection" href="#specrel.geom.Collection">Collection</a></code></h4>
+<ul class="">
+<li><code><a title="specrel.geom.Collection.append" href="#specrel.geom.Collection.append">append</a></code></li>
+<li><code><a title="specrel.geom.Collection.pop" href="#specrel.geom.Collection.pop">pop</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="specrel.geom.HalfRibbon" href="#specrel.geom.HalfRibbon">HalfRibbon</a></code></h4>
+</li>
+<li>
+<h4><code><a title="specrel.geom.Line" href="#specrel.geom.Line">Line</a></code></h4>
+<ul class="two-column">
+<li><code><a title="specrel.geom.Line.append" href="#specrel.geom.Line.append">append</a></code></li>
+<li><code><a title="specrel.geom.Line.direction" href="#specrel.geom.Line.direction">direction</a></code></li>
+<li><code><a title="specrel.geom.Line.intersect" href="#specrel.geom.Line.intersect">intersect</a></code></li>
+<li><code><a title="specrel.geom.Line.point" href="#specrel.geom.Line.point">point</a></code></li>
+<li><code><a title="specrel.geom.Line.precision" href="#specrel.geom.Line.precision">precision</a></code></li>
+<li><code><a title="specrel.geom.Line.slope" href="#specrel.geom.Line.slope">slope</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="specrel.geom.LorentzTransformable" href="#specrel.geom.LorentzTransformable">LorentzTransformable</a></code></h4>
+<ul class="">
+<li><code><a title="specrel.geom.LorentzTransformable.draw" href="#specrel.geom.LorentzTransformable.draw">draw</a></code></li>
+<li><code><a title="specrel.geom.LorentzTransformable.lorentz_boost" href="#specrel.geom.LorentzTransformable.lorentz_boost">lorentz_boost</a></code></li>
+<li><code><a title="specrel.geom.LorentzTransformable.lorentz_transform" href="#specrel.geom.LorentzTransformable.lorentz_transform">lorentz_transform</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="specrel.geom.PointGroup" href="#specrel.geom.PointGroup">PointGroup</a></code></h4>
+<ul class="">
+<li><code><a title="specrel.geom.PointGroup.CONNECT" href="#specrel.geom.PointGroup.CONNECT">CONNECT</a></code></li>
+<li><code><a title="specrel.geom.PointGroup.POINT" href="#specrel.geom.PointGroup.POINT">POINT</a></code></li>
+<li><code><a title="specrel.geom.PointGroup.POLYGON" href="#specrel.geom.PointGroup.POLYGON">POLYGON</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="specrel.geom.Ray" href="#specrel.geom.Ray">Ray</a></code></h4>
+<ul class="">
+<li><code><a title="specrel.geom.Ray.intersect" href="#specrel.geom.Ray.intersect">intersect</a></code></li>
+<li><code><a title="specrel.geom.Ray.point_dotprod" href="#specrel.geom.Ray.point_dotprod">point_dotprod</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="specrel.geom.Ribbon" href="#specrel.geom.Ribbon">Ribbon</a></code></h4>
+<ul class="">
+<li><code><a title="specrel.geom.Ribbon.append" href="#specrel.geom.Ribbon.append">append</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="specrel.geom.STVector" href="#specrel.geom.STVector">STVector</a></code></h4>
+<ul class="">
+<li><code><a title="specrel.geom.STVector.gamma_factor" href="#specrel.geom.STVector.gamma_factor">gamma_factor</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.6.3</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

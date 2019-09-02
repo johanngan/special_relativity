@@ -1,0 +1,1122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.6.3" />
+<title>specrel.graphics.compgraph API documentation</title>
+<meta name="description" content="Composite graphics that glue together one or more simple spacetime plots and
+animations in special relativity." />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase;cursor:pointer}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>specrel.graphics.compgraph</code></h1>
+</header>
+<section id="section-intro">
+<p>Composite graphics that glue together one or more simple spacetime plots and
+animations in special relativity.</p>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">&#34;&#34;&#34;Composite graphics that glue together one or more simple spacetime plots and
+animations in special relativity.
+&#34;&#34;&#34;
+
+from abc import abstractmethod
+import copy
+import os
+import subprocess
+
+import matplotlib.pyplot as plt
+
+from specrel.graphics.graphrc import graphrc
+import specrel.graphics.simpgraph as simpg
+
+class MultiAnimator(simpg.FigureCreator, simpg.BaseAnimator):
+    &#34;&#34;&#34;Runs multiple animations simultaneously on different subplots.
+
+    Args:
+        n_animations (int): Number of animations to run simultaneously.
+        fig (matplotlib.figure.Figure, optional): Figure window. If `None`, a
+            new figure window is created.
+        axs (list, optional): List of axes in row major format. If `None`, a
+            new set of axes is created under a new figure window.
+        others: See `specrel.graphics.simpgraph.BaseAnimator`.
+
+    Attributes:
+        axs (list): List of axes to draw on in row major format.
+    &#34;&#34;&#34;
+    def __init__(self,
+        n_animations,
+        fig=graphrc[&#39;fig&#39;],
+        axs=graphrc[&#39;axs&#39;],
+        stepsize=None,
+        fps=graphrc[&#39;anim.fps&#39;],
+        display_current=graphrc[&#39;anim.display_current&#39;],
+        display_current_decimals=
+            graphrc[&#39;anim.display_current_decimals&#39;],
+        title=graphrc[&#39;title&#39;],
+        frame_lim=(0, 0)):
+
+        simpg.FigureCreator.__init__(self)
+        # Make a new figure if necessary
+        if fig is None and axs is None:
+            # Default to a (1 x n) subplot
+            fig, axs = plt.subplots(1, n_animations)
+        elif fig is None or axs is None:
+            raise ValueError(&#39;Must give both figure and axes, or neither.&#39;)
+        self.axs = axs
+        simpg.BaseAnimator.__init__(self, fig, stepsize, fps, display_current,
+            display_current_decimals, title, frame_lim)
+
+        # Make sure there&#39;s at least one animation
+        if n_animations == 0:
+            raise ValueError(&#39;Number of animations must be nonzero.&#39;)
+        # Make sure animations and axes match
+        if n_animations != len(self.axs):
+            raise ValueError(&#39;Number of animations and axes must match.&#39;)
+
+        # Set up animators
+        self._animators = []
+
+        # Text in the suptitle
+        self._current_title_text = None
+        if self.title:
+            self._current_title_text = fig.suptitle(self.title)
+        elif self.display_current:
+            self._current_title_text = fig.suptitle(&#39;&#39;)
+
+    def clear(self):
+        for anim in self._animators:
+            anim.clear()
+
+    def init_func(self):
+        return [anim.init_func() for anim in self._animators]
+
+    @abstractmethod
+    def _val_text(self, val):
+        &#34;&#34;&#34;Return formatted display text for the given frame value.&#34;&#34;&#34;
+        return &#39;&#39;
+
+    def _update_current_text(self, val):
+        &#34;&#34;&#34;Update the current title text for a given frame value.&#34;&#34;&#34;
+        new_text = &#39;&#39;
+        if self.title:
+            new_text += self.title + &#39;\n&#39;
+        new_text += self._val_text(val)
+        self._current_title_text.set_text(new_text)
+
+    def update(self, frame):
+        artists = []
+        if self.display_current:
+            self._update_current_text(self.calc_frame_val(frame))
+            artists.append(self._current_title_text)
+        else:
+            # Still update title every frame in case it changes
+            self._current_title_text.set_text(self.title)
+        return artists + [anim.update(frame) for anim in self._animators]
+
+    def get_frame_lim(self):
+        # Expand the frame lim enough to be able to encompass the frame limits
+        # of every animator
+        start_frame = None
+        frame_lim = super().get_frame_lim()
+        if frame_lim[0] is not None:
+            start_frame = frame_lim[0]
+        else:
+            start_frame = min(
+                [anim.get_frame_lim()[0] for anim in self._animators])
+
+        end_frame = None
+        if frame_lim[1] is not None:
+            end_frame = frame_lim[1]
+        else:
+            end_frame = max(
+                [anim.get_frame_lim()[1] for anim in self._animators])
+
+        return (start_frame, end_frame)
+
+&#34;&#34;&#34;Runs multiple time-evolution animations simultaneously on different subplots
+&#34;&#34;&#34;
+&#34;&#34;&#34;
+    animation_params = list of dictionaries containing parameters for animators
+        in each subplot, in the following format:
+        [
+            {
+                &#34;animator&#34;: &lt;STAnimator constructor&gt;,
+                &#34;animator_options&#34;:
+                {
+                    &lt;kwargs except fig, ax, ct_per_sec, instant_pause_time,
+                        fps, display_current_time,
+                        display_current_time_decimals&gt;
+                },
+                &#34;transformable&#34;: &lt;LorentzTransformable object&gt;,
+                &#34;draw_options&#34;:
+                {
+                    &lt;kwargs except plotter&gt;
+                }
+            }
+        ]
+    &#34;&#34;&#34;
+class MultiTimeAnimator(MultiAnimator, simpg.TimeAnimator):
+    &#34;&#34;&#34;Runs multiple time-evolution animations simultaneously on different
+    subplots.
+
+    Args:
+        animations_params (list): List of dictionaries containing parameters for
+            animators in each subplot. Each individual dictionary has the
+            following items:
+
+            - **animator**: `type`, initializer for the
+                `specrel.graphics.simpgraph.STAnimator` to use.
+            - **transformable**: `specrel.geom.LorentzTransformable` object to
+                animate.
+            - **animator_options**: optional, dictionary of certain keyword
+                arguments for `animator`, *except* for the following:
+                - `fig`
+                - `ax`
+                - `ct_per_sec`
+                - `instant_pause_time`
+                - `fps`
+                - `display_current_time`
+                - `display_current_time_decimals`
+            - **draw_options**: optional, dictionary of keyword arguments to
+                `specrel.geom.LorentzTransformable.draw`, except for the
+                `plotter` argument.
+
+        fig (matplotlib.figure.Figure, optional): See
+            `specrel.graphics.compgraph.MultiAnimator`.
+        axs (list, optional): See `specrel.graphics.compgraph.MultiAnimator`.
+        tlim (tuple, optional): Start and end time of the animation.
+        others: See `specrel.graphics.simpgraph.TimeAnimator`.
+    &#34;&#34;&#34;
+    def __init__(self,
+        animations_params,
+        fig=graphrc[&#39;fig&#39;],
+        axs=graphrc[&#39;axs&#39;],
+        tlim=(0, 0),
+        ct_per_sec=graphrc[&#39;anim.time.ct_per_sec&#39;],
+        instant_pause_time=graphrc[&#39;anim.time.instant_pause_time&#39;],
+        fps=graphrc[&#39;anim.fps&#39;],
+        display_current_time=graphrc[&#39;anim.display_current&#39;],
+        display_current_time_decimals=
+            graphrc[&#39;anim.display_current_decimals&#39;],
+        title=graphrc[&#39;title&#39;]):
+
+        simpg.TimeAnimator.__init__(self, fig, ct_per_sec, instant_pause_time,
+            fps, display_current_time, display_current_time_decimals)
+        frame_lim = (self.calc_frame_idx(tlim[0]), self.calc_frame_idx(tlim[1]))
+        MultiAnimator.__init__(self, len(animations_params), fig, axs,
+            self.stepsize, fps, display_current_time,
+            display_current_time_decimals, title, frame_lim)
+
+        # Set up animators and draw the objects
+        for params, ax in zip(animations_params, self.axs):
+            # Construct animator
+            anim_kwargs = {}
+            if &#39;animator_options&#39; in params:
+                anim_kwargs = dict(params[&#39;animator_options&#39;])
+                for omit in [&#39;fig&#39;, &#39;ax&#39;, &#39;ct_per_sec&#39;, &#39;instant_pause_time&#39;,
+                    &#39;fps&#39;, &#39;display_current_time&#39;,
+                    &#39;display_current_time_decimals&#39;]:
+                    anim_kwargs.pop(omit, None)
+            anim = params[&#39;animator&#39;](
+                fig=self.fig, ax=ax,
+                ct_per_sec=ct_per_sec,
+                instant_pause_time=instant_pause_time,
+                fps=fps,
+                display_current_time=False,
+                **anim_kwargs)
+
+            # Draw object with animator
+            draw_kwargs = {}
+            if &#39;draw_options&#39; in params:
+                draw_kwargs = dict(params[&#39;draw_options&#39;])
+                draw_kwargs.pop(&#39;plotter&#39;, None)
+            params[&#39;transformable&#39;].draw(plotter=anim, **draw_kwargs)
+
+            # Add animator to the master list
+            self._animators.append(anim)
+
+        # Broaden the frame lists across all animators
+        broadened_flim = self.get_frame_lim()
+        broadened_tlim = (self.calc_frame_val(broadened_flim[0]),
+                          self.calc_frame_val(broadened_flim[1]))
+        for anim in self._animators:
+            anim.resize(broadened_tlim)
+
+    def _val_text(self, val):
+        return f&#39;Time = {{:.{self.display_current_decimals}f}} s&#39;.format(val)
+
+    &#34;&#34;&#34;Get dict with keys corresponding to frame indexes, and boolean values
+    for whether or not any animator has flagged the frame for pause&#34;&#34;&#34;
+    def _get_frame_pause_flags(self):
+        frame_pause_flags = {}
+        for anim in self._animators:
+            for frame, flag in anim.frame_pause_flags.items():
+                if frame not in frame_pause_flags:
+                    frame_pause_flags[frame] = False
+                # Pause if any animator pauses at a specific frame
+                frame_pause_flags[frame] = max(frame_pause_flags[frame], flag)
+        return frame_pause_flags
+
+    def _get_frame_list(self):
+        # Insert pause frames where necessary
+        return [f for f in MultiAnimator._get_frame_list(self)
+            for repeat in range(
+                self._pause_frames if self._get_frame_pause_flags()[f] else 1)]
+
+class MultiTransformAnimator(MultiAnimator):
+    &#34;&#34;&#34;Runs multiple Lorentz transform animations simultaneously on different
+    subplots.
+
+    Args:
+        animation_params (list): List of dictionaries containing parameters for
+            animators in each subplot. Each individual dictionary has the
+            following items:
+
+            - **transformable**: `specrel.geom.LorentzTransformable` object to
+                animate.
+            - **animator_options**: optional, dictionary of certain keyword
+                arguments for `specrel.graphics.simpgraph.TransformAnimator`
+                initialization, from the following list:
+                - `origin`
+                - `stanimator`
+                - `stanimator_options`
+                - `tlim`
+                - `xlim`
+                - `time`
+                - `title`
+
+        fig (matplotlib.figure.Figure, optional): See
+            `specrel.graphics.compgraph.MultiAnimator`.
+        axs (list, optional): See `specrel.graphics.compgraph.MultiAnimator`.
+        others: See `specrel.graphics.simpgraph.TransformAnimator`.
+    &#34;&#34;&#34;
+    def __init__(self,
+        animations_params,
+        velocity,
+        fig=graphrc[&#39;fig&#39;],
+        axs=graphrc[&#39;axs&#39;],
+        transition_duration=graphrc[&#39;anim.transform.transition_duration&#39;],
+        fps=graphrc[&#39;anim.fps&#39;],
+        display_current_velocity=graphrc[&#39;anim.display_current&#39;],
+        display_current_velocity_decimals=
+            graphrc[&#39;anim.display_current_decimals&#39;],
+        title=graphrc[&#39;title&#39;]):
+
+        nsteps = round(transition_duration * fps)
+        super().__init__(len(animations_params), fig, axs, velocity / nsteps,
+            fps, display_current_velocity, display_current_velocity_decimals,
+            title, (0, 0))
+
+        # Set up animators
+        for params, ax in zip(animations_params, self.axs):
+            # Construct animator
+            anim_kwargs = {}
+            if &#39;animator_options&#39; in params:
+                anim_kwargs = dict(params[&#39;animator_options&#39;])
+                for omit in [&#39;lorentz_transformable&#39;, &#39;velocity&#39;, &#39;fig&#39;, &#39;ax&#39;,
+                    &#39;transition_duration&#39;, &#39;fps&#39;, &#39;display_current_velocity&#39;,
+                    &#39;display_current_velocity_decimals&#39;]:
+                    anim_kwargs.pop(omit, None)
+            # Add animator to the master list
+            self._animators.append(
+                simpg.TransformAnimator(
+                    copy.deepcopy(params[&#39;transformable&#39;]),
+                    velocity,
+                    fig=self.fig,
+                    ax=ax,
+                    transition_duration=transition_duration,
+                    fps=fps,
+                    display_current_velocity=False,
+                    **anim_kwargs
+                )
+            )
+
+    def _val_text(self, val):
+        return f&#39;$v = {{:.{self.display_current_decimals}f}}c$&#39;.format(val)
+
+class Rewinder(simpg.BaseAnimator):
+    &#34;&#34;&#34;Animates the &#34;rewinding&#34; of an animator&#39;s animation.
+
+    Args:
+        animator (specrel.graphics.simpgraph.BaseAnimator): Animator to rewind.
+        rewind_rate (int, optional): See `rewind_rate` attribute.
+        rewind_title (str, optional): Rewind animation title; overrides title of
+            the original animation.
+        end_pause (float, optional): Pause length in seconds to insert at the
+            beginning and end of the rewind animation.
+
+    Attributes:
+        animator (specrel.graphics.simpgraph.BaseAnimator): Animator to rewind.
+        end_pause_frames (int): Number of pause frame at the beginning and end
+            of the rewind animation.
+        rewind_rate (int): Speedup factor of the rewind animation relative to
+            the original.
+    &#34;&#34;&#34;
+
+    def __init__(self, animator, rewind_rate=2,
+        rewind_title=&#39;Rewinding \u25C0 \u25C0&#39;, end_pause=1):
+        super().__init__(animator.fig, animator.stepsize, animator.fps,
+            animator.display_current, animator.display_current_decimals,
+            rewind_title, animator.get_frame_lim())
+        self.animator = animator
+        self.rewind_rate = rewind_rate
+        self.end_pause_frames = round(end_pause * self.fps)
+
+    def clear(self):
+        self._cached_anim = None
+
+    def init_func(self):
+        return self.animator.init_func()
+
+    def update(self, frame):
+        old_title = self.animator.title
+        # Temporarily change the title of the animator if actually rewinding
+        frame_lim = self.get_frame_lim()
+        if frame != frame_lim[0] and frame != frame_lim[1]:
+            self.animator.title = self.title
+        artist = self.animator.update(frame)
+        self.animator.title = old_title
+        return artist
+
+    def _get_frame_list(self):
+        # Run through frames backwards, at rewind_rate times the rate of the
+        # original
+        frame_lim = self.get_frame_lim()
+        frame_list = list(range(
+            frame_lim[1], frame_lim[0]-1, -self.rewind_rate))
+        # Explicitly make sure the starting frame is included
+        if frame_lim[0] not in frame_list:
+            frame_list.append(frame_lim[0])
+        # Pause at the start and end
+        # if self.end_pause_frames is 0, -1*[entry] will add an empty list
+        frame_list = (self.end_pause_frames - 1)*frame_list[:1] \
+            + frame_list + (self.end_pause_frames - 1)*frame_list[-1:]
+        return frame_list
+
+def concat_demuxer(input_files, output_file):
+    &#34;&#34;&#34;Concatenate video files.
+
+    Args:
+        input_files (list): List of input file names.
+        output_file (str): Output file name.
+    &#34;&#34;&#34;
+    # Write temporary file list as input for FFmpeg
+    tempfilename = &#39;concat_demuxer_temp_input_file.txt&#39;
+    with open(tempfilename, &#39;w+&#39;) as tempfile:
+        for i in input_files:
+            tempfile.write(f&#34;file &#39;{i}&#39;\n&#34;)
+
+    # Concatenate the video files with FFmpeg&#39;s concat demuxer
+    subprocess.run([&#39;ffmpeg&#39;, &#39;-f&#39;, &#39;concat&#39;, &#39;-safe&#39;, &#39;0&#39;, &#39;-i&#39;, tempfilename,
+        &#39;-c&#39;, &#39;copy&#39;, output_file])
+
+    # Delete temporary file list
+    try:
+        os.remove(tempfilename)
+    except OSError as e:
+        print(f&#34;[Error] {e.strerror}: &#39;{tempfilename}&#39;&#34;)</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="specrel.graphics.compgraph.concat_demuxer"><code class="name flex">
+<span>def <span class="ident">concat_demuxer</span></span>(<span>input_files, output_file)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Concatenate video files.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>input_files</code></strong> :&ensp;<code>list</code></dt>
+<dd>List of input file names.</dd>
+<dt><strong><code>output_file</code></strong> :&ensp;<code>str</code></dt>
+<dd>Output file name.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def concat_demuxer(input_files, output_file):
+    &#34;&#34;&#34;Concatenate video files.
+
+    Args:
+        input_files (list): List of input file names.
+        output_file (str): Output file name.
+    &#34;&#34;&#34;
+    # Write temporary file list as input for FFmpeg
+    tempfilename = &#39;concat_demuxer_temp_input_file.txt&#39;
+    with open(tempfilename, &#39;w+&#39;) as tempfile:
+        for i in input_files:
+            tempfile.write(f&#34;file &#39;{i}&#39;\n&#34;)
+
+    # Concatenate the video files with FFmpeg&#39;s concat demuxer
+    subprocess.run([&#39;ffmpeg&#39;, &#39;-f&#39;, &#39;concat&#39;, &#39;-safe&#39;, &#39;0&#39;, &#39;-i&#39;, tempfilename,
+        &#39;-c&#39;, &#39;copy&#39;, output_file])
+
+    # Delete temporary file list
+    try:
+        os.remove(tempfilename)
+    except OSError as e:
+        print(f&#34;[Error] {e.strerror}: &#39;{tempfilename}&#39;&#34;)</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="specrel.graphics.compgraph.MultiAnimator"><code class="flex name class">
+<span>class <span class="ident">MultiAnimator</span></span>
+<span>(</span><span>n_animations, fig=None, axs=None, stepsize=None, fps=50, display_current=True, display_current_decimals=3, title=None, frame_lim=(0, 0))</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Runs multiple animations simultaneously on different subplots.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>n_animations</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of animations to run simultaneously.</dd>
+<dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.figure.Figure</code>, optional</dt>
+<dd>Figure window. If <code>None</code>, a
+new figure window is created.</dd>
+<dt><strong><code>axs</code></strong> :&ensp;<code>list</code>, optional</dt>
+<dd>List of axes in row major format. If <code>None</code>, a
+new set of axes is created under a new figure window.</dd>
+<dt><strong><code>others</code></strong></dt>
+<dd>See <a title="specrel.graphics.simpgraph.BaseAnimator" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator"><code>BaseAnimator</code></a>.</dd>
+</dl>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>axs</code></strong> :&ensp;<code>list</code></dt>
+<dd>List of axes to draw on in row major format.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">class MultiAnimator(simpg.FigureCreator, simpg.BaseAnimator):
+    &#34;&#34;&#34;Runs multiple animations simultaneously on different subplots.
+
+    Args:
+        n_animations (int): Number of animations to run simultaneously.
+        fig (matplotlib.figure.Figure, optional): Figure window. If `None`, a
+            new figure window is created.
+        axs (list, optional): List of axes in row major format. If `None`, a
+            new set of axes is created under a new figure window.
+        others: See `specrel.graphics.simpgraph.BaseAnimator`.
+
+    Attributes:
+        axs (list): List of axes to draw on in row major format.
+    &#34;&#34;&#34;
+    def __init__(self,
+        n_animations,
+        fig=graphrc[&#39;fig&#39;],
+        axs=graphrc[&#39;axs&#39;],
+        stepsize=None,
+        fps=graphrc[&#39;anim.fps&#39;],
+        display_current=graphrc[&#39;anim.display_current&#39;],
+        display_current_decimals=
+            graphrc[&#39;anim.display_current_decimals&#39;],
+        title=graphrc[&#39;title&#39;],
+        frame_lim=(0, 0)):
+
+        simpg.FigureCreator.__init__(self)
+        # Make a new figure if necessary
+        if fig is None and axs is None:
+            # Default to a (1 x n) subplot
+            fig, axs = plt.subplots(1, n_animations)
+        elif fig is None or axs is None:
+            raise ValueError(&#39;Must give both figure and axes, or neither.&#39;)
+        self.axs = axs
+        simpg.BaseAnimator.__init__(self, fig, stepsize, fps, display_current,
+            display_current_decimals, title, frame_lim)
+
+        # Make sure there&#39;s at least one animation
+        if n_animations == 0:
+            raise ValueError(&#39;Number of animations must be nonzero.&#39;)
+        # Make sure animations and axes match
+        if n_animations != len(self.axs):
+            raise ValueError(&#39;Number of animations and axes must match.&#39;)
+
+        # Set up animators
+        self._animators = []
+
+        # Text in the suptitle
+        self._current_title_text = None
+        if self.title:
+            self._current_title_text = fig.suptitle(self.title)
+        elif self.display_current:
+            self._current_title_text = fig.suptitle(&#39;&#39;)
+
+    def clear(self):
+        for anim in self._animators:
+            anim.clear()
+
+    def init_func(self):
+        return [anim.init_func() for anim in self._animators]
+
+    @abstractmethod
+    def _val_text(self, val):
+        &#34;&#34;&#34;Return formatted display text for the given frame value.&#34;&#34;&#34;
+        return &#39;&#39;
+
+    def _update_current_text(self, val):
+        &#34;&#34;&#34;Update the current title text for a given frame value.&#34;&#34;&#34;
+        new_text = &#39;&#39;
+        if self.title:
+            new_text += self.title + &#39;\n&#39;
+        new_text += self._val_text(val)
+        self._current_title_text.set_text(new_text)
+
+    def update(self, frame):
+        artists = []
+        if self.display_current:
+            self._update_current_text(self.calc_frame_val(frame))
+            artists.append(self._current_title_text)
+        else:
+            # Still update title every frame in case it changes
+            self._current_title_text.set_text(self.title)
+        return artists + [anim.update(frame) for anim in self._animators]
+
+    def get_frame_lim(self):
+        # Expand the frame lim enough to be able to encompass the frame limits
+        # of every animator
+        start_frame = None
+        frame_lim = super().get_frame_lim()
+        if frame_lim[0] is not None:
+            start_frame = frame_lim[0]
+        else:
+            start_frame = min(
+                [anim.get_frame_lim()[0] for anim in self._animators])
+
+        end_frame = None
+        if frame_lim[1] is not None:
+            end_frame = frame_lim[1]
+        else:
+            end_frame = max(
+                [anim.get_frame_lim()[1] for anim in self._animators])
+
+        return (start_frame, end_frame)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="specrel.graphics.simpgraph.FigureCreator" href="simpgraph.html#specrel.graphics.simpgraph.FigureCreator">FigureCreator</a></li>
+<li><a title="specrel.graphics.simpgraph.BaseAnimator" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator">BaseAnimator</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="specrel.graphics.compgraph.MultiTimeAnimator" href="#specrel.graphics.compgraph.MultiTimeAnimator">MultiTimeAnimator</a></li>
+<li><a title="specrel.graphics.compgraph.MultiTransformAnimator" href="#specrel.graphics.compgraph.MultiTransformAnimator">MultiTransformAnimator</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="specrel.graphics.simpgraph.FigureCreator" href="simpgraph.html#specrel.graphics.simpgraph.FigureCreator">FigureCreator</a></b></code>:
+<ul class="hlist">
+<li><code><a title="specrel.graphics.simpgraph.FigureCreator.close" href="simpgraph.html#specrel.graphics.simpgraph.FigureCreator.close">close</a></code></li>
+</ul>
+</li>
+<li><code><b><a title="specrel.graphics.simpgraph.BaseAnimator" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator">BaseAnimator</a></b></code>:
+<ul class="hlist">
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.clear" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.clear">clear</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.get_frame_lim" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.init_func" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.init_func">init_func</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.update" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.update">update</a></code></li>
+</ul>
+</li>
+<li><code><b><a title="specrel.graphics.simpgraph.BaseAnimator" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator">BaseAnimator</a></b></code>:
+<ul class="hlist">
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.animate" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.animate">animate</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.calc_frame_idx" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.calc_frame_val" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.save" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.save">save</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.show" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.show">show</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="specrel.graphics.compgraph.MultiTimeAnimator"><code class="flex name class">
+<span>class <span class="ident">MultiTimeAnimator</span></span>
+<span>(</span><span>animations_params, fig=None, axs=None, tlim=(0, 0), ct_per_sec=1, instant_pause_time=1, fps=50, display_current_time=True, display_current_time_decimals=3, title=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Runs multiple time-evolution animations simultaneously on different
+subplots.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>animations_params</code></strong> :&ensp;<code>list</code></dt>
+<dd>
+<p>List of dictionaries containing parameters for
+animators in each subplot. Each individual dictionary has the
+following items:</p>
+<ul>
+<li><strong>animator</strong>: <code>type</code>, initializer for the
+<a title="specrel.graphics.simpgraph.STAnimator" href="simpgraph.html#specrel.graphics.simpgraph.STAnimator"><code>STAnimator</code></a> to use.</li>
+<li><strong>transformable</strong>: <a title="specrel.geom.LorentzTransformable" href="../geom.html#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a> object to
+animate.</li>
+<li><strong>animator_options</strong>: optional, dictionary of certain keyword
+arguments for <code>animator</code>, <em>except</em> for the following:<ul>
+<li><code>fig</code></li>
+<li><code>ax</code></li>
+<li><code>ct_per_sec</code></li>
+<li><code>instant_pause_time</code></li>
+<li><code>fps</code></li>
+<li><code>display_current_time</code></li>
+<li><code>display_current_time_decimals</code></li>
+</ul>
+</li>
+<li><strong>draw_options</strong>: optional, dictionary of keyword arguments to
+<a title="specrel.geom.LorentzTransformable.draw" href="../geom.html#specrel.geom.LorentzTransformable.draw"><code>LorentzTransformable.draw()</code></a>, except for the
+<code>plotter</code> argument.</li>
+</ul>
+</dd>
+<dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.figure.Figure</code>, optional</dt>
+<dd>See
+<a title="specrel.graphics.compgraph.MultiAnimator" href="#specrel.graphics.compgraph.MultiAnimator"><code>MultiAnimator</code></a>.</dd>
+<dt><strong><code>axs</code></strong> :&ensp;<code>list</code>, optional</dt>
+<dd>See <a title="specrel.graphics.compgraph.MultiAnimator" href="#specrel.graphics.compgraph.MultiAnimator"><code>MultiAnimator</code></a>.</dd>
+<dt><strong><code>tlim</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>Start and end time of the animation.</dd>
+<dt><strong><code>others</code></strong></dt>
+<dd>See <a title="specrel.graphics.simpgraph.TimeAnimator" href="simpgraph.html#specrel.graphics.simpgraph.TimeAnimator"><code>TimeAnimator</code></a>.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">class MultiTimeAnimator(MultiAnimator, simpg.TimeAnimator):
+    &#34;&#34;&#34;Runs multiple time-evolution animations simultaneously on different
+    subplots.
+
+    Args:
+        animations_params (list): List of dictionaries containing parameters for
+            animators in each subplot. Each individual dictionary has the
+            following items:
+
+            - **animator**: `type`, initializer for the
+                `specrel.graphics.simpgraph.STAnimator` to use.
+            - **transformable**: `specrel.geom.LorentzTransformable` object to
+                animate.
+            - **animator_options**: optional, dictionary of certain keyword
+                arguments for `animator`, *except* for the following:
+                - `fig`
+                - `ax`
+                - `ct_per_sec`
+                - `instant_pause_time`
+                - `fps`
+                - `display_current_time`
+                - `display_current_time_decimals`
+            - **draw_options**: optional, dictionary of keyword arguments to
+                `specrel.geom.LorentzTransformable.draw`, except for the
+                `plotter` argument.
+
+        fig (matplotlib.figure.Figure, optional): See
+            `specrel.graphics.compgraph.MultiAnimator`.
+        axs (list, optional): See `specrel.graphics.compgraph.MultiAnimator`.
+        tlim (tuple, optional): Start and end time of the animation.
+        others: See `specrel.graphics.simpgraph.TimeAnimator`.
+    &#34;&#34;&#34;
+    def __init__(self,
+        animations_params,
+        fig=graphrc[&#39;fig&#39;],
+        axs=graphrc[&#39;axs&#39;],
+        tlim=(0, 0),
+        ct_per_sec=graphrc[&#39;anim.time.ct_per_sec&#39;],
+        instant_pause_time=graphrc[&#39;anim.time.instant_pause_time&#39;],
+        fps=graphrc[&#39;anim.fps&#39;],
+        display_current_time=graphrc[&#39;anim.display_current&#39;],
+        display_current_time_decimals=
+            graphrc[&#39;anim.display_current_decimals&#39;],
+        title=graphrc[&#39;title&#39;]):
+
+        simpg.TimeAnimator.__init__(self, fig, ct_per_sec, instant_pause_time,
+            fps, display_current_time, display_current_time_decimals)
+        frame_lim = (self.calc_frame_idx(tlim[0]), self.calc_frame_idx(tlim[1]))
+        MultiAnimator.__init__(self, len(animations_params), fig, axs,
+            self.stepsize, fps, display_current_time,
+            display_current_time_decimals, title, frame_lim)
+
+        # Set up animators and draw the objects
+        for params, ax in zip(animations_params, self.axs):
+            # Construct animator
+            anim_kwargs = {}
+            if &#39;animator_options&#39; in params:
+                anim_kwargs = dict(params[&#39;animator_options&#39;])
+                for omit in [&#39;fig&#39;, &#39;ax&#39;, &#39;ct_per_sec&#39;, &#39;instant_pause_time&#39;,
+                    &#39;fps&#39;, &#39;display_current_time&#39;,
+                    &#39;display_current_time_decimals&#39;]:
+                    anim_kwargs.pop(omit, None)
+            anim = params[&#39;animator&#39;](
+                fig=self.fig, ax=ax,
+                ct_per_sec=ct_per_sec,
+                instant_pause_time=instant_pause_time,
+                fps=fps,
+                display_current_time=False,
+                **anim_kwargs)
+
+            # Draw object with animator
+            draw_kwargs = {}
+            if &#39;draw_options&#39; in params:
+                draw_kwargs = dict(params[&#39;draw_options&#39;])
+                draw_kwargs.pop(&#39;plotter&#39;, None)
+            params[&#39;transformable&#39;].draw(plotter=anim, **draw_kwargs)
+
+            # Add animator to the master list
+            self._animators.append(anim)
+
+        # Broaden the frame lists across all animators
+        broadened_flim = self.get_frame_lim()
+        broadened_tlim = (self.calc_frame_val(broadened_flim[0]),
+                          self.calc_frame_val(broadened_flim[1]))
+        for anim in self._animators:
+            anim.resize(broadened_tlim)
+
+    def _val_text(self, val):
+        return f&#39;Time = {{:.{self.display_current_decimals}f}} s&#39;.format(val)
+
+    &#34;&#34;&#34;Get dict with keys corresponding to frame indexes, and boolean values
+    for whether or not any animator has flagged the frame for pause&#34;&#34;&#34;
+    def _get_frame_pause_flags(self):
+        frame_pause_flags = {}
+        for anim in self._animators:
+            for frame, flag in anim.frame_pause_flags.items():
+                if frame not in frame_pause_flags:
+                    frame_pause_flags[frame] = False
+                # Pause if any animator pauses at a specific frame
+                frame_pause_flags[frame] = max(frame_pause_flags[frame], flag)
+        return frame_pause_flags
+
+    def _get_frame_list(self):
+        # Insert pause frames where necessary
+        return [f for f in MultiAnimator._get_frame_list(self)
+            for repeat in range(
+                self._pause_frames if self._get_frame_pause_flags()[f] else 1)]</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="specrel.graphics.compgraph.MultiAnimator" href="#specrel.graphics.compgraph.MultiAnimator">MultiAnimator</a></li>
+<li><a title="specrel.graphics.simpgraph.FigureCreator" href="simpgraph.html#specrel.graphics.simpgraph.FigureCreator">FigureCreator</a></li>
+<li><a title="specrel.graphics.simpgraph.TimeAnimator" href="simpgraph.html#specrel.graphics.simpgraph.TimeAnimator">TimeAnimator</a></li>
+<li><a title="specrel.graphics.simpgraph.BaseAnimator" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator">BaseAnimator</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="specrel.graphics.compgraph.MultiAnimator" href="#specrel.graphics.compgraph.MultiAnimator">MultiAnimator</a></b></code>:
+<ul class="hlist">
+<li><code><a title="specrel.graphics.compgraph.MultiAnimator.animate" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.animate">animate</a></code></li>
+<li><code><a title="specrel.graphics.compgraph.MultiAnimator.calc_frame_idx" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
+<li><code><a title="specrel.graphics.compgraph.MultiAnimator.calc_frame_val" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
+<li><code><a title="specrel.graphics.compgraph.MultiAnimator.clear" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.clear">clear</a></code></li>
+<li><code><a title="specrel.graphics.compgraph.MultiAnimator.close" href="simpgraph.html#specrel.graphics.simpgraph.FigureCreator.close">close</a></code></li>
+<li><code><a title="specrel.graphics.compgraph.MultiAnimator.get_frame_lim" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
+<li><code><a title="specrel.graphics.compgraph.MultiAnimator.init_func" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.init_func">init_func</a></code></li>
+<li><code><a title="specrel.graphics.compgraph.MultiAnimator.save" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.save">save</a></code></li>
+<li><code><a title="specrel.graphics.compgraph.MultiAnimator.show" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.show">show</a></code></li>
+<li><code><a title="specrel.graphics.compgraph.MultiAnimator.update" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.update">update</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="specrel.graphics.compgraph.MultiTransformAnimator"><code class="flex name class">
+<span>class <span class="ident">MultiTransformAnimator</span></span>
+<span>(</span><span>animations_params, velocity, fig=None, axs=None, transition_duration=2, fps=50, display_current_velocity=True, display_current_velocity_decimals=3, title=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Runs multiple Lorentz transform animations simultaneously on different
+subplots.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>animation_params</code></strong> :&ensp;<code>list</code></dt>
+<dd>
+<p>List of dictionaries containing parameters for
+animators in each subplot. Each individual dictionary has the
+following items:</p>
+<ul>
+<li><strong>transformable</strong>: <a title="specrel.geom.LorentzTransformable" href="../geom.html#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a> object to
+animate.</li>
+<li><strong>animator_options</strong>: optional, dictionary of certain keyword
+arguments for <a title="specrel.graphics.simpgraph.TransformAnimator" href="simpgraph.html#specrel.graphics.simpgraph.TransformAnimator"><code>TransformAnimator</code></a>
+initialization, from the following list:<ul>
+<li><code>origin</code></li>
+<li><code>stanimator</code></li>
+<li><code>stanimator_options</code></li>
+<li><code>tlim</code></li>
+<li><code>xlim</code></li>
+<li><code>time</code></li>
+<li><code>title</code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.figure.Figure</code>, optional</dt>
+<dd>See
+<a title="specrel.graphics.compgraph.MultiAnimator" href="#specrel.graphics.compgraph.MultiAnimator"><code>MultiAnimator</code></a>.</dd>
+<dt><strong><code>axs</code></strong> :&ensp;<code>list</code>, optional</dt>
+<dd>See <a title="specrel.graphics.compgraph.MultiAnimator" href="#specrel.graphics.compgraph.MultiAnimator"><code>MultiAnimator</code></a>.</dd>
+<dt><strong><code>others</code></strong></dt>
+<dd>See <a title="specrel.graphics.simpgraph.TransformAnimator" href="simpgraph.html#specrel.graphics.simpgraph.TransformAnimator"><code>TransformAnimator</code></a>.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">class MultiTransformAnimator(MultiAnimator):
+    &#34;&#34;&#34;Runs multiple Lorentz transform animations simultaneously on different
+    subplots.
+
+    Args:
+        animation_params (list): List of dictionaries containing parameters for
+            animators in each subplot. Each individual dictionary has the
+            following items:
+
+            - **transformable**: `specrel.geom.LorentzTransformable` object to
+                animate.
+            - **animator_options**: optional, dictionary of certain keyword
+                arguments for `specrel.graphics.simpgraph.TransformAnimator`
+                initialization, from the following list:
+                - `origin`
+                - `stanimator`
+                - `stanimator_options`
+                - `tlim`
+                - `xlim`
+                - `time`
+                - `title`
+
+        fig (matplotlib.figure.Figure, optional): See
+            `specrel.graphics.compgraph.MultiAnimator`.
+        axs (list, optional): See `specrel.graphics.compgraph.MultiAnimator`.
+        others: See `specrel.graphics.simpgraph.TransformAnimator`.
+    &#34;&#34;&#34;
+    def __init__(self,
+        animations_params,
+        velocity,
+        fig=graphrc[&#39;fig&#39;],
+        axs=graphrc[&#39;axs&#39;],
+        transition_duration=graphrc[&#39;anim.transform.transition_duration&#39;],
+        fps=graphrc[&#39;anim.fps&#39;],
+        display_current_velocity=graphrc[&#39;anim.display_current&#39;],
+        display_current_velocity_decimals=
+            graphrc[&#39;anim.display_current_decimals&#39;],
+        title=graphrc[&#39;title&#39;]):
+
+        nsteps = round(transition_duration * fps)
+        super().__init__(len(animations_params), fig, axs, velocity / nsteps,
+            fps, display_current_velocity, display_current_velocity_decimals,
+            title, (0, 0))
+
+        # Set up animators
+        for params, ax in zip(animations_params, self.axs):
+            # Construct animator
+            anim_kwargs = {}
+            if &#39;animator_options&#39; in params:
+                anim_kwargs = dict(params[&#39;animator_options&#39;])
+                for omit in [&#39;lorentz_transformable&#39;, &#39;velocity&#39;, &#39;fig&#39;, &#39;ax&#39;,
+                    &#39;transition_duration&#39;, &#39;fps&#39;, &#39;display_current_velocity&#39;,
+                    &#39;display_current_velocity_decimals&#39;]:
+                    anim_kwargs.pop(omit, None)
+            # Add animator to the master list
+            self._animators.append(
+                simpg.TransformAnimator(
+                    copy.deepcopy(params[&#39;transformable&#39;]),
+                    velocity,
+                    fig=self.fig,
+                    ax=ax,
+                    transition_duration=transition_duration,
+                    fps=fps,
+                    display_current_velocity=False,
+                    **anim_kwargs
+                )
+            )
+
+    def _val_text(self, val):
+        return f&#39;$v = {{:.{self.display_current_decimals}f}}c$&#39;.format(val)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="specrel.graphics.compgraph.MultiAnimator" href="#specrel.graphics.compgraph.MultiAnimator">MultiAnimator</a></li>
+<li><a title="specrel.graphics.simpgraph.FigureCreator" href="simpgraph.html#specrel.graphics.simpgraph.FigureCreator">FigureCreator</a></li>
+<li><a title="specrel.graphics.simpgraph.BaseAnimator" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator">BaseAnimator</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="specrel.graphics.compgraph.MultiAnimator" href="#specrel.graphics.compgraph.MultiAnimator">MultiAnimator</a></b></code>:
+<ul class="hlist">
+<li><code><a title="specrel.graphics.compgraph.MultiAnimator.animate" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.animate">animate</a></code></li>
+<li><code><a title="specrel.graphics.compgraph.MultiAnimator.calc_frame_idx" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
+<li><code><a title="specrel.graphics.compgraph.MultiAnimator.calc_frame_val" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
+<li><code><a title="specrel.graphics.compgraph.MultiAnimator.clear" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.clear">clear</a></code></li>
+<li><code><a title="specrel.graphics.compgraph.MultiAnimator.close" href="simpgraph.html#specrel.graphics.simpgraph.FigureCreator.close">close</a></code></li>
+<li><code><a title="specrel.graphics.compgraph.MultiAnimator.get_frame_lim" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
+<li><code><a title="specrel.graphics.compgraph.MultiAnimator.init_func" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.init_func">init_func</a></code></li>
+<li><code><a title="specrel.graphics.compgraph.MultiAnimator.save" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.save">save</a></code></li>
+<li><code><a title="specrel.graphics.compgraph.MultiAnimator.show" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.show">show</a></code></li>
+<li><code><a title="specrel.graphics.compgraph.MultiAnimator.update" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.update">update</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="specrel.graphics.compgraph.Rewinder"><code class="flex name class">
+<span>class <span class="ident">Rewinder</span></span>
+<span>(</span><span>animator, rewind_rate=2, rewind_title='Rewinding ◀ ◀', end_pause=1)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Animates the "rewinding" of an animator's animation.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>animator</code></strong> :&ensp;<a title="specrel.graphics.simpgraph.BaseAnimator" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator"><code>BaseAnimator</code></a></dt>
+<dd>Animator to rewind.</dd>
+<dt><strong><code>rewind_rate</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>See <code>rewind_rate</code> attribute.</dd>
+<dt><strong><code>rewind_title</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Rewind animation title; overrides title of
+the original animation.</dd>
+<dt><strong><code>end_pause</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Pause length in seconds to insert at the
+beginning and end of the rewind animation.</dd>
+</dl>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>animator</code></strong> :&ensp;<a title="specrel.graphics.simpgraph.BaseAnimator" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator"><code>BaseAnimator</code></a></dt>
+<dd>Animator to rewind.</dd>
+<dt><strong><code>end_pause_frames</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of pause frame at the beginning and end
+of the rewind animation.</dd>
+<dt><strong><code>rewind_rate</code></strong> :&ensp;<code>int</code></dt>
+<dd>Speedup factor of the rewind animation relative to
+the original.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">class Rewinder(simpg.BaseAnimator):
+    &#34;&#34;&#34;Animates the &#34;rewinding&#34; of an animator&#39;s animation.
+
+    Args:
+        animator (specrel.graphics.simpgraph.BaseAnimator): Animator to rewind.
+        rewind_rate (int, optional): See `rewind_rate` attribute.
+        rewind_title (str, optional): Rewind animation title; overrides title of
+            the original animation.
+        end_pause (float, optional): Pause length in seconds to insert at the
+            beginning and end of the rewind animation.
+
+    Attributes:
+        animator (specrel.graphics.simpgraph.BaseAnimator): Animator to rewind.
+        end_pause_frames (int): Number of pause frame at the beginning and end
+            of the rewind animation.
+        rewind_rate (int): Speedup factor of the rewind animation relative to
+            the original.
+    &#34;&#34;&#34;
+
+    def __init__(self, animator, rewind_rate=2,
+        rewind_title=&#39;Rewinding \u25C0 \u25C0&#39;, end_pause=1):
+        super().__init__(animator.fig, animator.stepsize, animator.fps,
+            animator.display_current, animator.display_current_decimals,
+            rewind_title, animator.get_frame_lim())
+        self.animator = animator
+        self.rewind_rate = rewind_rate
+        self.end_pause_frames = round(end_pause * self.fps)
+
+    def clear(self):
+        self._cached_anim = None
+
+    def init_func(self):
+        return self.animator.init_func()
+
+    def update(self, frame):
+        old_title = self.animator.title
+        # Temporarily change the title of the animator if actually rewinding
+        frame_lim = self.get_frame_lim()
+        if frame != frame_lim[0] and frame != frame_lim[1]:
+            self.animator.title = self.title
+        artist = self.animator.update(frame)
+        self.animator.title = old_title
+        return artist
+
+    def _get_frame_list(self):
+        # Run through frames backwards, at rewind_rate times the rate of the
+        # original
+        frame_lim = self.get_frame_lim()
+        frame_list = list(range(
+            frame_lim[1], frame_lim[0]-1, -self.rewind_rate))
+        # Explicitly make sure the starting frame is included
+        if frame_lim[0] not in frame_list:
+            frame_list.append(frame_lim[0])
+        # Pause at the start and end
+        # if self.end_pause_frames is 0, -1*[entry] will add an empty list
+        frame_list = (self.end_pause_frames - 1)*frame_list[:1] \
+            + frame_list + (self.end_pause_frames - 1)*frame_list[-1:]
+        return frame_list</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="specrel.graphics.simpgraph.BaseAnimator" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator">BaseAnimator</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="specrel.graphics.simpgraph.BaseAnimator" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator">BaseAnimator</a></b></code>:
+<ul class="hlist">
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.animate" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.animate">animate</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.calc_frame_idx" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.calc_frame_val" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.clear" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.clear">clear</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.get_frame_lim" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.init_func" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.init_func">init_func</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.save" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.save">save</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.show" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.show">show</a></code></li>
+<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.update" href="simpgraph.html#specrel.graphics.simpgraph.BaseAnimator.update">update</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="specrel.graphics" href="index.html">specrel.graphics</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="specrel.graphics.compgraph.concat_demuxer" href="#specrel.graphics.compgraph.concat_demuxer">concat_demuxer</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="specrel.graphics.compgraph.MultiAnimator" href="#specrel.graphics.compgraph.MultiAnimator">MultiAnimator</a></code></h4>
+</li>
+<li>
+<h4><code><a title="specrel.graphics.compgraph.MultiTimeAnimator" href="#specrel.graphics.compgraph.MultiTimeAnimator">MultiTimeAnimator</a></code></h4>
+</li>
+<li>
+<h4><code><a title="specrel.graphics.compgraph.MultiTransformAnimator" href="#specrel.graphics.compgraph.MultiTransformAnimator">MultiTransformAnimator</a></code></h4>
+</li>
+<li>
+<h4><code><a title="specrel.graphics.compgraph.Rewinder" href="#specrel.graphics.compgraph.Rewinder">Rewinder</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.6.3</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

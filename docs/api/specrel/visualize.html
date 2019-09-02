@@ -1,0 +1,2568 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.6.3" />
+<title>specrel.visualize API documentation</title>
+<meta name="description" content="Visualization tools for special relativity …" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase;cursor:pointer}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>specrel.visualize</code></h1>
+</header>
+<section id="section-intro">
+<p>Visualization tools for special relativity.</p>
+<p>Common spacetime visualization functions with API that's less general than
+<a title="specrel.graphics" href="graphics/index.html"><code>specrel.graphics</code></a>, but easier to use. These functions handle much of the
+nitty-gritty interfacing with the core graphics API automatically.</p>
+<p>All <code>visualization</code> functions adhere to the same style of usage:</p>
+<ol>
+<li>Pass in a <a title="specrel.geom.LorentzTransformable" href="geom.html#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a> to plot or animate, along with
+a variety of keyword arguments controlling plot specifications.</li>
+<li>Some sort of plotter, animator, or list thereof is returned, on which <code>show</code>
+and <code>save</code> methods can be called to show the plot interactively or save it to
+a file, respectively.</li>
+</ol>
+<p>Core graphics code is in <a title="specrel.graphics" href="graphics/index.html"><code>specrel.graphics</code></a>.</p>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">&#34;&#34;&#34;Visualization tools for special relativity.
+
+Common spacetime visualization functions with API that&#39;s less general than
+`specrel.graphics`, but easier to use. These functions handle much of the
+nitty-gritty interfacing with the core graphics API automatically.
+
+All `visualization` functions adhere to the same style of usage:
+
+1. Pass in a `specrel.geom.LorentzTransformable` to plot or animate, along with
+a variety of keyword arguments controlling plot specifications.
+2. Some sort of plotter, animator, or list thereof is returned, on which `show`
+and `save` methods can be called to show the plot interactively or save it to
+a file, respectively.
+
+Core graphics code is in `specrel.graphics`.
+&#34;&#34;&#34;
+
+import copy
+
+import matplotlib.pyplot as plt
+
+import specrel.geom as geom
+from specrel.graphics.graphrc import graphrc
+import specrel.graphics.simpgraph as simpg
+import specrel.graphics.compgraph as compg
+
+# Commonly used default values shared by multiple visualize functions
+visrc = {
+    &#39;default_fig_max_height&#39;: 10,
+    &#39;default_fig_max_width&#39;: 10,
+}
+&#34;&#34;&#34;
+Contains default parameters shared by various `visualize` functions.
+
+## Items
+- **default_fig_max_height**: `10`
+    - Maximum total figure height for functions that create new Matplotlib
+        figures. Corresponds to the first element of the `figsize` parameter.
+    - Figure height will be equal to this unless the width is a bigger
+        bottleneck at a given aspect ratio, in which case figure height will be
+        less.
+- **default_fig_max_width**: `10`
+    - Maximum total figure width for functions that create new Matplotlib
+        figures. Corresponds to the first element of the `figsize` parameter.
+    - Figure width will be equal to this unless the height is a bigger
+        bottleneck at a given aspect ratio, in which case figure width will be
+        less.
+&#34;&#34;&#34;
+
+def _prepare_fig_and_axs(fig, axs, nrow, ncol, rect, w_pad=None, h_pad=None):
+    &#34;&#34;&#34;Prepare a default figure and subplot axis set in tight layout, if both
+    the given fig and axs are None.&#34;&#34;&#34;
+    # Create new figure
+    if fig is None and axs is None:
+        # Determine the &#34;unit side length&#34; based on max height and width
+        # parameters, and the number of rows and columns in the subplot
+        unit = min(visrc[&#39;default_fig_max_height&#39;]/nrow,
+            visrc[&#39;default_fig_max_width&#39;]/ncol)
+        fig, axs = plt.subplots(nrow, ncol, figsize=(ncol*unit, nrow*unit))
+        # Return axis list in flattened, row-major format
+        axs = axs.flatten()
+        fig.tight_layout(rect=rect, w_pad=w_pad, h_pad=h_pad)
+    # Can&#39;t have half a specification
+    elif fig is None or axs is None:
+        raise ValueError(&#39;Must give both figure and axes, or neither.&#39;)
+    return fig, axs
+
+def stplot(lorentz_transformable,
+    tlim=geom.geomrc[&#39;tlim&#39;],
+    xlim=geom.geomrc[&#39;xlim&#39;],
+    fig=graphrc[&#39;fig&#39;],
+    ax=graphrc[&#39;ax&#39;],
+    grid=graphrc[&#39;grid&#39;],
+    legend=graphrc[&#39;legend&#39;],
+    legend_loc=graphrc[&#39;legend_loc&#39;],
+    lim_padding=graphrc[&#39;worldline.lim_padding&#39;],
+    equal_lim_expand=graphrc[&#39;worldline.equal_lim_expand&#39;],
+    title=graphrc[&#39;title&#39;],
+    **kwargs):
+    &#34;&#34;&#34;Plots the spacetime plot of a `specrel.geom.LorentzTransformable`.
+
+    Args:
+        lorentz_transformable (specrel.geom.LorentzTransformable): Object to
+            plot.
+        tlim (tuple, optional): Time drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+        xlim (tuple, optional): Position drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+        fig (matplotlib.figure.Figure, optional): Figure window. See
+            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+        ax (matplotlib.axes.Axes, optional): Plotting axes. See
+            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+        grid (bool, optional): Flag for whether or not to plot background grid
+            lines.
+        legend (bool, optional): Flag for whether or not to plot a legend.
+        legend_loc (str, optional): Legend location according to the Matplotlib
+            `loc` parameter. If `legend` is `False`, this parameter is ignored.
+        lim_padding (float, optional): Extra padding on spacetime diagram axis
+            limits, relative to the axis sizes.
+        equal_lim_expand (float, optional): If the limits on an axis are
+            specified to be equal, they will be expanded symmetrically until the
+            axis size is this value.
+        title (str, optional): Plot title.
+        **kwargs: Keyword arguments to forward to Matplotlib when drawing the
+            object.
+
+    Returns:
+        specrel.graphics.simpgraph.WorldlinePlotter:
+            Plotter for the spacetime diagram of the object.
+    &#34;&#34;&#34;
+    plotter = simpg.WorldlinePlotter(
+        fig=fig,
+        ax=ax,
+        grid=grid,
+        legend=legend,
+        legend_loc=legend_loc,
+        lim_padding=lim_padding,
+        equal_lim_expand=equal_lim_expand)
+    lorentz_transformable.draw(plotter=plotter, tlim=tlim, xlim=xlim, **kwargs)
+    plotter.set_labels()
+    if title:
+        plotter.ax.set_title(title)
+    return plotter
+
+def stanimate(lorentz_transformable,
+    tlim=geom.geomrc[&#39;tlim&#39;],
+    xlim=geom.geomrc[&#39;xlim&#39;],
+    fig=graphrc[&#39;fig&#39;],
+    ax=graphrc[&#39;ax&#39;],
+    grid=graphrc[&#39;grid&#39;],
+    legend=graphrc[&#39;legend&#39;],
+    legend_loc=graphrc[&#39;legend_loc&#39;],
+    ct_per_sec=graphrc[&#39;anim.time.ct_per_sec&#39;],
+    instant_pause_time=graphrc[&#39;anim.time.instant_pause_time&#39;],
+    fps=graphrc[&#39;anim.fps&#39;],
+    display_current_time=graphrc[&#39;anim.display_current&#39;],
+    display_current_time_decimals=
+        graphrc[&#39;anim.display_current_decimals&#39;],
+    title=graphrc[&#39;title&#39;],
+    **kwargs):
+    &#34;&#34;&#34;Animates a `specrel.geom.LorentzTransformable` in real space.
+
+    Args:
+        lorentz_transformable (specrel.geom.LorentzTransformable): Object to
+            animate.
+        tlim (tuple, optional): Time drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+        xlim (tuple, optional): Position drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+        fig (matplotlib.figure.Figure, optional): Figure window. See
+            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+        ax (matplotlib.axes.Axes, optional): Plotting axes. See
+            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+        grid (bool, optional): Flag for whether or not to plot background grid
+            lines.
+        legend (bool, optional): Flag for whether or not to plot a legend.
+        legend_loc (str, optional): Legend location according to the Matplotlib
+            `loc` parameter. If `legend` is `False`, this parameter is ignored.
+        ct_per_sec (float, optional): Amount of time to pass within an animation
+            for every second of real time.
+        instant_pause_time (float, optional): Amount of pause time in seconds
+            for instantaneous events (appear in a single instant of time).
+        fps (float, optional): Animation frames per second.
+        display_current_time (bool, optional): Flag for displaying the time of
+            the current animation frame.
+        display_current_time_decimals (int, optional): Number of decimals to
+            display the current time to. If `display_current_time` is `False`,
+            this parameter is ignored.
+        title (str, optional): Animation title.
+        **kwargs: Keyword arguments to forward to Matplotlib when drawing the
+            object.
+
+    Returns:
+        specrel.graphics.simpgraph.ObjectAnimator:
+            Animator for the real space animation of the object.
+    &#34;&#34;&#34;
+    animator = simpg.ObjectAnimator(
+        fig=fig,
+        ax=ax,
+        grid=grid,
+        legend=legend,
+        legend_loc=legend_loc,
+        ct_per_sec=ct_per_sec,
+        instant_pause_time=instant_pause_time,
+        fps=fps,
+        display_current_time=display_current_time,
+        display_current_time_decimals=display_current_time_decimals,
+        title=title)
+    lorentz_transformable.draw(plotter=animator, tlim=tlim, xlim=xlim, **kwargs)
+    return animator
+
+def _override_tlim(tlim_base, tlim_override):
+    &#34;&#34;&#34;Override None entries of tlim_base with those in tlim_override.&#34;&#34;&#34;
+    return tuple([override if override is not None else base
+        for base, override in zip(tlim_base, tlim_override)])
+
+def stanimate_with_worldline(lorentz_transformable,
+    tlim_anim=geom.geomrc[&#39;tlim&#39;],
+    tlim_worldline=geom.geomrc[&#39;tlim&#39;],
+    tlim=(None, None),
+    xlim=geom.geomrc[&#39;xlim&#39;],
+    fig=graphrc[&#39;fig&#39;],
+    axs=graphrc[&#39;axs&#39;],
+    grid=graphrc[&#39;grid&#39;],
+    legend=graphrc[&#39;legend&#39;],
+    legend_loc=graphrc[&#39;legend_loc&#39;],
+    ct_per_sec=graphrc[&#39;anim.time.ct_per_sec&#39;],
+    instant_pause_time=graphrc[&#39;anim.time.instant_pause_time&#39;],
+    fps=graphrc[&#39;anim.fps&#39;],
+    display_current_time=graphrc[&#39;anim.display_current&#39;],
+    display_current_time_decimals=
+        graphrc[&#39;anim.display_current_decimals&#39;],
+    title=graphrc[&#39;title&#39;],
+    lim_padding=graphrc[&#39;worldline.lim_padding&#39;],
+    equal_lim_expand=graphrc[&#39;worldline.equal_lim_expand&#39;],
+    current_time_style=graphrc[&#39;anim.worldline.current_time_style&#39;],
+    current_time_color=graphrc[&#39;anim.worldline.current_time_color&#39;],
+    **kwargs):
+    &#34;&#34;&#34;Animates a `specrel.geom.LorentzTransformable` alongside an animated
+    spacetime diagram.
+
+    Args:
+        lorentz_transformable (specrel.geom.LorentzTransformable): Object to
+            animate.
+        tlim_anim (tuple, optional): Time drawing limits for the animation
+            itself.
+        tlim_worldline (tuple, optional): Time drawing limits for the spacetime
+            diagram. See `specrel.geom.LorentzTransformable.draw`.
+        tlim (tuple, optional): Time drawing limits for both the animation and
+            the spacetime diagram. Entries that are not `None` override those
+            in `tlim_anim` and `tlim_worldline`.
+        xlim (tuple, optional): Position drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+        fig (matplotlib.figure.Figure, optional): Figure window. If `None`, a
+            new figure window is created.
+        axs (list, optional): List of axes in row major format. If `None`, a
+            new set of axes is created under a new figure window.
+        grid (bool, optional): Flag for whether or not to plot background grid
+            lines.
+        legend (bool, optional): Flag for whether or not to plot a legend.
+        legend_loc (str, optional): Legend location according to the Matplotlib
+            `loc` parameter. If `legend` is `False`, this parameter is ignored.
+        ct_per_sec (float, optional): Amount of time to pass within an animation
+            for every second of real time.
+        instant_pause_time (float, optional): Amount of pause time in seconds
+            for instantaneous events (appear in a single instant of time).
+        fps (float, optional): Animation frames per second.
+        display_current_time (bool, optional): Flag for displaying the time of
+            the current animation frame.
+        display_current_time_decimals (int, optional): Number of decimals to
+            display the current time to. If `display_current_time` is `False`,
+            this parameter is ignored.
+        title (str, optional): Animation title.
+        lim_padding (float, optional): Extra padding on spacetime diagram axis
+            limits, relative to the axis sizes.
+        equal_lim_expand (float, optional): If the limits on an axis are
+            specified to be equal, they will be expanded symmetrically until the
+            axis size is this value.
+        current_time_style (linestyle, optional): Matplotlib linestyle for the
+            line of current time in animated spacetime plot.
+        current_time_color (color, optional): Matplotlib color for the line of
+            current time in animated spacetime plot.
+        **kwargs: Keyword arguments to forward to Matplotlib when drawing the
+            object.
+
+    Returns:
+        specrel.graphics.compgraph.MultiTimeAnimator:
+            Animator for the spacetime diagram + real space animation of the
+            object.
+    &#34;&#34;&#34;
+    # Make new figure if necessary
+    fig, axs = _prepare_fig_and_axs(fig, axs, 1, 2,
+        rect=[0.03, 0.03, 1, 0.89], w_pad=0)
+
+    tlim_anim = _override_tlim(tlim_anim, tlim)
+    tlim_worldline = _override_tlim(tlim_worldline, tlim)
+
+    animator = compg.MultiTimeAnimator(
+        [
+            {
+                &#39;animator&#39;: simpg.WorldlineAnimator,
+                &#39;animator_options&#39;:
+                {
+                    &#39;title&#39;: &#39;Spacetime Diagram&#39;,
+                    &#39;grid&#39;: grid,
+                    &#39;legend&#39;: legend,
+                    &#39;legend_loc&#39;: legend_loc,
+                    &#39;lim_padding&#39;: lim_padding,
+                    &#39;equal_lim_expand&#39;: equal_lim_expand,
+                    &#39;current_time_style&#39;: current_time_style,
+                    &#39;current_time_color&#39;: current_time_color,
+                },
+                &#39;transformable&#39;: copy.deepcopy(lorentz_transformable),
+                &#39;draw_options&#39;: {&#39;tlim&#39;: tlim_worldline, &#39;xlim&#39;: xlim,
+                    **kwargs},
+            },
+            {
+                &#39;animator&#39;: simpg.ObjectAnimator,
+                &#39;animator_options&#39;: {
+                    &#39;grid&#39;: grid,
+                    &#39;legend&#39;: legend,
+                    &#39;legend_loc&#39;: legend_loc,
+                    &#39;title&#39;: &#39;Actual Scene&#39;,
+                },
+                &#39;transformable&#39;: copy.deepcopy(lorentz_transformable),
+                &#39;draw_options&#39;: {&#39;tlim&#39;: tlim_worldline, &#39;xlim&#39;: xlim,
+                    **kwargs},
+            },
+        ],
+        fig=fig,
+        axs=axs,
+        tlim=tlim_anim,
+        ct_per_sec=ct_per_sec,
+        instant_pause_time=instant_pause_time,
+        fps=fps,
+        display_current_time=display_current_time,
+        display_current_time_decimals=display_current_time_decimals,
+        title=title)
+    return animator
+
+def _get_transformable_and_vrel_in_all_frames(lorentz_transformable, vrels,
+    origin):
+    &#34;&#34;&#34;Return lists of a LorentzTransformable and vrels in different frames,
+    where the input vrels can be a scalar or a list of values.&#34;&#34;&#34;
+    transformables = [lorentz_transformable]
+    try:
+        transformables += [geom.lorentz_transformed(
+            lorentz_transformable, vrel, origin) for vrel in vrels]
+        return transformables, vrels
+    except TypeError:
+        # Single vrel
+        transformables += [geom.lorentz_transformed(
+            lorentz_transformable, vrels, origin)]
+        return transformables, [vrels]
+
+def _check_axs_match_frames(axs, nplots):
+    &#34;&#34;&#34;Raise error if there&#39;s a mismatch between number of plots to make and
+    number of axes to plot onto.&#34;&#34;&#34;
+    # Make there are the right number of axes for the number of frames
+    if len(axs) != nplots:
+        raise ValueError(&#39;Number of axes much match number of frame plots,&#39;
+            + &#39; including for the lab frame.&#39;
+            + f&#39; {len(axs)} axes given, {nplots} needed.&#39;)
+
+def compare_frames(lorentz_transformable,
+    vrels,
+    origin=geom.geomrc[&#39;origin&#39;],
+    tlim=geom.geomrc[&#39;tlim&#39;],
+    xlim=geom.geomrc[&#39;xlim&#39;],
+    fig=graphrc[&#39;fig&#39;],
+    axs=graphrc[&#39;axs&#39;],
+    grid=graphrc[&#39;grid&#39;],
+    legend=graphrc[&#39;legend&#39;],
+    legend_loc=graphrc[&#39;legend_loc&#39;],
+    lim_padding=graphrc[&#39;worldline.lim_padding&#39;],
+    equal_lim_expand=graphrc[&#39;worldline.equal_lim_expand&#39;],
+    title=graphrc[&#39;title&#39;],
+    **kwargs):
+    &#34;&#34;&#34;Plots the spacetime diagrams of a `specrel.geom.LorentzTransformable` in
+    some number of different frames moving at some relative velocity to a lab
+    frame.
+
+    Args:
+        lorentz_transformable (specrel.geom.LorentzTransformable): Object to
+            plot.
+        vrels (list): List of relative velocities of frames to compare with the
+            lab frame.
+        origin (tuple, optional): Origin used for Lorentz transformations, in
+            the form (t, x).
+        tlim (tuple, optional): Time drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+        xlim (tuple, optional): Position drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+        fig (matplotlib.figure.Figure, optional): Figure window. If `None`, a
+            new figure window is created.
+        axs (list, optional): List of axes in row major format. If `None`, a
+            new set of axes is created under a new figure window.
+        grid (bool, optional): Flag for whether or not to plot background grid
+            lines.
+        legend (bool, optional): Flag for whether or not to plot a legend.
+        legend_loc (str, optional): Legend location according to the Matplotlib
+            `loc` parameter. If `legend` is `False`, this parameter is ignored.
+        lim_padding (float, optional): Extra padding on spacetime diagram axis
+            limits, relative to the axis sizes.
+        equal_lim_expand (float, optional): If the limits on an axis are
+            specified to be equal, they will be expanded symmetrically until the
+            axis size is this value.
+        title (str, optional): Plot title.
+        **kwargs: Keyword arguments to forward to Matplotlib when drawing the
+            object.
+
+    Returns:
+        list:
+            List of `specrel.graphics.simpgraph.WorldlinePlotter` objects, one
+            for the object plotted in each reference frame.
+    &#34;&#34;&#34;
+    transformables, vrels = _get_transformable_and_vrel_in_all_frames(
+        lorentz_transformable, vrels, origin)
+
+    # Make new figure if necessary
+    fig, axs = _prepare_fig_and_axs(fig, axs, 1, len(transformables),
+        rect=[0.03, 0.03, 1, 0.93], w_pad=3)
+
+    _check_axs_match_frames(axs, len(transformables))
+
+    plotters = []
+    for ax, transformable in zip(axs, transformables):
+        plotter = simpg.WorldlinePlotter(
+            fig=fig,
+            ax=ax,
+            grid=grid,
+            legend=legend,
+            legend_loc=legend_loc,
+            lim_padding=lim_padding,
+            equal_lim_expand=equal_lim_expand)
+        transformable.draw(plotter=plotter, tlim=tlim, xlim=xlim, **kwargs)
+        plotter.set_labels()
+        plotters.append(plotter)
+    axs[0].set_title(&#39;Lab Frame&#39;)
+    for ax, vrel in zip(axs[1:], vrels):
+        ax.set_title(f&#39;Frame Moving at ${vrel:.3g}c$&#39;)
+    if title:
+        fig.suptitle(title)
+    return tuple(plotters)
+
+def compare_frames_animated(lorentz_transformable,
+    vrels,
+    origin=geom.geomrc[&#39;origin&#39;],
+    tlim=geom.geomrc[&#39;tlim&#39;],
+    xlim=geom.geomrc[&#39;xlim&#39;],
+    fig=graphrc[&#39;fig&#39;],
+    axs=graphrc[&#39;axs&#39;],
+    grid=graphrc[&#39;grid&#39;],
+    legend=graphrc[&#39;legend&#39;],
+    legend_loc=graphrc[&#39;legend_loc&#39;],
+    ct_per_sec=graphrc[&#39;anim.time.ct_per_sec&#39;],
+    instant_pause_time=graphrc[&#39;anim.time.instant_pause_time&#39;],
+    fps=graphrc[&#39;anim.fps&#39;],
+    display_current_time=graphrc[&#39;anim.display_current&#39;],
+    display_current_time_decimals=
+        graphrc[&#39;anim.display_current_decimals&#39;],
+    title=graphrc[&#39;title&#39;],
+    **kwargs):
+    &#34;&#34;&#34;Animates a `specrel.geom.LorentzTransformable` in some number of
+    different frames moving at some relative velocity to a lab frame.
+
+    Args:
+        lorentz_transformable (specrel.geom.LorentzTransformable): Object to
+            animate.
+        vrels (list): List of relative velocities of frames to compare with the
+            lab frame.
+        origin (tuple, optional): Origin used for Lorentz transformations, in
+            the form (t, x).
+        tlim (tuple, optional): Time drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+        xlim (tuple, optional): Position drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+        fig (matplotlib.figure.Figure, optional): Figure window. If `None`, a
+            new figure window is created.
+        axs (list, optional): List of axes in row major format. If `None`, a
+            new set of axes is created under a new figure window.
+        grid (bool, optional): Flag for whether or not to plot background grid
+            lines.
+        legend (bool, optional): Flag for whether or not to plot a legend.
+        legend_loc (str, optional): Legend location according to the Matplotlib
+            `loc` parameter. If `legend` is `False`, this parameter is ignored.
+        ct_per_sec (float, optional): Amount of time to pass within an animation
+            for every second of real time.
+        instant_pause_time (float, optional): Amount of pause time in seconds
+            for instantaneous events (appear in a single instant of time).
+        fps (float, optional): Animation frames per second.
+        display_current_time (bool, optional): Flag for displaying the time of
+            the current animation frame.
+        display_current_time_decimals (int, optional): Number of decimals to
+            display the current time to. If `display_current_time` is `False`,
+            this parameter is ignored.
+        title (str, optional): Animation title.
+        **kwargs: Keyword arguments to forward to Matplotlib when drawing the
+            object.
+
+    Returns:
+        specrel.graphics.compgraph.MultiTimeAnimator:
+            Animator for the object animated in real space in each of the
+            different reference frames.
+    &#34;&#34;&#34;
+    transformables, vrels = _get_transformable_and_vrel_in_all_frames(
+        lorentz_transformable, vrels, origin)
+
+    # Make new figure if necessary
+    fig, axs = _prepare_fig_and_axs(fig, axs, 1, len(transformables),
+        rect=[0.03, 0.03, 1, 0.89], w_pad=0)
+
+    _check_axs_match_frames(axs, len(transformables))
+
+    ax_titles = [&#39;Scene in Lab Frame&#39;] + \
+        [f&#39;Scene in Frame Moving at ${vrel:.3g}c$&#39; for vrel in vrels]
+    draw_options = {&#39;tlim&#39;: tlim, &#39;xlim&#39;: xlim, **kwargs}
+    animator = compg.MultiTimeAnimator(
+        [
+            {
+                &#39;animator&#39;: simpg.ObjectAnimator,
+                &#39;animator_options&#39;: {
+                    &#39;grid&#39;: grid,
+                    &#39;legend&#39;: legend,
+                    &#39;legend_loc&#39;: legend_loc,
+                    &#39;title&#39;: ax_title,
+                },
+                &#39;transformable&#39;: transformed_obj,
+                &#39;draw_options&#39;: draw_options,
+            } for transformed_obj, ax_title in zip(transformables, ax_titles)
+        ],
+        fig=fig,
+        axs=axs,
+        tlim=tlim,
+        ct_per_sec=ct_per_sec,
+        instant_pause_time=instant_pause_time,
+        fps=fps,
+        display_current_time=display_current_time,
+        display_current_time_decimals=display_current_time_decimals,
+        title=title)
+    return animator
+
+def compare_frames_animated_with_worldline(lorentz_transformable,
+    vrels,
+    origin=geom.geomrc[&#39;origin&#39;],
+    tlim_anim=geom.geomrc[&#39;tlim&#39;],
+    tlim_worldline=geom.geomrc[&#39;tlim&#39;],
+    tlim=(None, None),
+    xlim=geom.geomrc[&#39;xlim&#39;],
+    fig=graphrc[&#39;fig&#39;],
+    axs=graphrc[&#39;axs&#39;],
+    grid=graphrc[&#39;grid&#39;],
+    legend=graphrc[&#39;legend&#39;],
+    legend_loc=graphrc[&#39;legend_loc&#39;],
+    ct_per_sec=graphrc[&#39;anim.time.ct_per_sec&#39;],
+    instant_pause_time=graphrc[&#39;anim.time.instant_pause_time&#39;],
+    fps=graphrc[&#39;anim.fps&#39;],
+    display_current_time=graphrc[&#39;anim.display_current&#39;],
+    display_current_time_decimals=
+        graphrc[&#39;anim.display_current_decimals&#39;],
+    title=graphrc[&#39;title&#39;],
+    lim_padding=graphrc[&#39;worldline.lim_padding&#39;],
+    equal_lim_expand=graphrc[&#39;worldline.equal_lim_expand&#39;],
+    current_time_style=graphrc[&#39;anim.worldline.current_time_style&#39;],
+    current_time_color=graphrc[&#39;anim.worldline.current_time_color&#39;],
+    **kwargs):
+    &#34;&#34;&#34;Animates a `specrel.geom.LorentzTransformable` alongside an animated
+    spacetime diagram in some number of different frames moving at some relative
+    velocity to a lab frame.
+
+    Args:
+        lorentz_transformable (specrel.geom.LorentzTransformable): Object to
+            animate.
+        vrels (list): List of relative velocities of frames to compare with the
+            lab frame.
+        origin (tuple, optional): Origin used for Lorentz transformations, in
+            the form (t, x).
+        tlim_anim (tuple, optional): Time drawing limits for the animation
+            itself.
+        tlim_worldline (tuple, optional): Time drawing limits for the spacetime
+            diagram. See `specrel.geom.LorentzTransformable.draw`.
+        tlim (tuple, optional): Time drawing limits for both the animation and
+            the spacetime diagram. Entries that are not `None` override those
+            in `tlim_anim` and `tlim_worldline`.
+        xlim (tuple, optional): Position drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+        fig (matplotlib.figure.Figure, optional): Figure window. If `None`, a
+            new figure window is created.
+        axs (list, optional): List of axes in row major format. If `None`, a
+            new set of axes is created under a new figure window.
+        grid (bool, optional): Flag for whether or not to plot background grid
+            lines.
+        legend (bool, optional): Flag for whether or not to plot a legend.
+        legend_loc (str, optional): Legend location according to the Matplotlib
+            `loc` parameter. If `legend` is `False`, this parameter is ignored.
+        ct_per_sec (float, optional): Amount of time to pass within an animation
+            for every second of real time.
+        instant_pause_time (float, optional): Amount of pause time in seconds
+            for instantaneous events (appear in a single instant of time).
+        fps (float, optional): Animation frames per second.
+        display_current_time (bool, optional): Flag for displaying the time of
+            the current animation frame.
+        display_current_time_decimals (int, optional): Number of decimals to
+            display the current time to. If `display_current_time` is `False`,
+            this parameter is ignored.
+        title (str, optional): Animation title.
+        lim_padding (float, optional): Extra padding on spacetime diagram axis
+            limits, relative to the axis sizes.
+        equal_lim_expand (float, optional): If the limits on an axis are
+            specified to be equal, they will be expanded symmetrically until the
+            axis size is this value.
+        current_time_style (linestyle, optional): Matplotlib linestyle for the
+            line of current time in animated spacetime plot.
+        current_time_color (color, optional): Matplotlib color for the line of
+            current time in animated spacetime plot.
+        **kwargs: Keyword arguments to forward to Matplotlib when drawing the
+            object.
+
+    Returns:
+        specrel.graphics.compgraph.MultiTimeAnimator:
+            Animator for the spacetime + real space animations of the object in
+            each of the different reference frames.
+    &#34;&#34;&#34;
+    transformables, vrels = _get_transformable_and_vrel_in_all_frames(
+        lorentz_transformable, vrels, origin)
+
+    # Make new figure if necessary
+    fig, axs = _prepare_fig_and_axs(fig, axs, len(transformables), 2,
+        rect=[0.03, 0.03, 1, 0.93], h_pad=3)
+
+    _check_axs_match_frames(axs, 2*len(transformables))
+
+    tlim_anim = _override_tlim(tlim_anim, tlim)
+    tlim_worldline = _override_tlim(tlim_worldline, tlim)
+
+    ax_worldline_titles = [&#39;Spacetime Diagram (Lab Frame)&#39;] \
+        + [f&#39;Spacetime Diagram ($v = {vrel:.3g}c$)&#39; for vrel in vrels]
+    ax_obj_titles = [&#39;Scene in Lab Frame&#39;] \
+        + [f&#39;Scene in Frame Moving at ${vrel:.3g}c$&#39; for vrel in vrels]
+    worldline_anim_opts = {
+        &#39;grid&#39;: grid,
+        &#39;legend&#39;: legend,
+        &#39;legend_loc&#39;: legend_loc,
+        &#39;lim_padding&#39;: lim_padding,
+        &#39;equal_lim_expand&#39;: equal_lim_expand,
+        &#39;current_time_style&#39;: current_time_style,
+        &#39;current_time_color&#39;: current_time_color,
+    }
+    object_anim_opts = {
+        &#39;grid&#39;: grid,
+        &#39;legend&#39;: legend,
+        &#39;legend_loc&#39;: legend_loc,
+    }
+
+    anim_objs = []
+    for transformable, ax_worldline_title, ax_obj_title in zip(
+        transformables, ax_worldline_titles, ax_obj_titles):
+        anim_objs += [
+            {
+                &#39;animator&#39;: simpg.WorldlineAnimator,
+                &#39;animator_options&#39;: {&#39;title&#39;: ax_worldline_title,
+                    **worldline_anim_opts},
+                &#39;transformable&#39;: transformable,
+                &#39;draw_options&#39;: {&#39;tlim&#39;: tlim_worldline, &#39;xlim&#39;: xlim,
+                    **kwargs},
+            },
+            {
+                &#39;animator&#39;: simpg.ObjectAnimator,
+                &#39;animator_options&#39;: {&#39;title&#39;: ax_obj_title,
+                    **object_anim_opts},
+                &#39;transformable&#39;: transformable,
+                &#39;draw_options&#39;: {&#39;tlim&#39;: tlim_worldline, &#39;xlim&#39;: xlim,
+                    **kwargs},
+            },
+        ]
+
+    animator = compg.MultiTimeAnimator(
+        anim_objs,
+        fig=fig,
+        axs=axs,
+        tlim=tlim_anim,
+        ct_per_sec=ct_per_sec,
+        instant_pause_time=instant_pause_time,
+        fps=fps,
+        display_current_time=display_current_time,
+        display_current_time_decimals=display_current_time_decimals,
+        title=title)
+    return animator
+
+def animate_lt(lorentz_transformable,
+    vrel,
+    origin=geom.geomrc[&#39;origin&#39;],
+    tlim=geom.geomrc[&#39;tlim&#39;],
+    xlim=geom.geomrc[&#39;xlim&#39;],
+    fig=graphrc[&#39;fig&#39;],
+    ax=graphrc[&#39;ax&#39;],
+    grid=graphrc[&#39;grid&#39;],
+    legend=graphrc[&#39;legend&#39;],
+    legend_loc=graphrc[&#39;legend_loc&#39;],
+    transition_duration=graphrc[&#39;anim.transform.transition_duration&#39;],
+    fps=graphrc[&#39;anim.fps&#39;],
+    display_current_velocity=graphrc[&#39;anim.display_current&#39;],
+    display_current_velocity_decimals=
+        graphrc[&#39;anim.display_current_decimals&#39;],
+    title=graphrc[&#39;title&#39;],
+    lim_padding=graphrc[&#39;worldline.lim_padding&#39;],
+    equal_lim_expand=graphrc[&#39;worldline.equal_lim_expand&#39;]):
+    &#34;&#34;&#34;Animates the Lorentz transformation of a
+    `specrel.geom.LorentzTransformable` from one frame to another on a spacetime
+    diagram.
+
+    Args:
+        lorentz_transformable (specrel.geom.LorentzTransformable): Object to
+            animate.
+        vrel (float): Relative velocities of frame to transform to.
+        origin (tuple, optional): Origin used for Lorentz transformation, in the
+            form (t, x).
+        tlim (tuple, optional): Time drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+        xlim (tuple, optional): Position drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+        fig (matplotlib.figure.Figure, optional): Figure window. See
+            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+        ax (matplotlib.axes.Axes, optional): Plotting axes. See
+            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+        grid (bool, optional): Flag for whether or not to plot background grid
+            lines.
+        legend (bool, optional): Flag for whether or not to plot a legend.
+        legend_loc (str, optional): Legend location according to the Matplotlib
+            `loc` parameter. If `legend` is `False`, this parameter is ignored.
+        transition_duration (float, optional): Real-time duration in seconds of
+            the transformation animation.
+        fps (float, optional): Animation frames per second.
+        display_current_velocity (bool, optional): Flag for displaying the
+            velocity of the current animation frame.
+        display_current_velocity_decimals (int, optional): Number of decimals to
+            display the current velocity to. If `display_current_velocity` is
+            `False`, this parameter is ignored.
+        title (str, optional): Animation title.
+        lim_padding (float, optional): Extra padding on spacetime diagram axis
+            limits, relative to the axis sizes.
+        equal_lim_expand (float, optional): If the limits on an axis are
+            specified to be equal, they will be expanded symmetrically until the
+            axis size is this value.
+
+    Returns:
+        specrel.graphics.simpgraph.TransformAnimator:
+            Animator for the transformation animation of the object from one
+            reference frame to the other.
+    &#34;&#34;&#34;
+    # Attempt to make sure the time value falls within the limits so we don&#39;t
+    # get warnings
+    time = graphrc[&#39;anim.transform.time&#39;]
+    if tlim[0] is not None and time &lt; tlim[0]:
+        time = tlim[0]
+    elif tlim[1] is not None and time &gt; tlim[1]:
+        time = tlim[1]
+
+    animator = simpg.TransformAnimator(
+        copy.deepcopy(lorentz_transformable),
+        vrel,
+        origin=origin,
+        stanimator=simpg.WorldlineAnimator,
+        stanimator_options={
+            &#39;current_time_color&#39;: &#39;None&#39;,   # Transparent
+            &#39;grid&#39;: grid,
+            &#39;legend&#39;: legend,
+            &#39;legend_loc&#39;: legend_loc,
+            &#39;lim_padding&#39;: lim_padding,
+            &#39;equal_lim_expand&#39;: equal_lim_expand,
+        },
+        tlim=tlim,
+        xlim=xlim,
+        time=time,
+        fig=fig,
+        ax=ax,
+        transition_duration=transition_duration,
+        fps=fps,
+        display_current_velocity=display_current_velocity,
+        display_current_velocity_decimals=display_current_velocity_decimals,
+        title=title)
+    return animator
+
+def animate_lt_realspace(lorentz_transformable,
+    vrel,
+    origin=geom.geomrc[&#39;origin&#39;],
+    xlim=geom.geomrc[&#39;xlim&#39;],
+    time=graphrc[&#39;anim.transform.time&#39;],
+    fig=graphrc[&#39;fig&#39;],
+    ax=graphrc[&#39;ax&#39;],
+    grid=graphrc[&#39;grid&#39;],
+    legend=graphrc[&#39;legend&#39;],
+    legend_loc=graphrc[&#39;legend_loc&#39;],
+    transition_duration=graphrc[&#39;anim.transform.transition_duration&#39;],
+    fps=graphrc[&#39;anim.fps&#39;],
+    display_current_velocity=graphrc[&#39;anim.display_current&#39;],
+    display_current_velocity_decimals=
+        graphrc[&#39;anim.display_current_decimals&#39;],
+    title=graphrc[&#39;title&#39;]):
+    &#34;&#34;&#34;Animates the Lorentz transformation of a
+    `specrel.geom.LorentzTransformable` from one frame to another in real space,
+    fixing the frame-local time value.
+
+    Args:
+        lorentz_transformable (specrel.geom.LorentzTransformable): Object to
+            animate.
+        vrel (float): Relative velocities of frame to transform to.
+        origin (tuple, optional): Origin used for Lorentz transformation, in the
+            form (t, x).
+        xlim (tuple, optional): Position drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+        time (float, optional): Frame-local time value to fix during
+            transformation animation.
+        fig (matplotlib.figure.Figure, optional): Figure window. See
+            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+        ax (matplotlib.axes.Axes, optional): Plotting axes. See
+            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+        grid (bool, optional): Flag for whether or not to plot background grid
+            lines.
+        legend (bool, optional): Flag for whether or not to plot a legend.
+        legend_loc (str, optional): Legend location according to the Matplotlib
+            `loc` parameter. If `legend` is `False`, this parameter is ignored.
+        transition_duration (float, optional): Real-time duration in seconds of
+            the transformation animation.
+        fps (float, optional): Animation frames per second.
+        display_current_velocity (bool, optional): Flag for displaying the
+            velocity of the current animation frame.
+        display_current_velocity_decimals (int, optional): Number of decimals to
+            display the current velocity to. If `display_current_velocity` is
+            `False`, this parameter is ignored.
+        title (str, optional): Animation title.
+
+    Returns:
+        specrel.graphics.simpgraph.TransformAnimator:
+            Animator for the transformation animation of the object in real
+            space from one reference frame to the other.
+    &#34;&#34;&#34;
+    animator = simpg.TransformAnimator(
+        copy.deepcopy(lorentz_transformable),
+        vrel,
+        origin=origin,
+        stanimator=simpg.ObjectAnimator,
+        stanimator_options={
+            &#39;grid&#39;: grid,
+            &#39;legend&#39;: legend,
+            &#39;legend_loc&#39;: legend_loc,
+        },
+        # Draw just the desired and surrounding frames to save computation
+        tlim=(time - 1/fps, time + 1/fps),
+        xlim=xlim,
+        time=time,
+        fig=fig,
+        ax=ax,
+        transition_duration=transition_duration,
+        fps=fps,
+        display_current_velocity=display_current_velocity,
+        display_current_velocity_decimals=display_current_velocity_decimals,
+        title=title)
+    return animator
+
+def animate_lt_worldline_and_realspace(lorentz_transformable,
+    vrel,
+    origin=geom.geomrc[&#39;origin&#39;],
+    tlim=geom.geomrc[&#39;tlim&#39;],
+    xlim=geom.geomrc[&#39;xlim&#39;],
+    time=graphrc[&#39;anim.transform.time&#39;],
+    fig=graphrc[&#39;fig&#39;],
+    axs=graphrc[&#39;axs&#39;],
+    grid=graphrc[&#39;grid&#39;],
+    legend=graphrc[&#39;legend&#39;],
+    legend_loc=graphrc[&#39;legend_loc&#39;],
+    transition_duration=graphrc[&#39;anim.transform.transition_duration&#39;],
+    fps=graphrc[&#39;anim.fps&#39;],
+    display_current_velocity=graphrc[&#39;anim.display_current&#39;],
+    display_current_velocity_decimals=
+        graphrc[&#39;anim.display_current_decimals&#39;],
+    title=graphrc[&#39;title&#39;],
+    lim_padding=graphrc[&#39;worldline.lim_padding&#39;],
+    equal_lim_expand=graphrc[&#39;worldline.equal_lim_expand&#39;],
+    current_time_style=graphrc[&#39;anim.worldline.current_time_style&#39;],
+    current_time_color=graphrc[&#39;anim.worldline.current_time_color&#39;]):
+    &#34;&#34;&#34;Animates the Lorentz transformation of a
+    `specrel.geom.LorentzTransformable` from one frame to another in both a
+    spacetime diagram and real space, fixing the frame-local time value.
+
+    Args:
+        lorentz_transformable (specrel.geom.LorentzTransformable): Object to
+            animate.
+        vrel (float): Relative velocities of frame to transform to.
+        origin (tuple, optional): Origin used for Lorentz transformation, in the
+            form (t, x).
+        tlim (tuple, optional): Time drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+        xlim (tuple, optional): Position drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+        time (float, optional): Frame-local time value to fix during
+            transformation animation.
+        fig (matplotlib.figure.Figure, optional): Figure window. If `None`, a
+            new figure window is created.
+        axs (list, optional): List of axes in row major format. If `None`, a
+            new set of axes is created under a new figure window.
+        grid (bool, optional): Flag for whether or not to plot background grid
+            lines.
+        legend (bool, optional): Flag for whether or not to plot a legend.
+        legend_loc (str, optional): Legend location according to the Matplotlib
+            `loc` parameter. If `legend` is `False`, this parameter is ignored.
+        transition_duration (float, optional): Real-time duration in seconds of
+            the transformation animation.
+        fps (float, optional): Animation frames per second.
+        display_current_velocity (bool, optional): Flag for displaying the
+            velocity of the current animation frame.
+        display_current_velocity_decimals (int, optional): Number of decimals to
+            display the current velocity to. If `display_current_velocity` is
+            `False`, this parameter is ignored.
+        title (str, optional): Animation title.
+        lim_padding (float, optional): Extra padding on spacetime diagram axis
+            limits, relative to the axis sizes.
+        equal_lim_expand (float, optional): If the limits on an axis are
+            specified to be equal, they will be expanded symmetrically until the
+            axis size is this value.
+        current_time_style (linestyle, optional): Matplotlib linestyle for the
+            line of current time in animated spacetime plot.
+        current_time_color (color, optional): Matplotlib color for the line of
+            current time in animated spacetime plot.
+
+    Returns:
+        specrel.graphics.compgraph.MultiTransformAnimator:
+            Animator for the transformation animation of the object in a
+            spacetime diagram and real space from one reference frame to the
+            other.
+    &#34;&#34;&#34;
+    # Make new figure if necessary
+    fig, axs = _prepare_fig_and_axs(fig, axs, 1, 2,
+        rect=[0.03, 0.03, 1, 0.89], w_pad=0)
+
+    _check_axs_match_frames(axs, 2)
+
+    animator = compg.MultiTransformAnimator(
+        [
+            {
+                &#39;animator_options&#39;:
+                {
+                    &#39;stanimator&#39;: simpg.WorldlineAnimator,
+                    &#39;title&#39;: &#39;Spacetime Diagram&#39;,
+                    &#39;origin&#39;: origin,
+                    &#39;tlim&#39;: tlim,
+                    &#39;xlim&#39;: xlim,
+                    &#39;time&#39;: time,
+                    &#39;stanimator_options&#39;:
+                    {
+                        &#39;grid&#39;: grid,
+                        &#39;legend&#39;: legend,
+                        &#39;legend_loc&#39;: legend_loc,
+                        &#39;lim_padding&#39;: lim_padding,
+                        &#39;equal_lim_expand&#39;: equal_lim_expand,
+                        &#39;current_time_style&#39;: current_time_style,
+                        &#39;current_time_color&#39;: current_time_color,
+                    },
+                },
+                &#39;transformable&#39;: copy.deepcopy(lorentz_transformable),
+            },
+            {
+                &#39;animator_options&#39;:
+                {
+                    &#39;stanimator&#39;: simpg.ObjectAnimator,
+                    &#39;title&#39;: &#39;Actual Scene&#39;,
+                    &#39;origin&#39;: origin,
+                    &#39;xlim&#39;: xlim,
+                    &#39;time&#39;: time,
+                    &#39;stanimator_options&#39;: {
+                        &#39;grid&#39;: grid,
+                        &#39;legend&#39;: legend,
+                        &#39;legend_loc&#39;: legend_loc,
+                    }
+                },
+                &#39;transformable&#39;: copy.deepcopy(lorentz_transformable),
+            },
+        ],
+        vrel,
+        fig=fig,
+        axs=axs,
+        transition_duration=transition_duration,
+        fps=fps,
+        display_current_velocity=display_current_velocity,
+        display_current_velocity_decimals=display_current_velocity_decimals,
+        title=title)
+    return animator</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-variables">Global variables</h2>
+<dl>
+<dt id="specrel.visualize.visrc"><code class="name">var <span class="ident">visrc</span></code></dt>
+<dd>
+<section class="desc"><p>Contains default parameters shared by various <code>visualize</code> functions.</p>
+<h2 id="items">Items</h2>
+<ul>
+<li><strong>default_fig_max_height</strong>: <code>10</code><ul>
+<li>Maximum total figure height for functions that create new Matplotlib
+figures. Corresponds to the first element of the <code>figsize</code> parameter.</li>
+<li>Figure height will be equal to this unless the width is a bigger
+bottleneck at a given aspect ratio, in which case figure height will be
+less.</li>
+</ul>
+</li>
+<li><strong>default_fig_max_width</strong>: <code>10</code><ul>
+<li>Maximum total figure width for functions that create new Matplotlib
+figures. Corresponds to the first element of the <code>figsize</code> parameter.</li>
+<li>Figure width will be equal to this unless the height is a bigger
+bottleneck at a given aspect ratio, in which case figure width will be
+less.</li>
+</ul>
+</li>
+</ul></section>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="specrel.visualize.animate_lt"><code class="name flex">
+<span>def <span class="ident">animate_lt</span></span>(<span>lorentz_transformable, vrel, origin=(0, 0), tlim=(None, None), xlim=(None, None), fig=None, ax=None, grid=False, legend=False, legend_loc='best', transition_duration=2, fps=50, display_current_velocity=True, display_current_velocity_decimals=3, title=None, lim_padding=0.1, equal_lim_expand=1)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Animates the Lorentz transformation of a
+<a title="specrel.geom.LorentzTransformable" href="geom.html#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a> from one frame to another on a spacetime
+diagram.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>lorentz_transformable</code></strong> :&ensp;<a title="specrel.geom.LorentzTransformable" href="geom.html#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a></dt>
+<dd>Object to
+animate.</dd>
+<dt><strong><code>vrel</code></strong> :&ensp;<code>float</code></dt>
+<dd>Relative velocities of frame to transform to.</dd>
+<dt><strong><code>origin</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>Origin used for Lorentz transformation, in the
+form (t, x).</dd>
+<dt><strong><code>tlim</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>Time drawing limits. See
+<a title="specrel.geom.LorentzTransformable.draw" href="geom.html#specrel.geom.LorentzTransformable.draw"><code>LorentzTransformable.draw()</code></a>.</dd>
+<dt><strong><code>xlim</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>Position drawing limits. See
+<a title="specrel.geom.LorentzTransformable.draw" href="geom.html#specrel.geom.LorentzTransformable.draw"><code>LorentzTransformable.draw()</code></a>.</dd>
+<dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.figure.Figure</code>, optional</dt>
+<dd>Figure window. See
+<a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="graphics/simpgraph.html#specrel.graphics.simpgraph.SingleAxisFigureCreator"><code>SingleAxisFigureCreator</code></a>.</dd>
+<dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.axes.Axes</code>, optional</dt>
+<dd>Plotting axes. See
+<a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="graphics/simpgraph.html#specrel.graphics.simpgraph.SingleAxisFigureCreator"><code>SingleAxisFigureCreator</code></a>.</dd>
+<dt><strong><code>grid</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Flag for whether or not to plot background grid
+lines.</dd>
+<dt><strong><code>legend</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Flag for whether or not to plot a legend.</dd>
+<dt><strong><code>legend_loc</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Legend location according to the Matplotlib
+<code>loc</code> parameter. If <code>legend</code> is <code>False</code>, this parameter is ignored.</dd>
+<dt><strong><code>transition_duration</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Real-time duration in seconds of
+the transformation animation.</dd>
+<dt><strong><code>fps</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Animation frames per second.</dd>
+<dt><strong><code>display_current_velocity</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Flag for displaying the
+velocity of the current animation frame.</dd>
+<dt><strong><code>display_current_velocity_decimals</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>Number of decimals to
+display the current velocity to. If <code>display_current_velocity</code> is
+<code>False</code>, this parameter is ignored.</dd>
+<dt><strong><code>title</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Animation title.</dd>
+<dt><strong><code>lim_padding</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Extra padding on spacetime diagram axis
+limits, relative to the axis sizes.</dd>
+<dt><strong><code>equal_lim_expand</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>If the limits on an axis are
+specified to be equal, they will be expanded symmetrically until the
+axis size is this value.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="specrel.graphics.simpgraph.TransformAnimator" href="graphics/simpgraph.html#specrel.graphics.simpgraph.TransformAnimator"><code>TransformAnimator</code></a>:</dt>
+<dd>Animator for the transformation animation of the object from one
+reference frame to the other.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def animate_lt(lorentz_transformable,
+    vrel,
+    origin=geom.geomrc[&#39;origin&#39;],
+    tlim=geom.geomrc[&#39;tlim&#39;],
+    xlim=geom.geomrc[&#39;xlim&#39;],
+    fig=graphrc[&#39;fig&#39;],
+    ax=graphrc[&#39;ax&#39;],
+    grid=graphrc[&#39;grid&#39;],
+    legend=graphrc[&#39;legend&#39;],
+    legend_loc=graphrc[&#39;legend_loc&#39;],
+    transition_duration=graphrc[&#39;anim.transform.transition_duration&#39;],
+    fps=graphrc[&#39;anim.fps&#39;],
+    display_current_velocity=graphrc[&#39;anim.display_current&#39;],
+    display_current_velocity_decimals=
+        graphrc[&#39;anim.display_current_decimals&#39;],
+    title=graphrc[&#39;title&#39;],
+    lim_padding=graphrc[&#39;worldline.lim_padding&#39;],
+    equal_lim_expand=graphrc[&#39;worldline.equal_lim_expand&#39;]):
+    &#34;&#34;&#34;Animates the Lorentz transformation of a
+    `specrel.geom.LorentzTransformable` from one frame to another on a spacetime
+    diagram.
+
+    Args:
+        lorentz_transformable (specrel.geom.LorentzTransformable): Object to
+            animate.
+        vrel (float): Relative velocities of frame to transform to.
+        origin (tuple, optional): Origin used for Lorentz transformation, in the
+            form (t, x).
+        tlim (tuple, optional): Time drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+        xlim (tuple, optional): Position drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+        fig (matplotlib.figure.Figure, optional): Figure window. See
+            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+        ax (matplotlib.axes.Axes, optional): Plotting axes. See
+            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+        grid (bool, optional): Flag for whether or not to plot background grid
+            lines.
+        legend (bool, optional): Flag for whether or not to plot a legend.
+        legend_loc (str, optional): Legend location according to the Matplotlib
+            `loc` parameter. If `legend` is `False`, this parameter is ignored.
+        transition_duration (float, optional): Real-time duration in seconds of
+            the transformation animation.
+        fps (float, optional): Animation frames per second.
+        display_current_velocity (bool, optional): Flag for displaying the
+            velocity of the current animation frame.
+        display_current_velocity_decimals (int, optional): Number of decimals to
+            display the current velocity to. If `display_current_velocity` is
+            `False`, this parameter is ignored.
+        title (str, optional): Animation title.
+        lim_padding (float, optional): Extra padding on spacetime diagram axis
+            limits, relative to the axis sizes.
+        equal_lim_expand (float, optional): If the limits on an axis are
+            specified to be equal, they will be expanded symmetrically until the
+            axis size is this value.
+
+    Returns:
+        specrel.graphics.simpgraph.TransformAnimator:
+            Animator for the transformation animation of the object from one
+            reference frame to the other.
+    &#34;&#34;&#34;
+    # Attempt to make sure the time value falls within the limits so we don&#39;t
+    # get warnings
+    time = graphrc[&#39;anim.transform.time&#39;]
+    if tlim[0] is not None and time &lt; tlim[0]:
+        time = tlim[0]
+    elif tlim[1] is not None and time &gt; tlim[1]:
+        time = tlim[1]
+
+    animator = simpg.TransformAnimator(
+        copy.deepcopy(lorentz_transformable),
+        vrel,
+        origin=origin,
+        stanimator=simpg.WorldlineAnimator,
+        stanimator_options={
+            &#39;current_time_color&#39;: &#39;None&#39;,   # Transparent
+            &#39;grid&#39;: grid,
+            &#39;legend&#39;: legend,
+            &#39;legend_loc&#39;: legend_loc,
+            &#39;lim_padding&#39;: lim_padding,
+            &#39;equal_lim_expand&#39;: equal_lim_expand,
+        },
+        tlim=tlim,
+        xlim=xlim,
+        time=time,
+        fig=fig,
+        ax=ax,
+        transition_duration=transition_duration,
+        fps=fps,
+        display_current_velocity=display_current_velocity,
+        display_current_velocity_decimals=display_current_velocity_decimals,
+        title=title)
+    return animator</code></pre>
+</details>
+</dd>
+<dt id="specrel.visualize.animate_lt_realspace"><code class="name flex">
+<span>def <span class="ident">animate_lt_realspace</span></span>(<span>lorentz_transformable, vrel, origin=(0, 0), xlim=(None, None), time=0, fig=None, ax=None, grid=False, legend=False, legend_loc='best', transition_duration=2, fps=50, display_current_velocity=True, display_current_velocity_decimals=3, title=None)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Animates the Lorentz transformation of a
+<a title="specrel.geom.LorentzTransformable" href="geom.html#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a> from one frame to another in real space,
+fixing the frame-local time value.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>lorentz_transformable</code></strong> :&ensp;<a title="specrel.geom.LorentzTransformable" href="geom.html#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a></dt>
+<dd>Object to
+animate.</dd>
+<dt><strong><code>vrel</code></strong> :&ensp;<code>float</code></dt>
+<dd>Relative velocities of frame to transform to.</dd>
+<dt><strong><code>origin</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>Origin used for Lorentz transformation, in the
+form (t, x).</dd>
+<dt><strong><code>xlim</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>Position drawing limits. See
+<a title="specrel.geom.LorentzTransformable.draw" href="geom.html#specrel.geom.LorentzTransformable.draw"><code>LorentzTransformable.draw()</code></a>.</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Frame-local time value to fix during
+transformation animation.</dd>
+<dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.figure.Figure</code>, optional</dt>
+<dd>Figure window. See
+<a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="graphics/simpgraph.html#specrel.graphics.simpgraph.SingleAxisFigureCreator"><code>SingleAxisFigureCreator</code></a>.</dd>
+<dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.axes.Axes</code>, optional</dt>
+<dd>Plotting axes. See
+<a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="graphics/simpgraph.html#specrel.graphics.simpgraph.SingleAxisFigureCreator"><code>SingleAxisFigureCreator</code></a>.</dd>
+<dt><strong><code>grid</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Flag for whether or not to plot background grid
+lines.</dd>
+<dt><strong><code>legend</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Flag for whether or not to plot a legend.</dd>
+<dt><strong><code>legend_loc</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Legend location according to the Matplotlib
+<code>loc</code> parameter. If <code>legend</code> is <code>False</code>, this parameter is ignored.</dd>
+<dt><strong><code>transition_duration</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Real-time duration in seconds of
+the transformation animation.</dd>
+<dt><strong><code>fps</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Animation frames per second.</dd>
+<dt><strong><code>display_current_velocity</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Flag for displaying the
+velocity of the current animation frame.</dd>
+<dt><strong><code>display_current_velocity_decimals</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>Number of decimals to
+display the current velocity to. If <code>display_current_velocity</code> is
+<code>False</code>, this parameter is ignored.</dd>
+<dt><strong><code>title</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Animation title.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="specrel.graphics.simpgraph.TransformAnimator" href="graphics/simpgraph.html#specrel.graphics.simpgraph.TransformAnimator"><code>TransformAnimator</code></a>:</dt>
+<dd>Animator for the transformation animation of the object in real
+space from one reference frame to the other.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def animate_lt_realspace(lorentz_transformable,
+    vrel,
+    origin=geom.geomrc[&#39;origin&#39;],
+    xlim=geom.geomrc[&#39;xlim&#39;],
+    time=graphrc[&#39;anim.transform.time&#39;],
+    fig=graphrc[&#39;fig&#39;],
+    ax=graphrc[&#39;ax&#39;],
+    grid=graphrc[&#39;grid&#39;],
+    legend=graphrc[&#39;legend&#39;],
+    legend_loc=graphrc[&#39;legend_loc&#39;],
+    transition_duration=graphrc[&#39;anim.transform.transition_duration&#39;],
+    fps=graphrc[&#39;anim.fps&#39;],
+    display_current_velocity=graphrc[&#39;anim.display_current&#39;],
+    display_current_velocity_decimals=
+        graphrc[&#39;anim.display_current_decimals&#39;],
+    title=graphrc[&#39;title&#39;]):
+    &#34;&#34;&#34;Animates the Lorentz transformation of a
+    `specrel.geom.LorentzTransformable` from one frame to another in real space,
+    fixing the frame-local time value.
+
+    Args:
+        lorentz_transformable (specrel.geom.LorentzTransformable): Object to
+            animate.
+        vrel (float): Relative velocities of frame to transform to.
+        origin (tuple, optional): Origin used for Lorentz transformation, in the
+            form (t, x).
+        xlim (tuple, optional): Position drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+        time (float, optional): Frame-local time value to fix during
+            transformation animation.
+        fig (matplotlib.figure.Figure, optional): Figure window. See
+            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+        ax (matplotlib.axes.Axes, optional): Plotting axes. See
+            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+        grid (bool, optional): Flag for whether or not to plot background grid
+            lines.
+        legend (bool, optional): Flag for whether or not to plot a legend.
+        legend_loc (str, optional): Legend location according to the Matplotlib
+            `loc` parameter. If `legend` is `False`, this parameter is ignored.
+        transition_duration (float, optional): Real-time duration in seconds of
+            the transformation animation.
+        fps (float, optional): Animation frames per second.
+        display_current_velocity (bool, optional): Flag for displaying the
+            velocity of the current animation frame.
+        display_current_velocity_decimals (int, optional): Number of decimals to
+            display the current velocity to. If `display_current_velocity` is
+            `False`, this parameter is ignored.
+        title (str, optional): Animation title.
+
+    Returns:
+        specrel.graphics.simpgraph.TransformAnimator:
+            Animator for the transformation animation of the object in real
+            space from one reference frame to the other.
+    &#34;&#34;&#34;
+    animator = simpg.TransformAnimator(
+        copy.deepcopy(lorentz_transformable),
+        vrel,
+        origin=origin,
+        stanimator=simpg.ObjectAnimator,
+        stanimator_options={
+            &#39;grid&#39;: grid,
+            &#39;legend&#39;: legend,
+            &#39;legend_loc&#39;: legend_loc,
+        },
+        # Draw just the desired and surrounding frames to save computation
+        tlim=(time - 1/fps, time + 1/fps),
+        xlim=xlim,
+        time=time,
+        fig=fig,
+        ax=ax,
+        transition_duration=transition_duration,
+        fps=fps,
+        display_current_velocity=display_current_velocity,
+        display_current_velocity_decimals=display_current_velocity_decimals,
+        title=title)
+    return animator</code></pre>
+</details>
+</dd>
+<dt id="specrel.visualize.animate_lt_worldline_and_realspace"><code class="name flex">
+<span>def <span class="ident">animate_lt_worldline_and_realspace</span></span>(<span>lorentz_transformable, vrel, origin=(0, 0), tlim=(None, None), xlim=(None, None), time=0, fig=None, axs=None, grid=False, legend=False, legend_loc='best', transition_duration=2, fps=50, display_current_velocity=True, display_current_velocity_decimals=3, title=None, lim_padding=0.1, equal_lim_expand=1, current_time_style='--', current_time_color='red')</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Animates the Lorentz transformation of a
+<a title="specrel.geom.LorentzTransformable" href="geom.html#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a> from one frame to another in both a
+spacetime diagram and real space, fixing the frame-local time value.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>lorentz_transformable</code></strong> :&ensp;<a title="specrel.geom.LorentzTransformable" href="geom.html#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a></dt>
+<dd>Object to
+animate.</dd>
+<dt><strong><code>vrel</code></strong> :&ensp;<code>float</code></dt>
+<dd>Relative velocities of frame to transform to.</dd>
+<dt><strong><code>origin</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>Origin used for Lorentz transformation, in the
+form (t, x).</dd>
+<dt><strong><code>tlim</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>Time drawing limits. See
+<a title="specrel.geom.LorentzTransformable.draw" href="geom.html#specrel.geom.LorentzTransformable.draw"><code>LorentzTransformable.draw()</code></a>.</dd>
+<dt><strong><code>xlim</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>Position drawing limits. See
+<a title="specrel.geom.LorentzTransformable.draw" href="geom.html#specrel.geom.LorentzTransformable.draw"><code>LorentzTransformable.draw()</code></a>.</dd>
+<dt><strong><code>time</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Frame-local time value to fix during
+transformation animation.</dd>
+<dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.figure.Figure</code>, optional</dt>
+<dd>Figure window. If <code>None</code>, a
+new figure window is created.</dd>
+<dt><strong><code>axs</code></strong> :&ensp;<code>list</code>, optional</dt>
+<dd>List of axes in row major format. If <code>None</code>, a
+new set of axes is created under a new figure window.</dd>
+<dt><strong><code>grid</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Flag for whether or not to plot background grid
+lines.</dd>
+<dt><strong><code>legend</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Flag for whether or not to plot a legend.</dd>
+<dt><strong><code>legend_loc</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Legend location according to the Matplotlib
+<code>loc</code> parameter. If <code>legend</code> is <code>False</code>, this parameter is ignored.</dd>
+<dt><strong><code>transition_duration</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Real-time duration in seconds of
+the transformation animation.</dd>
+<dt><strong><code>fps</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Animation frames per second.</dd>
+<dt><strong><code>display_current_velocity</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Flag for displaying the
+velocity of the current animation frame.</dd>
+<dt><strong><code>display_current_velocity_decimals</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>Number of decimals to
+display the current velocity to. If <code>display_current_velocity</code> is
+<code>False</code>, this parameter is ignored.</dd>
+<dt><strong><code>title</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Animation title.</dd>
+<dt><strong><code>lim_padding</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Extra padding on spacetime diagram axis
+limits, relative to the axis sizes.</dd>
+<dt><strong><code>equal_lim_expand</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>If the limits on an axis are
+specified to be equal, they will be expanded symmetrically until the
+axis size is this value.</dd>
+<dt><strong><code>current_time_style</code></strong> :&ensp;<code>linestyle</code>, optional</dt>
+<dd>Matplotlib linestyle for the
+line of current time in animated spacetime plot.</dd>
+<dt><strong><code>current_time_color</code></strong> :&ensp;<code>color</code>, optional</dt>
+<dd>Matplotlib color for the line of
+current time in animated spacetime plot.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="specrel.graphics.compgraph.MultiTransformAnimator" href="graphics/compgraph.html#specrel.graphics.compgraph.MultiTransformAnimator"><code>MultiTransformAnimator</code></a>:</dt>
+<dd>Animator for the transformation animation of the object in a
+spacetime diagram and real space from one reference frame to the
+other.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def animate_lt_worldline_and_realspace(lorentz_transformable,
+    vrel,
+    origin=geom.geomrc[&#39;origin&#39;],
+    tlim=geom.geomrc[&#39;tlim&#39;],
+    xlim=geom.geomrc[&#39;xlim&#39;],
+    time=graphrc[&#39;anim.transform.time&#39;],
+    fig=graphrc[&#39;fig&#39;],
+    axs=graphrc[&#39;axs&#39;],
+    grid=graphrc[&#39;grid&#39;],
+    legend=graphrc[&#39;legend&#39;],
+    legend_loc=graphrc[&#39;legend_loc&#39;],
+    transition_duration=graphrc[&#39;anim.transform.transition_duration&#39;],
+    fps=graphrc[&#39;anim.fps&#39;],
+    display_current_velocity=graphrc[&#39;anim.display_current&#39;],
+    display_current_velocity_decimals=
+        graphrc[&#39;anim.display_current_decimals&#39;],
+    title=graphrc[&#39;title&#39;],
+    lim_padding=graphrc[&#39;worldline.lim_padding&#39;],
+    equal_lim_expand=graphrc[&#39;worldline.equal_lim_expand&#39;],
+    current_time_style=graphrc[&#39;anim.worldline.current_time_style&#39;],
+    current_time_color=graphrc[&#39;anim.worldline.current_time_color&#39;]):
+    &#34;&#34;&#34;Animates the Lorentz transformation of a
+    `specrel.geom.LorentzTransformable` from one frame to another in both a
+    spacetime diagram and real space, fixing the frame-local time value.
+
+    Args:
+        lorentz_transformable (specrel.geom.LorentzTransformable): Object to
+            animate.
+        vrel (float): Relative velocities of frame to transform to.
+        origin (tuple, optional): Origin used for Lorentz transformation, in the
+            form (t, x).
+        tlim (tuple, optional): Time drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+        xlim (tuple, optional): Position drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+        time (float, optional): Frame-local time value to fix during
+            transformation animation.
+        fig (matplotlib.figure.Figure, optional): Figure window. If `None`, a
+            new figure window is created.
+        axs (list, optional): List of axes in row major format. If `None`, a
+            new set of axes is created under a new figure window.
+        grid (bool, optional): Flag for whether or not to plot background grid
+            lines.
+        legend (bool, optional): Flag for whether or not to plot a legend.
+        legend_loc (str, optional): Legend location according to the Matplotlib
+            `loc` parameter. If `legend` is `False`, this parameter is ignored.
+        transition_duration (float, optional): Real-time duration in seconds of
+            the transformation animation.
+        fps (float, optional): Animation frames per second.
+        display_current_velocity (bool, optional): Flag for displaying the
+            velocity of the current animation frame.
+        display_current_velocity_decimals (int, optional): Number of decimals to
+            display the current velocity to. If `display_current_velocity` is
+            `False`, this parameter is ignored.
+        title (str, optional): Animation title.
+        lim_padding (float, optional): Extra padding on spacetime diagram axis
+            limits, relative to the axis sizes.
+        equal_lim_expand (float, optional): If the limits on an axis are
+            specified to be equal, they will be expanded symmetrically until the
+            axis size is this value.
+        current_time_style (linestyle, optional): Matplotlib linestyle for the
+            line of current time in animated spacetime plot.
+        current_time_color (color, optional): Matplotlib color for the line of
+            current time in animated spacetime plot.
+
+    Returns:
+        specrel.graphics.compgraph.MultiTransformAnimator:
+            Animator for the transformation animation of the object in a
+            spacetime diagram and real space from one reference frame to the
+            other.
+    &#34;&#34;&#34;
+    # Make new figure if necessary
+    fig, axs = _prepare_fig_and_axs(fig, axs, 1, 2,
+        rect=[0.03, 0.03, 1, 0.89], w_pad=0)
+
+    _check_axs_match_frames(axs, 2)
+
+    animator = compg.MultiTransformAnimator(
+        [
+            {
+                &#39;animator_options&#39;:
+                {
+                    &#39;stanimator&#39;: simpg.WorldlineAnimator,
+                    &#39;title&#39;: &#39;Spacetime Diagram&#39;,
+                    &#39;origin&#39;: origin,
+                    &#39;tlim&#39;: tlim,
+                    &#39;xlim&#39;: xlim,
+                    &#39;time&#39;: time,
+                    &#39;stanimator_options&#39;:
+                    {
+                        &#39;grid&#39;: grid,
+                        &#39;legend&#39;: legend,
+                        &#39;legend_loc&#39;: legend_loc,
+                        &#39;lim_padding&#39;: lim_padding,
+                        &#39;equal_lim_expand&#39;: equal_lim_expand,
+                        &#39;current_time_style&#39;: current_time_style,
+                        &#39;current_time_color&#39;: current_time_color,
+                    },
+                },
+                &#39;transformable&#39;: copy.deepcopy(lorentz_transformable),
+            },
+            {
+                &#39;animator_options&#39;:
+                {
+                    &#39;stanimator&#39;: simpg.ObjectAnimator,
+                    &#39;title&#39;: &#39;Actual Scene&#39;,
+                    &#39;origin&#39;: origin,
+                    &#39;xlim&#39;: xlim,
+                    &#39;time&#39;: time,
+                    &#39;stanimator_options&#39;: {
+                        &#39;grid&#39;: grid,
+                        &#39;legend&#39;: legend,
+                        &#39;legend_loc&#39;: legend_loc,
+                    }
+                },
+                &#39;transformable&#39;: copy.deepcopy(lorentz_transformable),
+            },
+        ],
+        vrel,
+        fig=fig,
+        axs=axs,
+        transition_duration=transition_duration,
+        fps=fps,
+        display_current_velocity=display_current_velocity,
+        display_current_velocity_decimals=display_current_velocity_decimals,
+        title=title)
+    return animator</code></pre>
+</details>
+</dd>
+<dt id="specrel.visualize.compare_frames"><code class="name flex">
+<span>def <span class="ident">compare_frames</span></span>(<span>lorentz_transformable, vrels, origin=(0, 0), tlim=(None, None), xlim=(None, None), fig=None, axs=None, grid=False, legend=False, legend_loc='best', lim_padding=0.1, equal_lim_expand=1, title=None, **kwargs)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Plots the spacetime diagrams of a <a title="specrel.geom.LorentzTransformable" href="geom.html#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a> in
+some number of different frames moving at some relative velocity to a lab
+frame.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>lorentz_transformable</code></strong> :&ensp;<a title="specrel.geom.LorentzTransformable" href="geom.html#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a></dt>
+<dd>Object to
+plot.</dd>
+<dt><strong><code>vrels</code></strong> :&ensp;<code>list</code></dt>
+<dd>List of relative velocities of frames to compare with the
+lab frame.</dd>
+<dt><strong><code>origin</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>Origin used for Lorentz transformations, in
+the form (t, x).</dd>
+<dt><strong><code>tlim</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>Time drawing limits. See
+<a title="specrel.geom.LorentzTransformable.draw" href="geom.html#specrel.geom.LorentzTransformable.draw"><code>LorentzTransformable.draw()</code></a>.</dd>
+<dt><strong><code>xlim</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>Position drawing limits. See
+<a title="specrel.geom.LorentzTransformable.draw" href="geom.html#specrel.geom.LorentzTransformable.draw"><code>LorentzTransformable.draw()</code></a>.</dd>
+<dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.figure.Figure</code>, optional</dt>
+<dd>Figure window. If <code>None</code>, a
+new figure window is created.</dd>
+<dt><strong><code>axs</code></strong> :&ensp;<code>list</code>, optional</dt>
+<dd>List of axes in row major format. If <code>None</code>, a
+new set of axes is created under a new figure window.</dd>
+<dt><strong><code>grid</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Flag for whether or not to plot background grid
+lines.</dd>
+<dt><strong><code>legend</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Flag for whether or not to plot a legend.</dd>
+<dt><strong><code>legend_loc</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Legend location according to the Matplotlib
+<code>loc</code> parameter. If <code>legend</code> is <code>False</code>, this parameter is ignored.</dd>
+<dt><strong><code>lim_padding</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Extra padding on spacetime diagram axis
+limits, relative to the axis sizes.</dd>
+<dt><strong><code>equal_lim_expand</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>If the limits on an axis are
+specified to be equal, they will be expanded symmetrically until the
+axis size is this value.</dd>
+<dt><strong><code>title</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Plot title.</dd>
+<dt><strong><code>**kwargs</code></strong></dt>
+<dd>Keyword arguments to forward to Matplotlib when drawing the
+object.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code>:</dt>
+<dd>List of <a title="specrel.graphics.simpgraph.WorldlinePlotter" href="graphics/simpgraph.html#specrel.graphics.simpgraph.WorldlinePlotter"><code>WorldlinePlotter</code></a> objects, one
+for the object plotted in each reference frame.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def compare_frames(lorentz_transformable,
+    vrels,
+    origin=geom.geomrc[&#39;origin&#39;],
+    tlim=geom.geomrc[&#39;tlim&#39;],
+    xlim=geom.geomrc[&#39;xlim&#39;],
+    fig=graphrc[&#39;fig&#39;],
+    axs=graphrc[&#39;axs&#39;],
+    grid=graphrc[&#39;grid&#39;],
+    legend=graphrc[&#39;legend&#39;],
+    legend_loc=graphrc[&#39;legend_loc&#39;],
+    lim_padding=graphrc[&#39;worldline.lim_padding&#39;],
+    equal_lim_expand=graphrc[&#39;worldline.equal_lim_expand&#39;],
+    title=graphrc[&#39;title&#39;],
+    **kwargs):
+    &#34;&#34;&#34;Plots the spacetime diagrams of a `specrel.geom.LorentzTransformable` in
+    some number of different frames moving at some relative velocity to a lab
+    frame.
+
+    Args:
+        lorentz_transformable (specrel.geom.LorentzTransformable): Object to
+            plot.
+        vrels (list): List of relative velocities of frames to compare with the
+            lab frame.
+        origin (tuple, optional): Origin used for Lorentz transformations, in
+            the form (t, x).
+        tlim (tuple, optional): Time drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+        xlim (tuple, optional): Position drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+        fig (matplotlib.figure.Figure, optional): Figure window. If `None`, a
+            new figure window is created.
+        axs (list, optional): List of axes in row major format. If `None`, a
+            new set of axes is created under a new figure window.
+        grid (bool, optional): Flag for whether or not to plot background grid
+            lines.
+        legend (bool, optional): Flag for whether or not to plot a legend.
+        legend_loc (str, optional): Legend location according to the Matplotlib
+            `loc` parameter. If `legend` is `False`, this parameter is ignored.
+        lim_padding (float, optional): Extra padding on spacetime diagram axis
+            limits, relative to the axis sizes.
+        equal_lim_expand (float, optional): If the limits on an axis are
+            specified to be equal, they will be expanded symmetrically until the
+            axis size is this value.
+        title (str, optional): Plot title.
+        **kwargs: Keyword arguments to forward to Matplotlib when drawing the
+            object.
+
+    Returns:
+        list:
+            List of `specrel.graphics.simpgraph.WorldlinePlotter` objects, one
+            for the object plotted in each reference frame.
+    &#34;&#34;&#34;
+    transformables, vrels = _get_transformable_and_vrel_in_all_frames(
+        lorentz_transformable, vrels, origin)
+
+    # Make new figure if necessary
+    fig, axs = _prepare_fig_and_axs(fig, axs, 1, len(transformables),
+        rect=[0.03, 0.03, 1, 0.93], w_pad=3)
+
+    _check_axs_match_frames(axs, len(transformables))
+
+    plotters = []
+    for ax, transformable in zip(axs, transformables):
+        plotter = simpg.WorldlinePlotter(
+            fig=fig,
+            ax=ax,
+            grid=grid,
+            legend=legend,
+            legend_loc=legend_loc,
+            lim_padding=lim_padding,
+            equal_lim_expand=equal_lim_expand)
+        transformable.draw(plotter=plotter, tlim=tlim, xlim=xlim, **kwargs)
+        plotter.set_labels()
+        plotters.append(plotter)
+    axs[0].set_title(&#39;Lab Frame&#39;)
+    for ax, vrel in zip(axs[1:], vrels):
+        ax.set_title(f&#39;Frame Moving at ${vrel:.3g}c$&#39;)
+    if title:
+        fig.suptitle(title)
+    return tuple(plotters)</code></pre>
+</details>
+</dd>
+<dt id="specrel.visualize.compare_frames_animated"><code class="name flex">
+<span>def <span class="ident">compare_frames_animated</span></span>(<span>lorentz_transformable, vrels, origin=(0, 0), tlim=(None, None), xlim=(None, None), fig=None, axs=None, grid=False, legend=False, legend_loc='best', ct_per_sec=1, instant_pause_time=1, fps=50, display_current_time=True, display_current_time_decimals=3, title=None, **kwargs)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Animates a <a title="specrel.geom.LorentzTransformable" href="geom.html#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a> in some number of
+different frames moving at some relative velocity to a lab frame.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>lorentz_transformable</code></strong> :&ensp;<a title="specrel.geom.LorentzTransformable" href="geom.html#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a></dt>
+<dd>Object to
+animate.</dd>
+<dt><strong><code>vrels</code></strong> :&ensp;<code>list</code></dt>
+<dd>List of relative velocities of frames to compare with the
+lab frame.</dd>
+<dt><strong><code>origin</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>Origin used for Lorentz transformations, in
+the form (t, x).</dd>
+<dt><strong><code>tlim</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>Time drawing limits. See
+<a title="specrel.geom.LorentzTransformable.draw" href="geom.html#specrel.geom.LorentzTransformable.draw"><code>LorentzTransformable.draw()</code></a>.</dd>
+<dt><strong><code>xlim</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>Position drawing limits. See
+<a title="specrel.geom.LorentzTransformable.draw" href="geom.html#specrel.geom.LorentzTransformable.draw"><code>LorentzTransformable.draw()</code></a>.</dd>
+<dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.figure.Figure</code>, optional</dt>
+<dd>Figure window. If <code>None</code>, a
+new figure window is created.</dd>
+<dt><strong><code>axs</code></strong> :&ensp;<code>list</code>, optional</dt>
+<dd>List of axes in row major format. If <code>None</code>, a
+new set of axes is created under a new figure window.</dd>
+<dt><strong><code>grid</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Flag for whether or not to plot background grid
+lines.</dd>
+<dt><strong><code>legend</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Flag for whether or not to plot a legend.</dd>
+<dt><strong><code>legend_loc</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Legend location according to the Matplotlib
+<code>loc</code> parameter. If <code>legend</code> is <code>False</code>, this parameter is ignored.</dd>
+<dt><strong><code>ct_per_sec</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Amount of time to pass within an animation
+for every second of real time.</dd>
+<dt><strong><code>instant_pause_time</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Amount of pause time in seconds
+for instantaneous events (appear in a single instant of time).</dd>
+<dt><strong><code>fps</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Animation frames per second.</dd>
+<dt><strong><code>display_current_time</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Flag for displaying the time of
+the current animation frame.</dd>
+<dt><strong><code>display_current_time_decimals</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>Number of decimals to
+display the current time to. If <code>display_current_time</code> is <code>False</code>,
+this parameter is ignored.</dd>
+<dt><strong><code>title</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Animation title.</dd>
+<dt><strong><code>**kwargs</code></strong></dt>
+<dd>Keyword arguments to forward to Matplotlib when drawing the
+object.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="specrel.graphics.compgraph.MultiTimeAnimator" href="graphics/compgraph.html#specrel.graphics.compgraph.MultiTimeAnimator"><code>MultiTimeAnimator</code></a>:</dt>
+<dd>Animator for the object animated in real space in each of the
+different reference frames.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def compare_frames_animated(lorentz_transformable,
+    vrels,
+    origin=geom.geomrc[&#39;origin&#39;],
+    tlim=geom.geomrc[&#39;tlim&#39;],
+    xlim=geom.geomrc[&#39;xlim&#39;],
+    fig=graphrc[&#39;fig&#39;],
+    axs=graphrc[&#39;axs&#39;],
+    grid=graphrc[&#39;grid&#39;],
+    legend=graphrc[&#39;legend&#39;],
+    legend_loc=graphrc[&#39;legend_loc&#39;],
+    ct_per_sec=graphrc[&#39;anim.time.ct_per_sec&#39;],
+    instant_pause_time=graphrc[&#39;anim.time.instant_pause_time&#39;],
+    fps=graphrc[&#39;anim.fps&#39;],
+    display_current_time=graphrc[&#39;anim.display_current&#39;],
+    display_current_time_decimals=
+        graphrc[&#39;anim.display_current_decimals&#39;],
+    title=graphrc[&#39;title&#39;],
+    **kwargs):
+    &#34;&#34;&#34;Animates a `specrel.geom.LorentzTransformable` in some number of
+    different frames moving at some relative velocity to a lab frame.
+
+    Args:
+        lorentz_transformable (specrel.geom.LorentzTransformable): Object to
+            animate.
+        vrels (list): List of relative velocities of frames to compare with the
+            lab frame.
+        origin (tuple, optional): Origin used for Lorentz transformations, in
+            the form (t, x).
+        tlim (tuple, optional): Time drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+        xlim (tuple, optional): Position drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+        fig (matplotlib.figure.Figure, optional): Figure window. If `None`, a
+            new figure window is created.
+        axs (list, optional): List of axes in row major format. If `None`, a
+            new set of axes is created under a new figure window.
+        grid (bool, optional): Flag for whether or not to plot background grid
+            lines.
+        legend (bool, optional): Flag for whether or not to plot a legend.
+        legend_loc (str, optional): Legend location according to the Matplotlib
+            `loc` parameter. If `legend` is `False`, this parameter is ignored.
+        ct_per_sec (float, optional): Amount of time to pass within an animation
+            for every second of real time.
+        instant_pause_time (float, optional): Amount of pause time in seconds
+            for instantaneous events (appear in a single instant of time).
+        fps (float, optional): Animation frames per second.
+        display_current_time (bool, optional): Flag for displaying the time of
+            the current animation frame.
+        display_current_time_decimals (int, optional): Number of decimals to
+            display the current time to. If `display_current_time` is `False`,
+            this parameter is ignored.
+        title (str, optional): Animation title.
+        **kwargs: Keyword arguments to forward to Matplotlib when drawing the
+            object.
+
+    Returns:
+        specrel.graphics.compgraph.MultiTimeAnimator:
+            Animator for the object animated in real space in each of the
+            different reference frames.
+    &#34;&#34;&#34;
+    transformables, vrels = _get_transformable_and_vrel_in_all_frames(
+        lorentz_transformable, vrels, origin)
+
+    # Make new figure if necessary
+    fig, axs = _prepare_fig_and_axs(fig, axs, 1, len(transformables),
+        rect=[0.03, 0.03, 1, 0.89], w_pad=0)
+
+    _check_axs_match_frames(axs, len(transformables))
+
+    ax_titles = [&#39;Scene in Lab Frame&#39;] + \
+        [f&#39;Scene in Frame Moving at ${vrel:.3g}c$&#39; for vrel in vrels]
+    draw_options = {&#39;tlim&#39;: tlim, &#39;xlim&#39;: xlim, **kwargs}
+    animator = compg.MultiTimeAnimator(
+        [
+            {
+                &#39;animator&#39;: simpg.ObjectAnimator,
+                &#39;animator_options&#39;: {
+                    &#39;grid&#39;: grid,
+                    &#39;legend&#39;: legend,
+                    &#39;legend_loc&#39;: legend_loc,
+                    &#39;title&#39;: ax_title,
+                },
+                &#39;transformable&#39;: transformed_obj,
+                &#39;draw_options&#39;: draw_options,
+            } for transformed_obj, ax_title in zip(transformables, ax_titles)
+        ],
+        fig=fig,
+        axs=axs,
+        tlim=tlim,
+        ct_per_sec=ct_per_sec,
+        instant_pause_time=instant_pause_time,
+        fps=fps,
+        display_current_time=display_current_time,
+        display_current_time_decimals=display_current_time_decimals,
+        title=title)
+    return animator</code></pre>
+</details>
+</dd>
+<dt id="specrel.visualize.compare_frames_animated_with_worldline"><code class="name flex">
+<span>def <span class="ident">compare_frames_animated_with_worldline</span></span>(<span>lorentz_transformable, vrels, origin=(0, 0), tlim_anim=(None, None), tlim_worldline=(None, None), tlim=(None, None), xlim=(None, None), fig=None, axs=None, grid=False, legend=False, legend_loc='best', ct_per_sec=1, instant_pause_time=1, fps=50, display_current_time=True, display_current_time_decimals=3, title=None, lim_padding=0.1, equal_lim_expand=1, current_time_style='--', current_time_color='red', **kwargs)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Animates a <a title="specrel.geom.LorentzTransformable" href="geom.html#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a> alongside an animated
+spacetime diagram in some number of different frames moving at some relative
+velocity to a lab frame.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>lorentz_transformable</code></strong> :&ensp;<a title="specrel.geom.LorentzTransformable" href="geom.html#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a></dt>
+<dd>Object to
+animate.</dd>
+<dt><strong><code>vrels</code></strong> :&ensp;<code>list</code></dt>
+<dd>List of relative velocities of frames to compare with the
+lab frame.</dd>
+<dt><strong><code>origin</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>Origin used for Lorentz transformations, in
+the form (t, x).</dd>
+<dt><strong><code>tlim_anim</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>Time drawing limits for the animation
+itself.</dd>
+<dt><strong><code>tlim_worldline</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>Time drawing limits for the spacetime
+diagram. See <a title="specrel.geom.LorentzTransformable.draw" href="geom.html#specrel.geom.LorentzTransformable.draw"><code>LorentzTransformable.draw()</code></a>.</dd>
+<dt><strong><code>tlim</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>Time drawing limits for both the animation and
+the spacetime diagram. Entries that are not <code>None</code> override those
+in <code>tlim_anim</code> and <code>tlim_worldline</code>.</dd>
+<dt><strong><code>xlim</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>Position drawing limits. See
+<a title="specrel.geom.LorentzTransformable.draw" href="geom.html#specrel.geom.LorentzTransformable.draw"><code>LorentzTransformable.draw()</code></a>.</dd>
+<dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.figure.Figure</code>, optional</dt>
+<dd>Figure window. If <code>None</code>, a
+new figure window is created.</dd>
+<dt><strong><code>axs</code></strong> :&ensp;<code>list</code>, optional</dt>
+<dd>List of axes in row major format. If <code>None</code>, a
+new set of axes is created under a new figure window.</dd>
+<dt><strong><code>grid</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Flag for whether or not to plot background grid
+lines.</dd>
+<dt><strong><code>legend</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Flag for whether or not to plot a legend.</dd>
+<dt><strong><code>legend_loc</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Legend location according to the Matplotlib
+<code>loc</code> parameter. If <code>legend</code> is <code>False</code>, this parameter is ignored.</dd>
+<dt><strong><code>ct_per_sec</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Amount of time to pass within an animation
+for every second of real time.</dd>
+<dt><strong><code>instant_pause_time</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Amount of pause time in seconds
+for instantaneous events (appear in a single instant of time).</dd>
+<dt><strong><code>fps</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Animation frames per second.</dd>
+<dt><strong><code>display_current_time</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Flag for displaying the time of
+the current animation frame.</dd>
+<dt><strong><code>display_current_time_decimals</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>Number of decimals to
+display the current time to. If <code>display_current_time</code> is <code>False</code>,
+this parameter is ignored.</dd>
+<dt><strong><code>title</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Animation title.</dd>
+<dt><strong><code>lim_padding</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Extra padding on spacetime diagram axis
+limits, relative to the axis sizes.</dd>
+<dt><strong><code>equal_lim_expand</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>If the limits on an axis are
+specified to be equal, they will be expanded symmetrically until the
+axis size is this value.</dd>
+<dt><strong><code>current_time_style</code></strong> :&ensp;<code>linestyle</code>, optional</dt>
+<dd>Matplotlib linestyle for the
+line of current time in animated spacetime plot.</dd>
+<dt><strong><code>current_time_color</code></strong> :&ensp;<code>color</code>, optional</dt>
+<dd>Matplotlib color for the line of
+current time in animated spacetime plot.</dd>
+<dt><strong><code>**kwargs</code></strong></dt>
+<dd>Keyword arguments to forward to Matplotlib when drawing the
+object.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="specrel.graphics.compgraph.MultiTimeAnimator" href="graphics/compgraph.html#specrel.graphics.compgraph.MultiTimeAnimator"><code>MultiTimeAnimator</code></a>:</dt>
+<dd>Animator for the spacetime + real space animations of the object in
+each of the different reference frames.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def compare_frames_animated_with_worldline(lorentz_transformable,
+    vrels,
+    origin=geom.geomrc[&#39;origin&#39;],
+    tlim_anim=geom.geomrc[&#39;tlim&#39;],
+    tlim_worldline=geom.geomrc[&#39;tlim&#39;],
+    tlim=(None, None),
+    xlim=geom.geomrc[&#39;xlim&#39;],
+    fig=graphrc[&#39;fig&#39;],
+    axs=graphrc[&#39;axs&#39;],
+    grid=graphrc[&#39;grid&#39;],
+    legend=graphrc[&#39;legend&#39;],
+    legend_loc=graphrc[&#39;legend_loc&#39;],
+    ct_per_sec=graphrc[&#39;anim.time.ct_per_sec&#39;],
+    instant_pause_time=graphrc[&#39;anim.time.instant_pause_time&#39;],
+    fps=graphrc[&#39;anim.fps&#39;],
+    display_current_time=graphrc[&#39;anim.display_current&#39;],
+    display_current_time_decimals=
+        graphrc[&#39;anim.display_current_decimals&#39;],
+    title=graphrc[&#39;title&#39;],
+    lim_padding=graphrc[&#39;worldline.lim_padding&#39;],
+    equal_lim_expand=graphrc[&#39;worldline.equal_lim_expand&#39;],
+    current_time_style=graphrc[&#39;anim.worldline.current_time_style&#39;],
+    current_time_color=graphrc[&#39;anim.worldline.current_time_color&#39;],
+    **kwargs):
+    &#34;&#34;&#34;Animates a `specrel.geom.LorentzTransformable` alongside an animated
+    spacetime diagram in some number of different frames moving at some relative
+    velocity to a lab frame.
+
+    Args:
+        lorentz_transformable (specrel.geom.LorentzTransformable): Object to
+            animate.
+        vrels (list): List of relative velocities of frames to compare with the
+            lab frame.
+        origin (tuple, optional): Origin used for Lorentz transformations, in
+            the form (t, x).
+        tlim_anim (tuple, optional): Time drawing limits for the animation
+            itself.
+        tlim_worldline (tuple, optional): Time drawing limits for the spacetime
+            diagram. See `specrel.geom.LorentzTransformable.draw`.
+        tlim (tuple, optional): Time drawing limits for both the animation and
+            the spacetime diagram. Entries that are not `None` override those
+            in `tlim_anim` and `tlim_worldline`.
+        xlim (tuple, optional): Position drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+        fig (matplotlib.figure.Figure, optional): Figure window. If `None`, a
+            new figure window is created.
+        axs (list, optional): List of axes in row major format. If `None`, a
+            new set of axes is created under a new figure window.
+        grid (bool, optional): Flag for whether or not to plot background grid
+            lines.
+        legend (bool, optional): Flag for whether or not to plot a legend.
+        legend_loc (str, optional): Legend location according to the Matplotlib
+            `loc` parameter. If `legend` is `False`, this parameter is ignored.
+        ct_per_sec (float, optional): Amount of time to pass within an animation
+            for every second of real time.
+        instant_pause_time (float, optional): Amount of pause time in seconds
+            for instantaneous events (appear in a single instant of time).
+        fps (float, optional): Animation frames per second.
+        display_current_time (bool, optional): Flag for displaying the time of
+            the current animation frame.
+        display_current_time_decimals (int, optional): Number of decimals to
+            display the current time to. If `display_current_time` is `False`,
+            this parameter is ignored.
+        title (str, optional): Animation title.
+        lim_padding (float, optional): Extra padding on spacetime diagram axis
+            limits, relative to the axis sizes.
+        equal_lim_expand (float, optional): If the limits on an axis are
+            specified to be equal, they will be expanded symmetrically until the
+            axis size is this value.
+        current_time_style (linestyle, optional): Matplotlib linestyle for the
+            line of current time in animated spacetime plot.
+        current_time_color (color, optional): Matplotlib color for the line of
+            current time in animated spacetime plot.
+        **kwargs: Keyword arguments to forward to Matplotlib when drawing the
+            object.
+
+    Returns:
+        specrel.graphics.compgraph.MultiTimeAnimator:
+            Animator for the spacetime + real space animations of the object in
+            each of the different reference frames.
+    &#34;&#34;&#34;
+    transformables, vrels = _get_transformable_and_vrel_in_all_frames(
+        lorentz_transformable, vrels, origin)
+
+    # Make new figure if necessary
+    fig, axs = _prepare_fig_and_axs(fig, axs, len(transformables), 2,
+        rect=[0.03, 0.03, 1, 0.93], h_pad=3)
+
+    _check_axs_match_frames(axs, 2*len(transformables))
+
+    tlim_anim = _override_tlim(tlim_anim, tlim)
+    tlim_worldline = _override_tlim(tlim_worldline, tlim)
+
+    ax_worldline_titles = [&#39;Spacetime Diagram (Lab Frame)&#39;] \
+        + [f&#39;Spacetime Diagram ($v = {vrel:.3g}c$)&#39; for vrel in vrels]
+    ax_obj_titles = [&#39;Scene in Lab Frame&#39;] \
+        + [f&#39;Scene in Frame Moving at ${vrel:.3g}c$&#39; for vrel in vrels]
+    worldline_anim_opts = {
+        &#39;grid&#39;: grid,
+        &#39;legend&#39;: legend,
+        &#39;legend_loc&#39;: legend_loc,
+        &#39;lim_padding&#39;: lim_padding,
+        &#39;equal_lim_expand&#39;: equal_lim_expand,
+        &#39;current_time_style&#39;: current_time_style,
+        &#39;current_time_color&#39;: current_time_color,
+    }
+    object_anim_opts = {
+        &#39;grid&#39;: grid,
+        &#39;legend&#39;: legend,
+        &#39;legend_loc&#39;: legend_loc,
+    }
+
+    anim_objs = []
+    for transformable, ax_worldline_title, ax_obj_title in zip(
+        transformables, ax_worldline_titles, ax_obj_titles):
+        anim_objs += [
+            {
+                &#39;animator&#39;: simpg.WorldlineAnimator,
+                &#39;animator_options&#39;: {&#39;title&#39;: ax_worldline_title,
+                    **worldline_anim_opts},
+                &#39;transformable&#39;: transformable,
+                &#39;draw_options&#39;: {&#39;tlim&#39;: tlim_worldline, &#39;xlim&#39;: xlim,
+                    **kwargs},
+            },
+            {
+                &#39;animator&#39;: simpg.ObjectAnimator,
+                &#39;animator_options&#39;: {&#39;title&#39;: ax_obj_title,
+                    **object_anim_opts},
+                &#39;transformable&#39;: transformable,
+                &#39;draw_options&#39;: {&#39;tlim&#39;: tlim_worldline, &#39;xlim&#39;: xlim,
+                    **kwargs},
+            },
+        ]
+
+    animator = compg.MultiTimeAnimator(
+        anim_objs,
+        fig=fig,
+        axs=axs,
+        tlim=tlim_anim,
+        ct_per_sec=ct_per_sec,
+        instant_pause_time=instant_pause_time,
+        fps=fps,
+        display_current_time=display_current_time,
+        display_current_time_decimals=display_current_time_decimals,
+        title=title)
+    return animator</code></pre>
+</details>
+</dd>
+<dt id="specrel.visualize.stanimate"><code class="name flex">
+<span>def <span class="ident">stanimate</span></span>(<span>lorentz_transformable, tlim=(None, None), xlim=(None, None), fig=None, ax=None, grid=False, legend=False, legend_loc='best', ct_per_sec=1, instant_pause_time=1, fps=50, display_current_time=True, display_current_time_decimals=3, title=None, **kwargs)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Animates a <a title="specrel.geom.LorentzTransformable" href="geom.html#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a> in real space.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>lorentz_transformable</code></strong> :&ensp;<a title="specrel.geom.LorentzTransformable" href="geom.html#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a></dt>
+<dd>Object to
+animate.</dd>
+<dt><strong><code>tlim</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>Time drawing limits. See
+<a title="specrel.geom.LorentzTransformable.draw" href="geom.html#specrel.geom.LorentzTransformable.draw"><code>LorentzTransformable.draw()</code></a>.</dd>
+<dt><strong><code>xlim</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>Position drawing limits. See
+<a title="specrel.geom.LorentzTransformable.draw" href="geom.html#specrel.geom.LorentzTransformable.draw"><code>LorentzTransformable.draw()</code></a>.</dd>
+<dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.figure.Figure</code>, optional</dt>
+<dd>Figure window. See
+<a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="graphics/simpgraph.html#specrel.graphics.simpgraph.SingleAxisFigureCreator"><code>SingleAxisFigureCreator</code></a>.</dd>
+<dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.axes.Axes</code>, optional</dt>
+<dd>Plotting axes. See
+<a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="graphics/simpgraph.html#specrel.graphics.simpgraph.SingleAxisFigureCreator"><code>SingleAxisFigureCreator</code></a>.</dd>
+<dt><strong><code>grid</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Flag for whether or not to plot background grid
+lines.</dd>
+<dt><strong><code>legend</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Flag for whether or not to plot a legend.</dd>
+<dt><strong><code>legend_loc</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Legend location according to the Matplotlib
+<code>loc</code> parameter. If <code>legend</code> is <code>False</code>, this parameter is ignored.</dd>
+<dt><strong><code>ct_per_sec</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Amount of time to pass within an animation
+for every second of real time.</dd>
+<dt><strong><code>instant_pause_time</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Amount of pause time in seconds
+for instantaneous events (appear in a single instant of time).</dd>
+<dt><strong><code>fps</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Animation frames per second.</dd>
+<dt><strong><code>display_current_time</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Flag for displaying the time of
+the current animation frame.</dd>
+<dt><strong><code>display_current_time_decimals</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>Number of decimals to
+display the current time to. If <code>display_current_time</code> is <code>False</code>,
+this parameter is ignored.</dd>
+<dt><strong><code>title</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Animation title.</dd>
+<dt><strong><code>**kwargs</code></strong></dt>
+<dd>Keyword arguments to forward to Matplotlib when drawing the
+object.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="specrel.graphics.simpgraph.ObjectAnimator" href="graphics/simpgraph.html#specrel.graphics.simpgraph.ObjectAnimator"><code>ObjectAnimator</code></a>:</dt>
+<dd>Animator for the real space animation of the object.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def stanimate(lorentz_transformable,
+    tlim=geom.geomrc[&#39;tlim&#39;],
+    xlim=geom.geomrc[&#39;xlim&#39;],
+    fig=graphrc[&#39;fig&#39;],
+    ax=graphrc[&#39;ax&#39;],
+    grid=graphrc[&#39;grid&#39;],
+    legend=graphrc[&#39;legend&#39;],
+    legend_loc=graphrc[&#39;legend_loc&#39;],
+    ct_per_sec=graphrc[&#39;anim.time.ct_per_sec&#39;],
+    instant_pause_time=graphrc[&#39;anim.time.instant_pause_time&#39;],
+    fps=graphrc[&#39;anim.fps&#39;],
+    display_current_time=graphrc[&#39;anim.display_current&#39;],
+    display_current_time_decimals=
+        graphrc[&#39;anim.display_current_decimals&#39;],
+    title=graphrc[&#39;title&#39;],
+    **kwargs):
+    &#34;&#34;&#34;Animates a `specrel.geom.LorentzTransformable` in real space.
+
+    Args:
+        lorentz_transformable (specrel.geom.LorentzTransformable): Object to
+            animate.
+        tlim (tuple, optional): Time drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+        xlim (tuple, optional): Position drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+        fig (matplotlib.figure.Figure, optional): Figure window. See
+            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+        ax (matplotlib.axes.Axes, optional): Plotting axes. See
+            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+        grid (bool, optional): Flag for whether or not to plot background grid
+            lines.
+        legend (bool, optional): Flag for whether or not to plot a legend.
+        legend_loc (str, optional): Legend location according to the Matplotlib
+            `loc` parameter. If `legend` is `False`, this parameter is ignored.
+        ct_per_sec (float, optional): Amount of time to pass within an animation
+            for every second of real time.
+        instant_pause_time (float, optional): Amount of pause time in seconds
+            for instantaneous events (appear in a single instant of time).
+        fps (float, optional): Animation frames per second.
+        display_current_time (bool, optional): Flag for displaying the time of
+            the current animation frame.
+        display_current_time_decimals (int, optional): Number of decimals to
+            display the current time to. If `display_current_time` is `False`,
+            this parameter is ignored.
+        title (str, optional): Animation title.
+        **kwargs: Keyword arguments to forward to Matplotlib when drawing the
+            object.
+
+    Returns:
+        specrel.graphics.simpgraph.ObjectAnimator:
+            Animator for the real space animation of the object.
+    &#34;&#34;&#34;
+    animator = simpg.ObjectAnimator(
+        fig=fig,
+        ax=ax,
+        grid=grid,
+        legend=legend,
+        legend_loc=legend_loc,
+        ct_per_sec=ct_per_sec,
+        instant_pause_time=instant_pause_time,
+        fps=fps,
+        display_current_time=display_current_time,
+        display_current_time_decimals=display_current_time_decimals,
+        title=title)
+    lorentz_transformable.draw(plotter=animator, tlim=tlim, xlim=xlim, **kwargs)
+    return animator</code></pre>
+</details>
+</dd>
+<dt id="specrel.visualize.stanimate_with_worldline"><code class="name flex">
+<span>def <span class="ident">stanimate_with_worldline</span></span>(<span>lorentz_transformable, tlim_anim=(None, None), tlim_worldline=(None, None), tlim=(None, None), xlim=(None, None), fig=None, axs=None, grid=False, legend=False, legend_loc='best', ct_per_sec=1, instant_pause_time=1, fps=50, display_current_time=True, display_current_time_decimals=3, title=None, lim_padding=0.1, equal_lim_expand=1, current_time_style='--', current_time_color='red', **kwargs)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Animates a <a title="specrel.geom.LorentzTransformable" href="geom.html#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a> alongside an animated
+spacetime diagram.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>lorentz_transformable</code></strong> :&ensp;<a title="specrel.geom.LorentzTransformable" href="geom.html#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a></dt>
+<dd>Object to
+animate.</dd>
+<dt><strong><code>tlim_anim</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>Time drawing limits for the animation
+itself.</dd>
+<dt><strong><code>tlim_worldline</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>Time drawing limits for the spacetime
+diagram. See <a title="specrel.geom.LorentzTransformable.draw" href="geom.html#specrel.geom.LorentzTransformable.draw"><code>LorentzTransformable.draw()</code></a>.</dd>
+<dt><strong><code>tlim</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>Time drawing limits for both the animation and
+the spacetime diagram. Entries that are not <code>None</code> override those
+in <code>tlim_anim</code> and <code>tlim_worldline</code>.</dd>
+<dt><strong><code>xlim</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>Position drawing limits. See
+<a title="specrel.geom.LorentzTransformable.draw" href="geom.html#specrel.geom.LorentzTransformable.draw"><code>LorentzTransformable.draw()</code></a>.</dd>
+<dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.figure.Figure</code>, optional</dt>
+<dd>Figure window. If <code>None</code>, a
+new figure window is created.</dd>
+<dt><strong><code>axs</code></strong> :&ensp;<code>list</code>, optional</dt>
+<dd>List of axes in row major format. If <code>None</code>, a
+new set of axes is created under a new figure window.</dd>
+<dt><strong><code>grid</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Flag for whether or not to plot background grid
+lines.</dd>
+<dt><strong><code>legend</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Flag for whether or not to plot a legend.</dd>
+<dt><strong><code>legend_loc</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Legend location according to the Matplotlib
+<code>loc</code> parameter. If <code>legend</code> is <code>False</code>, this parameter is ignored.</dd>
+<dt><strong><code>ct_per_sec</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Amount of time to pass within an animation
+for every second of real time.</dd>
+<dt><strong><code>instant_pause_time</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Amount of pause time in seconds
+for instantaneous events (appear in a single instant of time).</dd>
+<dt><strong><code>fps</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Animation frames per second.</dd>
+<dt><strong><code>display_current_time</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Flag for displaying the time of
+the current animation frame.</dd>
+<dt><strong><code>display_current_time_decimals</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>Number of decimals to
+display the current time to. If <code>display_current_time</code> is <code>False</code>,
+this parameter is ignored.</dd>
+<dt><strong><code>title</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Animation title.</dd>
+<dt><strong><code>lim_padding</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Extra padding on spacetime diagram axis
+limits, relative to the axis sizes.</dd>
+<dt><strong><code>equal_lim_expand</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>If the limits on an axis are
+specified to be equal, they will be expanded symmetrically until the
+axis size is this value.</dd>
+<dt><strong><code>current_time_style</code></strong> :&ensp;<code>linestyle</code>, optional</dt>
+<dd>Matplotlib linestyle for the
+line of current time in animated spacetime plot.</dd>
+<dt><strong><code>current_time_color</code></strong> :&ensp;<code>color</code>, optional</dt>
+<dd>Matplotlib color for the line of
+current time in animated spacetime plot.</dd>
+<dt><strong><code>**kwargs</code></strong></dt>
+<dd>Keyword arguments to forward to Matplotlib when drawing the
+object.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="specrel.graphics.compgraph.MultiTimeAnimator" href="graphics/compgraph.html#specrel.graphics.compgraph.MultiTimeAnimator"><code>MultiTimeAnimator</code></a>:</dt>
+<dd>Animator for the spacetime diagram + real space animation of the
+object.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def stanimate_with_worldline(lorentz_transformable,
+    tlim_anim=geom.geomrc[&#39;tlim&#39;],
+    tlim_worldline=geom.geomrc[&#39;tlim&#39;],
+    tlim=(None, None),
+    xlim=geom.geomrc[&#39;xlim&#39;],
+    fig=graphrc[&#39;fig&#39;],
+    axs=graphrc[&#39;axs&#39;],
+    grid=graphrc[&#39;grid&#39;],
+    legend=graphrc[&#39;legend&#39;],
+    legend_loc=graphrc[&#39;legend_loc&#39;],
+    ct_per_sec=graphrc[&#39;anim.time.ct_per_sec&#39;],
+    instant_pause_time=graphrc[&#39;anim.time.instant_pause_time&#39;],
+    fps=graphrc[&#39;anim.fps&#39;],
+    display_current_time=graphrc[&#39;anim.display_current&#39;],
+    display_current_time_decimals=
+        graphrc[&#39;anim.display_current_decimals&#39;],
+    title=graphrc[&#39;title&#39;],
+    lim_padding=graphrc[&#39;worldline.lim_padding&#39;],
+    equal_lim_expand=graphrc[&#39;worldline.equal_lim_expand&#39;],
+    current_time_style=graphrc[&#39;anim.worldline.current_time_style&#39;],
+    current_time_color=graphrc[&#39;anim.worldline.current_time_color&#39;],
+    **kwargs):
+    &#34;&#34;&#34;Animates a `specrel.geom.LorentzTransformable` alongside an animated
+    spacetime diagram.
+
+    Args:
+        lorentz_transformable (specrel.geom.LorentzTransformable): Object to
+            animate.
+        tlim_anim (tuple, optional): Time drawing limits for the animation
+            itself.
+        tlim_worldline (tuple, optional): Time drawing limits for the spacetime
+            diagram. See `specrel.geom.LorentzTransformable.draw`.
+        tlim (tuple, optional): Time drawing limits for both the animation and
+            the spacetime diagram. Entries that are not `None` override those
+            in `tlim_anim` and `tlim_worldline`.
+        xlim (tuple, optional): Position drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+        fig (matplotlib.figure.Figure, optional): Figure window. If `None`, a
+            new figure window is created.
+        axs (list, optional): List of axes in row major format. If `None`, a
+            new set of axes is created under a new figure window.
+        grid (bool, optional): Flag for whether or not to plot background grid
+            lines.
+        legend (bool, optional): Flag for whether or not to plot a legend.
+        legend_loc (str, optional): Legend location according to the Matplotlib
+            `loc` parameter. If `legend` is `False`, this parameter is ignored.
+        ct_per_sec (float, optional): Amount of time to pass within an animation
+            for every second of real time.
+        instant_pause_time (float, optional): Amount of pause time in seconds
+            for instantaneous events (appear in a single instant of time).
+        fps (float, optional): Animation frames per second.
+        display_current_time (bool, optional): Flag for displaying the time of
+            the current animation frame.
+        display_current_time_decimals (int, optional): Number of decimals to
+            display the current time to. If `display_current_time` is `False`,
+            this parameter is ignored.
+        title (str, optional): Animation title.
+        lim_padding (float, optional): Extra padding on spacetime diagram axis
+            limits, relative to the axis sizes.
+        equal_lim_expand (float, optional): If the limits on an axis are
+            specified to be equal, they will be expanded symmetrically until the
+            axis size is this value.
+        current_time_style (linestyle, optional): Matplotlib linestyle for the
+            line of current time in animated spacetime plot.
+        current_time_color (color, optional): Matplotlib color for the line of
+            current time in animated spacetime plot.
+        **kwargs: Keyword arguments to forward to Matplotlib when drawing the
+            object.
+
+    Returns:
+        specrel.graphics.compgraph.MultiTimeAnimator:
+            Animator for the spacetime diagram + real space animation of the
+            object.
+    &#34;&#34;&#34;
+    # Make new figure if necessary
+    fig, axs = _prepare_fig_and_axs(fig, axs, 1, 2,
+        rect=[0.03, 0.03, 1, 0.89], w_pad=0)
+
+    tlim_anim = _override_tlim(tlim_anim, tlim)
+    tlim_worldline = _override_tlim(tlim_worldline, tlim)
+
+    animator = compg.MultiTimeAnimator(
+        [
+            {
+                &#39;animator&#39;: simpg.WorldlineAnimator,
+                &#39;animator_options&#39;:
+                {
+                    &#39;title&#39;: &#39;Spacetime Diagram&#39;,
+                    &#39;grid&#39;: grid,
+                    &#39;legend&#39;: legend,
+                    &#39;legend_loc&#39;: legend_loc,
+                    &#39;lim_padding&#39;: lim_padding,
+                    &#39;equal_lim_expand&#39;: equal_lim_expand,
+                    &#39;current_time_style&#39;: current_time_style,
+                    &#39;current_time_color&#39;: current_time_color,
+                },
+                &#39;transformable&#39;: copy.deepcopy(lorentz_transformable),
+                &#39;draw_options&#39;: {&#39;tlim&#39;: tlim_worldline, &#39;xlim&#39;: xlim,
+                    **kwargs},
+            },
+            {
+                &#39;animator&#39;: simpg.ObjectAnimator,
+                &#39;animator_options&#39;: {
+                    &#39;grid&#39;: grid,
+                    &#39;legend&#39;: legend,
+                    &#39;legend_loc&#39;: legend_loc,
+                    &#39;title&#39;: &#39;Actual Scene&#39;,
+                },
+                &#39;transformable&#39;: copy.deepcopy(lorentz_transformable),
+                &#39;draw_options&#39;: {&#39;tlim&#39;: tlim_worldline, &#39;xlim&#39;: xlim,
+                    **kwargs},
+            },
+        ],
+        fig=fig,
+        axs=axs,
+        tlim=tlim_anim,
+        ct_per_sec=ct_per_sec,
+        instant_pause_time=instant_pause_time,
+        fps=fps,
+        display_current_time=display_current_time,
+        display_current_time_decimals=display_current_time_decimals,
+        title=title)
+    return animator</code></pre>
+</details>
+</dd>
+<dt id="specrel.visualize.stplot"><code class="name flex">
+<span>def <span class="ident">stplot</span></span>(<span>lorentz_transformable, tlim=(None, None), xlim=(None, None), fig=None, ax=None, grid=False, legend=False, legend_loc='best', lim_padding=0.1, equal_lim_expand=1, title=None, **kwargs)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Plots the spacetime plot of a <a title="specrel.geom.LorentzTransformable" href="geom.html#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a>.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>lorentz_transformable</code></strong> :&ensp;<a title="specrel.geom.LorentzTransformable" href="geom.html#specrel.geom.LorentzTransformable"><code>LorentzTransformable</code></a></dt>
+<dd>Object to
+plot.</dd>
+<dt><strong><code>tlim</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>Time drawing limits. See
+<a title="specrel.geom.LorentzTransformable.draw" href="geom.html#specrel.geom.LorentzTransformable.draw"><code>LorentzTransformable.draw()</code></a>.</dd>
+<dt><strong><code>xlim</code></strong> :&ensp;<code>tuple</code>, optional</dt>
+<dd>Position drawing limits. See
+<a title="specrel.geom.LorentzTransformable.draw" href="geom.html#specrel.geom.LorentzTransformable.draw"><code>LorentzTransformable.draw()</code></a>.</dd>
+<dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.figure.Figure</code>, optional</dt>
+<dd>Figure window. See
+<a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="graphics/simpgraph.html#specrel.graphics.simpgraph.SingleAxisFigureCreator"><code>SingleAxisFigureCreator</code></a>.</dd>
+<dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.axes.Axes</code>, optional</dt>
+<dd>Plotting axes. See
+<a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="graphics/simpgraph.html#specrel.graphics.simpgraph.SingleAxisFigureCreator"><code>SingleAxisFigureCreator</code></a>.</dd>
+<dt><strong><code>grid</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Flag for whether or not to plot background grid
+lines.</dd>
+<dt><strong><code>legend</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Flag for whether or not to plot a legend.</dd>
+<dt><strong><code>legend_loc</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Legend location according to the Matplotlib
+<code>loc</code> parameter. If <code>legend</code> is <code>False</code>, this parameter is ignored.</dd>
+<dt><strong><code>lim_padding</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>Extra padding on spacetime diagram axis
+limits, relative to the axis sizes.</dd>
+<dt><strong><code>equal_lim_expand</code></strong> :&ensp;<code>float</code>, optional</dt>
+<dd>If the limits on an axis are
+specified to be equal, they will be expanded symmetrically until the
+axis size is this value.</dd>
+<dt><strong><code>title</code></strong> :&ensp;<code>str</code>, optional</dt>
+<dd>Plot title.</dd>
+<dt><strong><code>**kwargs</code></strong></dt>
+<dd>Keyword arguments to forward to Matplotlib when drawing the
+object.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><a title="specrel.graphics.simpgraph.WorldlinePlotter" href="graphics/simpgraph.html#specrel.graphics.simpgraph.WorldlinePlotter"><code>WorldlinePlotter</code></a>:</dt>
+<dd>Plotter for the spacetime diagram of the object.</dd>
+</dl></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def stplot(lorentz_transformable,
+    tlim=geom.geomrc[&#39;tlim&#39;],
+    xlim=geom.geomrc[&#39;xlim&#39;],
+    fig=graphrc[&#39;fig&#39;],
+    ax=graphrc[&#39;ax&#39;],
+    grid=graphrc[&#39;grid&#39;],
+    legend=graphrc[&#39;legend&#39;],
+    legend_loc=graphrc[&#39;legend_loc&#39;],
+    lim_padding=graphrc[&#39;worldline.lim_padding&#39;],
+    equal_lim_expand=graphrc[&#39;worldline.equal_lim_expand&#39;],
+    title=graphrc[&#39;title&#39;],
+    **kwargs):
+    &#34;&#34;&#34;Plots the spacetime plot of a `specrel.geom.LorentzTransformable`.
+
+    Args:
+        lorentz_transformable (specrel.geom.LorentzTransformable): Object to
+            plot.
+        tlim (tuple, optional): Time drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+        xlim (tuple, optional): Position drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+        fig (matplotlib.figure.Figure, optional): Figure window. See
+            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+        ax (matplotlib.axes.Axes, optional): Plotting axes. See
+            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+        grid (bool, optional): Flag for whether or not to plot background grid
+            lines.
+        legend (bool, optional): Flag for whether or not to plot a legend.
+        legend_loc (str, optional): Legend location according to the Matplotlib
+            `loc` parameter. If `legend` is `False`, this parameter is ignored.
+        lim_padding (float, optional): Extra padding on spacetime diagram axis
+            limits, relative to the axis sizes.
+        equal_lim_expand (float, optional): If the limits on an axis are
+            specified to be equal, they will be expanded symmetrically until the
+            axis size is this value.
+        title (str, optional): Plot title.
+        **kwargs: Keyword arguments to forward to Matplotlib when drawing the
+            object.
+
+    Returns:
+        specrel.graphics.simpgraph.WorldlinePlotter:
+            Plotter for the spacetime diagram of the object.
+    &#34;&#34;&#34;
+    plotter = simpg.WorldlinePlotter(
+        fig=fig,
+        ax=ax,
+        grid=grid,
+        legend=legend,
+        legend_loc=legend_loc,
+        lim_padding=lim_padding,
+        equal_lim_expand=equal_lim_expand)
+    lorentz_transformable.draw(plotter=plotter, tlim=tlim, xlim=xlim, **kwargs)
+    plotter.set_labels()
+    if title:
+        plotter.ax.set_title(title)
+    return plotter</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="specrel" href="index.html">specrel</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-variables">Global variables</a></h3>
+<ul class="">
+<li><code><a title="specrel.visualize.visrc" href="#specrel.visualize.visrc">visrc</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="specrel.visualize.animate_lt" href="#specrel.visualize.animate_lt">animate_lt</a></code></li>
+<li><code><a title="specrel.visualize.animate_lt_realspace" href="#specrel.visualize.animate_lt_realspace">animate_lt_realspace</a></code></li>
+<li><code><a title="specrel.visualize.animate_lt_worldline_and_realspace" href="#specrel.visualize.animate_lt_worldline_and_realspace">animate_lt_worldline_and_realspace</a></code></li>
+<li><code><a title="specrel.visualize.compare_frames" href="#specrel.visualize.compare_frames">compare_frames</a></code></li>
+<li><code><a title="specrel.visualize.compare_frames_animated" href="#specrel.visualize.compare_frames_animated">compare_frames_animated</a></code></li>
+<li><code><a title="specrel.visualize.compare_frames_animated_with_worldline" href="#specrel.visualize.compare_frames_animated_with_worldline">compare_frames_animated_with_worldline</a></code></li>
+<li><code><a title="specrel.visualize.stanimate" href="#specrel.visualize.stanimate">stanimate</a></code></li>
+<li><code><a title="specrel.visualize.stanimate_with_worldline" href="#specrel.visualize.stanimate_with_worldline">stanimate_with_worldline</a></code></li>
+<li><code><a title="specrel.visualize.stplot" href="#specrel.visualize.stplot">stplot</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.6.3</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

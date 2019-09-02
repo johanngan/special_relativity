@@ -5,4 +5,4 @@ The `specrel` package represents physical things and spacetime processes as geom
 The [guided tour](guided_tour) is a series of demo modules that show off practical application of various features of the `specrel` package, alongside an introduction to topics is special relativity.
 
 # API Documentation
-See [api/](api) for detailed API documentation.
+For detailed documentation on the `specrel` API, see [here](api/specrel).
