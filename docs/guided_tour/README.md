@@ -1,3 +1,5 @@
+# Guided Tour
+
 This guided tour contains demo modules that highlight how to use the `specrel` package in the context of real topics in special relativity. Each page interleaves code, diagrams, and explanation. The actual source code can be found in [examples](https://github.com/johanngan/special_relativity/tree/master/examples).
 
 ## Table of Contents
