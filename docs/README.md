@@ -11,5 +11,5 @@ For detailed documentation on the `specrel` API, see [here](api/specrel).
 For notes on unit testing, see [here](testing.md).
 
 # Links
-- [Repository](https://github.com/johanngan/special_relativity/tree/master/docs)
+- [`docs/` in the Repository](https://github.com/johanngan/special_relativity/tree/master/docs)
 - [GitHub Pages](https://johanngan.github.io/special_relativity/)
