@@ -1,59 +1,125 @@
-"""The geometry of special relativity"""
+"""
+Defines the geometry of special relativity, meaning core geometry classes and
+relevant transformation operations on them.
+
+All concrete geometry classes are subclasses of
+`specrel.geom.LorentzTransformable`.
+
+Object drawing is done abstractly, with concrete graphics code delegated to
+`specrel.graphics`.
+"""
+
 from abc import ABC, abstractmethod
 import copy
 from math import atan2
 import warnings
 
-# Commonly used default parameters shared by multiple geom classes
 geomrc = {
-    # Origin for Lorentz transformations
     'origin': (0, 0),
-    # Draw limits
     'tlim': (None, None),
     'xlim': (None, None),
-    # "Name" for an object, to be overlaid when an object is drawn
     'tag': None,
-    # Numerical precision for internal comparison logic, and also for string
-    # representations of objects
     'precision': 7,
-    # kwargs to pass onto MPL when drawing an object
-    # Okay to have a mutable dict here; ctors will copy
-    'draw_options': {},
+    'draw_options': {}, # Okay to have a mutable dict here; ctors will copy
     'ribbon.default_edgecolor': 'black',
 }
+"""
+Contains default parameters shared by various classes and functions in `geom`.
 
-"""Something that obeys Lorentz transformations"""
+## Items
+- **origin**: `(0, 0)`
+    - Origin used for Lorentz transformations, in the form (t, x).
+- **tlim**: `(None, None)`
+    - Time drawing limits. See `specrel.geom.LorentzTransformable.draw`.
+- **xlim**: `(None, None)`
+    - Position drawing limits. See `specrel.geom.LorentzTransformable.draw`.
+- **precision**: `7`
+    - Floating-point precision (number of decimal places) for internal
+    comparisons.
+- **tag**: `None`
+    - Object tag, see `specrel.geom.LorentzTransformable`.
+- **draw_options**: `{}`
+    - Object draw options, see `specrel.geom.LorentzTransformable`.
+- **ribbon.default_edgecolor**: `'black'`
+    - Default edge color for drawing `specrel.geom.Ribbon` objects.
+"""
+
 class LorentzTransformable(ABC):
+    """Something that obeys Lorentz transformations.
+
+    Attributes:
+        draw_options (dict): Keyword arguments to forward to Matplotlib when
+            drawing an object. For example, `{'color': 'red'}` would set the
+            keyword argument `color=red` when internally calling Matplotlib
+            plotting functions. Note that options here can be overridden by
+            keyword arguments in `specrel.geom.LorentzTransformable.draw`.
+        tag (str): A tag or "name" associated with an object. Can be used by
+            certain plotters to add a custom type of label when drawing an
+            object.
+
+            For a legend entry, instead use the Matplotlib draw option `label`
+            in the `draw_options` property/parameter.
+    """
+
     @abstractmethod
     def __init__(self, tag, draw_options):
         self.tag = tag
         self.draw_options = dict(draw_options)
 
-    """Lorentz transform the object with some velocity about some origin"""
     @abstractmethod
     def lorentz_transform(self, velocity, origin):
+        """Lorentz transform the object with some velocity about some origin.
+
+        Args:
+            velocity (float): Lorentz transformation velocity.
+            origin (tuple): Origin of Lorentz transformation.
+
+        Raises:
+            NotImplementedError:
+                Abstract method.
+        """
         raise NotImplementedError
 
-    """Lorentz boost the object with some velocity about some origin.
-    Just a convenience function."""
     def lorentz_boost(self, velocity, origin=geomrc['origin']):
+        """Lorentz boost the object with some velocity about some origin.
+        Equivalent to lorentz transforming with `-velocity`. See
+        `specrel.geom.LorentzTransformable.lorentz_transform`.
+        """
         self.lorentz_transform(-velocity, origin)
 
     """Drawing logic for an object, contingent on a DI for boilerplate plotting
     implementation via plotter (a graphics.simpgraph.STPlotter instance)"""
     @abstractmethod
     def draw(self, plotter, tlim, xlim, **kwargs):
+        """Drawing logic for an object, contingent on a plotter object.
+
+        Args:
+            plotter (`specrel.graphics.simpgraph.STPlotter`): Plotter object to
+                implement plotting functionality.
+            tlim (tuple): Minimum and maximum time values when drawing the
+                object. Any `None` entries are replaced with a class-specific
+                default.
+            xlim (tuple): Minimum and maximum position values when drawing the
+                object. Any `None` entries are replaced with a class-specific
+                default.
+            **kwargs: Keyword arguments to forward to Matplotlib when drawing
+                the object.
+
+        Raises:
+            NotImplementedError:
+                Abstract method.
+        """
         raise NotImplementedError
 
-    """Determine automatic draw limits if one or more aren't given,
-    in the format (tmin, tmax), (xmin, xmax)"""
     @abstractmethod
     def _auto_draw_lims(self):
+        """Determine automatic draw limits if one or more aren't given,
+        in the format (tmin, tmax), (xmin, xmax)"""
         raise NotImplementedError
 
-    """Fill in automatic limits only where explicit limits aren't given, and
-    return in the format (tmin, tmax), (xmin, xmax)"""
     def _fill_auto_lims(self, tlim, xlim):
+        """Fill in automatic limits only where explicit limits aren't given, and
+        return in the format (tmin, tmax), (xmin, xmax)"""
         tmin, tmax, xmin, xmax = tlim + xlim
         if None in tlim + xlim:
             # Only compute automatic limits if needed
@@ -70,18 +136,59 @@ class LorentzTransformable(ABC):
 
 """Return a Lorentz transformed copy of a LorentzTransformable"""
 def lorentz_transformed(transformable, velocity, origin=geomrc['origin']):
+    """Lorentz transforms an object and returns a copy.
+
+    Args:
+        transformable (specrel.geom.LorentzTransformable): Object to Lorentz
+            transform.
+        velocity (float): Lorentz transformation velocity.
+        origin (tuple, optional): Origin of Lorentz transformation, in the form
+            (t, x).
+
+    Returns:
+        specrel.geom.LorentzTransformable:
+            Transformed copy of `transformable`.
+    """
     transformed = copy.deepcopy(transformable)
     transformed.lorentz_transform(velocity, origin)
     return transformed
 
 """Return a Lorentz-boosted copy of a LorentzTransformable"""
 def lorentz_boosted(transformable, velocity, origin=geomrc['origin']):
+    """Lorentz boosts an object and returns a copy. Equivalent to a Lorentz
+    transform with `-velocity`. See `specrel.geom.lorentz_transformed`.
+    """
     boosted = copy.deepcopy(transformable)
     boosted.lorentz_boost(velocity, origin)
     return boosted
 
-"""(1+1)-D spacetime vector (i.e. 1 space + 1 time)"""
 class STVector(LorentzTransformable):
+    """A vector in spacetime (t, x). `*args` can be one of two options
+    (see below). `**kwargs` are for attributes other than `t` and `x`, and
+    default to corresponding items in `specrel.geom.geomrc` if unspecified.
+
+    An `STVector`-convertible type is any type that can be used for the `stvec`
+    parameter in the second initialization list (see below).
+
+    Args:
+        t (float): Time value.
+        x (float): Position value.
+
+    Args:
+        stvec (specrel.geom.STVector or iterable): Existing `STVector` or some
+            other iterable (t, x) to copy. If an `STVector`, will copy over all
+            attributes not overridden by explicit keyword arguments.
+
+    Attributes:
+        draw_options (dict): See `specrel.geom.LorentzTransformable`.
+        precision (int): Floating-point precision for comparisons. Two
+            `STVector` are equal if the components agree to this many decimal
+            places.
+        t (float): Time value of the vector.
+        tag (str): See `specrel.geom.LorentzTransformable`.
+        x (float): Position value of the vector.
+    """
+
     def __init__(self, *args, **kwargs):
         # args can either be:
         #   - 2 arguments: [t, x]
@@ -90,11 +197,11 @@ class STVector(LorentzTransformable):
         # kwargs can include: 'tag', 'precision', 'draw_options'
         if len(args) == 2:
             # t and x were individually provided
-            self.constructor(*args, **kwargs)
+            self._constructor(*args, **kwargs)
         elif len(args) == 1:
             # An iterable representing (t, x) was provided
             # This can function as a copy ctor if said iterable was an STVector
-            self.constructor(*args[0], **kwargs)
+            self._constructor(*args[0], **kwargs)
             # If no tag is given explicitly, copy over the old tag if it exists
             # i.e. if the object is an STVector, not just a tuple or something
             if 'tag' not in kwargs:
@@ -117,21 +224,22 @@ class STVector(LorentzTransformable):
         else:
             raise TypeError('Too many positional arguments.')
 
-    """The actual constructor underlying __init__"""
-    def constructor(self, time, position, tag=geomrc['tag'],
+    def _constructor(self, time, position, tag=geomrc['tag'],
         precision=geomrc['precision'], draw_options=geomrc['draw_options']):
+        """The actual constructor underlying __init__"""
         super().__init__(tag=tag, draw_options=draw_options)
         self.t = time
         self.x = position
         self.precision = precision
 
-    """The order is (t, x), consistent with standard notation for 4-position
-    in physics"""
     def __getitem__(self, key):
+        """The order is (t, x), consistent with standard notation for 4-position
+        in physics"""
         return [self.t, self.x][key]
 
-    """String representation of vector components as an ordered pair, (t, x)"""
     def __str__(self):
+        """String representation of vector components as an ordered pair,
+        (t, x)"""
         return f'STVector({round(self.t, self.precision)}, ' \
             + f'{round(self.x, self.precision)})'
 
@@ -139,8 +247,8 @@ class STVector(LorentzTransformable):
         yield self.t
         yield self.x
 
-    """Equality within internal precision settings"""
     def __eq__(self, other):
+        """Equality within internal precision settings"""
         # Compare up to the precision of the two objects
         try:
             precision = min(self.precision, other.precision)
@@ -158,16 +266,16 @@ class STVector(LorentzTransformable):
     def __neg__(self):
         return STVector((-cmp for cmp in self))
 
-    """Vector-vector addition"""
     def __add__(self, other):
+        """Vector-vector addition"""
         return STVector((left + right for left, right in zip(self, other)))
 
-    """Vector-vector subtraction"""
     def __sub__(self, other):
+        """Vector-vector subtraction"""
         return self + -other
 
-    """Spacetime interval"""
     def __abs__(self):
+        """Spacetime interval"""
         return -self.t**2 + self.x**2
 
     def lorentz_transform(self, velocity, origin=geomrc['origin']):
@@ -188,21 +296,40 @@ class STVector(LorentzTransformable):
     def _auto_draw_lims(self):
         return (self.t, self.t), (self.x, self.x)
 
-    """Check if the point is in a given set of bounds"""
     def _in_bounds(self, tlim, xlim):
+        """Check if the point is in a given set of bounds"""
         return (round(self.t, self.precision) >= round(tlim[0], self.precision) \
             and round(self.t, self.precision) <= round(tlim[1], self.precision) \
             and round(self.x, self.precision) >= round(xlim[0], self.precision) \
             and round(self.x, self.precision) <= round(xlim[1], self.precision))
 
-    """Calculate the relativistic gamma factor for a given velocity"""
     @staticmethod
     def gamma_factor(velocity):
+        """Calculates the relativistic gamma factor for a given velocity.
+
+        Args:
+            velocity (float): Relative velocity.
+
+        Returns:
+            float:
+                Gamma factor for `velocity`.
+        """
         return 1/(1 - velocity**2)**0.5
 
-"""Collection of LorentzTransformables
-Holds references, rather than copies, similar to a list"""
 class Collection(LorentzTransformable):
+    """Collection of `specrel.geom.LorentzTransformable` objects. Holds
+    references, rather than copies, similar to a `list`. Operations like
+    `Collection.lorentz_transform` and `Collection.draw` act on all elements in
+    the `Collection`.
+
+    Has similar API to the `list`, such as indexing, iteration, using `len()`,
+    appending entries, and popping entries.
+
+    Attributes:
+        transformables (list): list of `specrel.geom.LorentzTransformable`
+            references.
+    """
+
     def __init__(self, transformables=(), tag=geomrc['tag'],
         draw_options=geomrc['draw_options']):
         super().__init__(tag=tag, draw_options=draw_options)
@@ -220,11 +347,30 @@ class Collection(LorentzTransformable):
         return len(self.transformables)
 
     def append(self, transformable):
+        """Append an element to the `Collection`.
+
+        Args:
+            transformable (`specrel.geom.LorentzTransformable`): Reference to
+                append to the `Collection`.
+
+        Raises:
+            ValueError:
+                If appended object is not a `specrel.geom.LorentzTransformable`.
+        """
         if not isinstance(transformable, LorentzTransformable):
             raise ValueError('Appended object must be LorentzTransformable')
         self.transformables.append(transformable)
 
     def pop(self, pos=-1):
+        """Pop an element from the `Collection`.
+
+        Args:
+            pos (int, optional): Position of element to pop.
+
+        Returns:
+            specrel.geom.LorentzTransformable:
+                Element at `pos`.
+        """
         return self.transformables.pop(pos)
 
     def lorentz_transform(self, velocity, origin=geomrc['origin']):
@@ -255,8 +401,27 @@ class Collection(LorentzTransformable):
             xmax = new_xmax if xmax is None else max(xmax, new_xmax)
         return (tmin, tmax), (xmin, xmax)
 
-"""Collection of spacetime points"""
 class PointGroup(Collection):
+    """Collection of specifically `specrel.geom.STVector` references.
+
+    Allowed modes are defined by class variables `PointGroup.<mode>`
+    (see below).
+
+    Modes:
+        CONNECT (int): Specifies points connected by line segments.
+        POINT (int): Specifies individual, disconnected points.
+        POLYGON (int): Specifies points defining the vertices of a polygon.
+
+    Args:
+        points (list): List of `specrel.geom.STVector` references.
+        mode (int, optional): See attributes.
+        tag (str, optional): See `specrel.geom.LorentzTransformable`.
+        draw_options (dict, optional): See `specrel.geom.LorentzTransformable`.
+
+    Attributes:
+        mode (int): Drawing mode of the `PointGroup`.
+    """
+
     # Modes for how to treat a PointGroup
     POINT = 0   # Individual points
     CONNECT = 1 # Points connected by line segments
@@ -265,7 +430,7 @@ class PointGroup(Collection):
     def __init__(self, points, mode=POINT, tag=geomrc['tag'],
         draw_options=geomrc['draw_options']):
         # Registered drawing methods for each mode
-        self.MODE_DRAW_METHODS = {
+        self._MODE_DRAW_METHODS = {
             PointGroup.POINT: self._draw_point,
             PointGroup.CONNECT: self._draw_connect,
             PointGroup.POLYGON: self._draw_polygon
@@ -279,36 +444,76 @@ class PointGroup(Collection):
         # Fill in automatic limits
         tlim, xlim = self._fill_auto_lims(tlim, xlim)
         # Dispatch based on mode
-        self.MODE_DRAW_METHODS[self.mode](plotter, tlim, xlim, **kwargs)
+        self._MODE_DRAW_METHODS[self.mode](plotter, tlim, xlim, **kwargs)
         # Make sure plot limits are properly set
         plotter.set_lims(tlim, xlim)
 
-    """Drawing for unconnected points"""
     def _draw_point(self, plotter, tlim, xlim, **kwargs):
+        """Drawing for unconnected points"""
         super().draw(plotter, tlim, xlim, **kwargs)
 
-    """Drawing for connected line segments"""
     def _draw_connect(self, plotter, tlim, xlim, **kwargs):
+        """Drawing for connected line segments"""
         # Use the overall collection's tag on each line segment
         for p1, p2 in zip(self[:-1], self[1:]):
             plotter.draw_line_segment(p1, p2, tag=self.tag, **kwargs)
 
-    """Drawing for points specifying polygon vertices"""
     def _draw_polygon(self, plotter, tlim, xlim, **kwargs):
+        """Drawing for points specifying polygon vertices"""
         # Use the overall collection's tag
         plotter.draw_shaded_polygon(self, tag=self.tag, **kwargs)
 
-"""A finite line segment"""
 def line_segment(point1, point2, tag=geomrc['tag'],
     draw_options=geomrc['draw_options']):
+    """Creates a finite line segment.
+
+    Args:
+        point1 (STVector or iterable): First line segment endpoint.
+        point2 (STVector or iterable): Second line segment endpoint.
+        tag (str, optional): See `specrel.geom.LorentzTransformable`.
+        draw_options (dict, optional): See `specrel.geom.LorentzTransformable`.
+
+    Returns:
+        specrel.geom.PointGroup:
+            Line segment conneting `point1` and `point2`.
+    """
     return PointGroup([point1, point2], PointGroup.CONNECT, tag, draw_options)
 
-"""A finite polygon"""
 def polygon(points, tag=geomrc['tag'], draw_options=geomrc['draw_options']):
+    """Creates a finite polygon.
+
+    Args:
+        points (list): Polygon vertices (`specrel.geom.STVector`-convertible).
+        tag (str, optional): See`specrel.geom.LorentzTransformable`.
+        draw_options (dict, optional): See `specrel.geom.LorentzTransformable`.
+
+    Returns:
+        specrel.geom.PointGroup:
+            Polygon with vertices in `points`.
+    """
     return PointGroup(points, PointGroup.POLYGON, tag, draw_options)
 
-"""An infinite line in spacetime"""
 class Line(Collection):
+    """An infinite line in spacetime.
+
+    Args:
+        direction (specrel.geom.STVector or iterable): Direction vector
+            (dt, dx).
+        point (specrel.geom.STVector or iterable): Point that the line passes
+            through (t0, x0).
+        tag (str, optional): See `specrel.geom.LorentzTransformable`.
+        precision (int, optional): Precision of internal `specrel.geom.STVector`
+            objects.
+        draw_options (str, optional): See `specrel.geom.LorentzTransformable`.
+
+    Attributes:
+        transformables (list): `[direction, point]`.
+
+    Raises:
+        ValueError:
+            Direction vector is zero.
+    """
+
     def __init__(self, direction, point, tag=geomrc['tag'],
         precision=geomrc['precision'], draw_options=geomrc['draw_options']):
         # Zero direction would give a point geometrically, but would make
@@ -319,9 +524,9 @@ class Line(Collection):
             STVector(point, precision=precision)],
             tag=tag, draw_options=draw_options)
 
-    """Vector parameterization of the line as a string.
-    E.g. Line( [t, x] = [3, 4] + k*[1, 1] )"""
     def __str__(self):
+        """Vector parameterization of the line as a string.
+        E.g. Line( [t, x] = [3, 4] + k*[1, 1] )"""
         precision = self.precision()
         return f'Line( [t, x] = [{round(self.point()[0], precision)}, ' \
             + f'{round(self.point()[1], precision)}]' \
@@ -337,6 +542,7 @@ class Line(Collection):
         return not (self == other)
 
     def append(self, other):
+        """Disabled; will raise a `TypeError`."""
         raise TypeError("Cannot append to object of type 'Line'")
 
     def lorentz_transform(self, velocity, origin=geomrc['origin']):
@@ -345,29 +551,58 @@ class Line(Collection):
         self.point().lorentz_transform(velocity, origin)
         self.direction().lorentz_transform(velocity)
 
-    """Direction vector"""
     def direction(self):
+        """
+        Returns:
+            specrel.geom.STVector:
+                Line direction vector.
+        """
         return self[0]
 
     """A point that the line passes through"""
     def point(self):
+        """
+        Returns:
+            specrel.geom.STVector:
+                Some point the line passes through.
+        """
         return self[1]
 
-    """The precision of the internal STVectors"""
     def precision(self):
+        """
+        Returns:
+            int:
+                Floating-point precision of internal `specrel.geom.STVector`
+                objects.
+        """
         return min([p.precision for p in self])
 
-    """Slope of the line. None if vertical."""
     def slope(self):
+        """
+        Returns:
+            float:
+                Slope of the line dt/dx if not vertical.
+            NoneType:
+                `None` if vertical.
+        """
         if self.direction().x == 0:
             return None
         return self.direction().t / self.direction().x
 
-    """Intersection point between two lines. Returns the intersection point
-    as an STVector in normal cases,
-    or a Line if the two are equal,
-    or None if parallel."""
     def intersect(self, other):
+        """Calculates intersection between two lines.
+
+        Args:
+            other (specrel.geom.Line): Other line to intersect with.
+
+        Returns:
+            specrel.geom.STVector:
+                Single intersection point if the lines meet at a point.
+            Line:
+                Line of intersection if the lines are equal.
+            NoneType:
+                `None` if the lines don't intersect.
+        """
         # Compare up to the precision of the two lines
         precision = min(self.precision(), other.precision())
 
@@ -399,9 +634,9 @@ class Line(Collection):
             self.point().x + lineparam * self.direction().x,
             precision=precision)
 
-    """Returns a list of point intersections of a line with the time and
-    space boundaries, sorted in ascending order by time, then space"""
     def _boundary_intersections(self, tlim, xlim):
+        """Returns a list of point intersections of a line with the time and
+        space boundaries, sorted in ascending order by time, then space"""
         # The four sides of the bounding box
         boundaries = [
             fixedtime(tlim[0]), fixedtime(tlim[1]),
@@ -459,20 +694,42 @@ class Line(Collection):
         xmax = max(forward.x, backward.x)
         return (tmin, tmax), (xmin, xmax)
 
-"""Returns a line of fixed space across all time"""
 def fixedspace(position, tag=geomrc['tag'],
     draw_options=geomrc['draw_options']):
+    """Creates a line of fixed space at some position value (vertical line)
+    across all time.
+
+    Args:
+        position (float): Constant position value of the line.
+        tag (str, optional): See `specrel.geom.LorentzTransformable`.
+        draw_options (dict, optional): See `specrel.geom.LorentzTransformable`.
+
+    Returns:
+        specrel.geom.Line:
+            Line of fixed space, x = `position`.
+    """
     return Line((1, 0), (0, position), tag=tag, draw_options=draw_options)
 
-"""Returns a line of fixed time across all space"""
 def fixedtime(time, tag=geomrc['tag'], draw_options=geomrc['draw_options']):
+    """Creates a line of fixed space at some position value (vertical line)
+    across all space.
+
+    Args:
+        time (float): Constant time value of the line.
+        tag (str, optional): See `specrel.geom.LorentzTransformable`.
+        draw_options (dict, optional): See `specrel.geom.LorentzTransformable`.
+
+    Returns:
+        specrel.geom.Line:
+            Line of fixed time, t = `time`.
+    """
     return Line((0, 1), (time, 0), tag=tag, draw_options=draw_options)
 
-"""An infinite ray in spacetime. Note that intersection only works if the
-argument is a vanilla Line, not a Ray"""
 class Ray(Line):
-    """Same format as a line, but with a qualifier that k >= 0"""
+    """An infinite ray in spacetime. Starting from `point`."""
+
     def __str__(self):
+        """Same format as a line, but with a qualifier that k >= 0."""
         raystr = super().__str__().replace('Line', 'Ray')
         close_paren = raystr.rfind(')')
         return raystr[:close_paren] + 'where k >= 0 ' + raystr[close_paren:]
@@ -491,16 +748,26 @@ class Ray(Line):
     def append(self, other):
         raise TypeError("Cannot append to object of type 'Ray'")
 
-    """Calculates the dot product between the vector from the Ray's anchor to
-    a point, and the Ray's direction vector"""
     def point_dotprod(self, point):
+        """Calculates the dot product between the vector from the Ray's anchor
+        to a point, and the Ray's direction vector.
+
+        Args:
+            point (`specrel.geom.STVector`): Endpoint defining one of the dot
+                product arguments.
+
+        Returns:
+            float:
+                Dot product between the anchor-point and direction vectors.
+        """
         return sum([(x - p)*d for x, p, d in zip(
             point, self.point(), self.direction())])
 
-    """Intersection point between a ray and a line. Returns the intersection
-    point as an STVector in normal cases, or a Ray if the two are coincide,
-    or None if no intersection."""
     def intersect(self, line):
+        """Intersection point between a ray and a line. Similar to
+        `specrel.geom.Line.intersect`, but returns never returns a
+        `specrel.geom.Line`, and returns a `Ray` if the ray and line coincide.
+        """
         # Pretend this is a full line to start
         ll_intersect = super().intersect(line)
         if ll_intersect is None:
@@ -525,10 +792,10 @@ class Ray(Line):
         xmax = max(forward.x, self.point().x)
         return (tmin, tmax), (xmin, xmax)
 
-    """Returns a list of point intersections of a ray with the time and
-    space boundaries, sorted in ascending order by time, then space, including
-    the ray endpoint"""
     def _boundary_intersections(self, tlim, xlim):
+        """Returns a list of point intersections of a ray with the time and
+        space boundaries, sorted in ascending order by time, then space,
+        including the ray endpoint"""
         boundary_points = super()._boundary_intersections(tlim, xlim)
         # Add the ray endpoint
         if self.point() not in boundary_points:
@@ -536,8 +803,22 @@ class Ray(Line):
         # Re-sort, since a new point was added
         return sorted(boundary_points, key=lambda p:(p.t, p.x))
 
-"""The region between two parallel spacetime lines"""
 class Ribbon(Collection):
+    """The region between two parallel spacetime lines.
+
+    Args:
+        line1 (specrel.geom.Line): First line defining the ribbon.
+        line2 (specrel.geom.Line): Second line defining the ribbon.
+        tag (str, optional): See `specrel.geom.LorentzTransformable`.
+        draw_options (dict, optional): See `specrel.geom.LorentzTransformable`.
+
+    Attributes:
+        transformables (list): `[line1, line2]`
+
+    Raises:
+        ValueError:
+            Lines are not parallel.
+    """
     def __init__(self, line1, line2, tag=geomrc['tag'],
         draw_options=geomrc['draw_options']):
         if line1.slope() != line2.slope():
@@ -546,10 +827,11 @@ class Ribbon(Collection):
             tag=tag, draw_options=draw_options)
 
     def append(self, other):
+        """Disabled; will raise a `TypeError`."""
         raise TypeError("Cannot append to object of type 'Ribbon'")
 
-    """Test whether a point lies inside the two line boundaries"""
     def _point_inside(self, point):
+        """Test whether a point lies inside the two line boundaries"""
         # Compare up to the precision of the two lines and the point
         precision = min(self[0].precision(), self[1].precision())
         try:    # If point is an STVector
@@ -574,12 +856,13 @@ class Ribbon(Collection):
             and round(point_constant, precision)
             <= round(boundary_constants[1], precision))
 
-    """Get a list of hard boundaries (i.e. the line boundaries)"""
     def _boundaries(self):
+        """Get a list of hard boundaries (i.e. the line boundaries)"""
         return list(self)
 
-    """Get the polygon vertices for drawing the ribbon in a given view range"""
     def _get_vertices(self, tlim, xlim):
+        """Get the polygon vertices for drawing the ribbon in a given view
+        range"""
         vertices = []
         # Gather all the unique candidates for vertices; all intersections
         # between all boundaries, essentially
@@ -645,8 +928,10 @@ class Ribbon(Collection):
                 line.draw(plotter, tlim, xlim, color=edgecolor, zorder=zorder,
                     **kwargs)
 
-"""The region between two parallel spacetime rays"""
 class HalfRibbon(Ribbon):
+    """The region between two parallel spacetime rays. See
+    `specrel.geom.Ribbon`.
+    """
     def __init__(self, ray1, ray2, tag=geomrc['tag'],
         draw_options=geomrc['draw_options']):
         # PARALLEL; antiparallel isn't good enough

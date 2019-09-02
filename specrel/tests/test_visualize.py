@@ -4,13 +4,14 @@ import specrel.geom as geom
 import specrel.spacetime as st
 import specrel.visualize as vis
 
-"""Get the data of a nested numpy array as a list of lists, rounded to some
-precision"""
 def _arrays_to_lists(arrarr, precision=7):
+    """Get the data of a nested numpy array as a list of lists, rounded to some
+    precision.
+    """
     return [[round(p, precision) for p in arr] for arr in arrarr]
 
-"""Set up a scenario to perform tests on"""
 class VisualizationTests(unittest.TestCase):
+    """Set up a scenario to perform tests on."""
     def setUp(self):
         # Set up a scene to visualize
         self.meterstick = st.MovingObject(0, length=3/5, velocity=4/5)
@@ -24,11 +25,11 @@ class VisualizationTests(unittest.TestCase):
         self.xdata_moving = [[0, 3/5], [4/5, 7/5], [8/5, 11/5]]
         self.xdata_rest = 3*[[0, 1]]
 
-"""Visualization within inertial frames"""
 class VisualizationInertialTests(VisualizationTests):
+    """Visualization within inertial frames."""
 
-    """Tester for worldline animators for this scene"""
     def _worldline_anim_tester(self, animator, ax, xydata, nframes):
+        """Tester for worldline animators for this scene."""
         poly = ax.patches[0]
         self.assertEqual(_arrays_to_lists(poly.get_xy()), xydata)
 
@@ -39,8 +40,8 @@ class VisualizationInertialTests(VisualizationTests):
             self.assertEqual(_arrays_to_lists(ln.get_data()),
                 [list(self.xlim), 2*[(1-p)*self.tlim[0] + p*self.tlim[1]]])
 
-    """Tester for object animators for this scene"""
     def _obj_anim_tester(self, animator, ax, xdata):
+        """Tester for object animators for this scene."""
         for i, xvals in enumerate(xdata):
             animator.update(i)
             ln = ax.lines[0]
@@ -92,8 +93,8 @@ class VisualizationInertialTests(VisualizationTests):
             self.vertices_rest, len(self.xdata_rest))
         self._obj_anim_tester(animator, animator.axs[3], self.xdata_rest)
 
-"""Visualization within accelerating frames"""
 class VisualizationAccelTests(VisualizationTests):
+    """Visualization within accelerating frames."""
     def setUp(self):
         super().setUp()
         # Over 3 frames of transformation
@@ -112,16 +113,16 @@ class VisualizationAccelTests(VisualizationTests):
         # Round
         self.xdata_mid = [0, round(mid_length, 7)]
 
-    """Tester for worldline animators for this scene"""
     def _worldline_anim_tester(self, animator, ax):
+        """Tester for worldline animators for this scene."""
         for i, vertices in enumerate(
             [self.vertices_moving, self.vertices_mid, self.vertices_rest]):
             animator.update(i)
             poly = ax.patches[0]
             self.assertEqual(_arrays_to_lists(poly.get_xy()), vertices)
 
-    """Tester for object animators for this scene"""
     def _obj_anim_tester(self, animator, ax):
+        """Tester for object animators for this scene."""
         for i, xdata in enumerate(
             [self.xdata_moving[0], self.xdata_mid, self.xdata_rest[0]]):
             animator.update(i)

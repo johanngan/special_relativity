@@ -3,10 +3,12 @@ import unittest
 import specrel.geom as geom
 from specrel.graphics.simpgraph import STPlotter
 
-"""Mock plotter for draw() methods
-Just tabulates the objects it's told to draw, but doesn't actually draw
-anything"""
 class _MockSTPlotter(STPlotter):
+    """Mock plotter for draw() methods.
+
+    Just tabulates the objects it's told to draw, but doesn't actually draw
+    anything.
+    """
     def __init__(self):
         # Tuples with all the given object info
         self.points = []
@@ -54,8 +56,8 @@ class _MockSTPlotter(STPlotter):
                 testcase.assertAlmostEqual(x, y)
         testcase.assertEqual(p1[1:], p2[1:])
 
-"""Instance initialization"""
 class STVectorInitTests(unittest.TestCase):
+    """Instance initialization."""
     def test_init_from_timepos(self):
         stvec = geom.STVector(2, 3)
         self.assertEqual(stvec.t, 2)
@@ -85,8 +87,8 @@ class STVectorInitTests(unittest.TestCase):
     def test_init_invalid_nargs(self):
         self.assertRaises(TypeError, geom.STVector, 2, 3, 4)
 
-"""Overloaded operators and special methods"""
 class STVectorOverloadTests(unittest.TestCase):
+    """Overloaded operators and special methods."""
     def test_getitem(self):
         stvec = geom.STVector(2, 3)
         self.assertEqual(stvec[0], 2)
@@ -121,8 +123,8 @@ class STVectorOverloadTests(unittest.TestCase):
     def test_abs(self):
         self.assertEqual(abs(geom.STVector(2, 3)), 5)
 
-"""Actual core functionality as spacetime objects"""
 class STVectorCoreTests(unittest.TestCase):
+    """Actual core functionality as spacetime objects."""
     def test_lorentz_transform(self):
         stvec = geom.STVector(2, 3)
         stvec.lorentz_transform(3/5)
@@ -320,8 +322,8 @@ class PointGroupTests(unittest.TestCase):
         self.assertEqual(p.tlim, (0, 1))
         self.assertEqual(p.xlim, (0, 1))
 
-"""Instance initialization"""
 class LineInitTests(unittest.TestCase):
+    """Instance initialization."""
     def test_init(self):
         line = geom.Line((0, 1), (2, 3), precision=7, tag='test',
             draw_options={'color': 'red'})
@@ -342,8 +344,8 @@ class LineInitTests(unittest.TestCase):
         self.assertEqual(line.precision(), 5)
         self.assertEqual(line.tag, 'test')
 
-"""Overloaded operators and special methods"""
 class LineOverloadTests(unittest.TestCase):
+    """Overloaded operators and special methods."""
     def test_str(self):
         self.assertEqual(str(geom.Line((0, 1), (2, 3))),
             'Line( [t, x] = [2, 3] + k*[0, 1] )')
@@ -372,8 +374,8 @@ class LineOverloadTests(unittest.TestCase):
         self.assertRaises(TypeError, geom.Line((0, 1), (2, 3)).append,
             geom.STVector(1, 1))
 
-"""Actual core functionality as spacetime objects"""
 class LineCoreTests(unittest.TestCase):
+    """Actual core functionality as spacetime objects."""
     def test_lorentz_transform_origin_1_1(self):
         line = geom.Line((2, 3), (3, 4))
         line.lorentz_transform(3/5, origin=(1, 1))
@@ -411,8 +413,8 @@ class LineCoreTests(unittest.TestCase):
     def test_slope_vertical(self):
         self.assertIsNone(geom.Line((1, 0), (2, 3)).slope())
 
-"""Line intersection logic"""
 class LineIntersectTests(unittest.TestCase):
+    """Line intersection logic."""
     def test_boundary_intersections_diag(self):
         line = geom.Line((1, 1), (0.5, 0))
         tlim = (0, 1)
@@ -471,8 +473,8 @@ class LineIntersectTests(unittest.TestCase):
         self.assertEqual(intersection.direction(), line1.direction())
         self.assertEqual(intersection.point(), line1.point())
 
-"""Overloaded operators and special methods"""
 class RayOverloadTests(unittest.TestCase):
+    """Overloaded operators and special methods."""
     def test_str(self):
         self.assertEqual(str(geom.Ray((0, 1), (2, 3))),
             'Ray( [t, x] = [2, 3] + k*[0, 1] where k >= 0 )')
@@ -490,8 +492,8 @@ class RayOverloadTests(unittest.TestCase):
         self.assertNotEqual(geom.Ray((1, 1), (2, 3)),
             geom.Ray((-1, -1), (2, 3)))
 
-"""Actual core functionality as spacetime objects"""
 class RayCoreTests(unittest.TestCase):
+    """Actual core functionality as spacetime objects."""
     def test_draw_endpoint_out_of_bounds(self):
         ray = geom.Ray((-1, -1), (2, 3))
         p = _MockSTPlotter()
@@ -522,8 +524,8 @@ class RayCoreTests(unittest.TestCase):
         ray = geom.Ray((1, -1), (2, 3))
         self.assertEqual(ray._auto_draw_lims(), ((2, 3), (2, 3)))
 
-"""Ray-line intersection logic"""
 class RayIntersectTests(unittest.TestCase):
+    """Ray-line intersection logic."""
     def test_boundary_intersections_exterior_endpoint(self):
         ray = geom.Ray((0, 1), (0.5, -1))
         tlim = (0, 1)
@@ -566,8 +568,8 @@ class RayIntersectTests(unittest.TestCase):
         line = geom.Line((0, 1), (1, 0))
         self.assertIsNone(ray.intersect(line))
 
-"""Basic functionality tests"""
 class RibbonBasicTests(unittest.TestCase):
+    """Basic functionality tests."""
     def test_init(self):
         ribbon = geom.Ribbon(geom.Line((0, 1), (2, 3)),
             geom.Line((0, 1), (0, 0)), tag='test',
@@ -626,8 +628,8 @@ class RibbonBasicTests(unittest.TestCase):
         self.assertEqual(len(p.segments), 0)
         self.assertEqual(len(p.polygons), 0)
 
-"""Tests for bounds checking logic"""
 class RibbonBoundaryTests(unittest.TestCase):
+    """Tests for bounds checking logic."""
     def test_point_inside(self):
         ribbon = geom.Ribbon(geom.Line((1, 1), (0, 2)),
             geom.Line((1, 1), (0, 0)))
@@ -734,8 +736,8 @@ class RibbonGetVerticesTests(unittest.TestCase):
             ]
         )
 
-"""Basic functionality tests"""
 class HalfRibbonBasicTests(unittest.TestCase):
+    """Basic functionality tests."""
     def test_init_error_on_antiparallel(self):
         self.assertRaises(ValueError, geom.HalfRibbon,
             geom.Ray((0, 1), (0, 0)), geom.Ray((0, -1), (2, 3)))

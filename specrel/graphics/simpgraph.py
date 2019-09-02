@@ -1,5 +1,7 @@
-"""Core graphics for simple (1 set of axes) spacetime plots and animations in
-special relativity"""
+"""Simple (one set of axes) spacetime plots and animations in special
+relativity.
+"""
+
 from abc import ABC, abstractmethod
 import copy
 import math
@@ -10,19 +12,37 @@ from matplotlib.animation import FuncAnimation
 
 from specrel.graphics.graphrc import graphrc
 
-"""Something that can create and own a figure"""
 class FigureCreator:
+    """Something that can create and own a figure.
+
+    Attributes:
+        fig (matplotlib.figure.Figure): Figure handle.
+    """
     def __init__(self):
         self.fig = None
         self._created_own_fig = False
 
     def close(self):
+        """Close the figure window if it was created by the class."""
         if self._created_own_fig:
             plt.close(self.fig)
 
-"""Something that creates and owns a figure with a single axis
-(i.e. not a subplot)"""
 class SingleAxisFigureCreator(FigureCreator):
+    """Something that creates and owns a figure with a single axis
+    (i.e. not a subplot).
+
+    Args:
+        fig (matplotlib.figure.Figure, optional): Figure window. If `None` and
+            `ax` is not `None`, will be set to `ax.figure`. If both are `None`,
+            a new figure will be created.
+        ax (matplotlib.axes.Axes, optional): Axes to draw on. If `None` and
+            `fig` is not `None`, will be set to `fig.gca()`. If both are `None`,
+            a new set of axes will be created.
+
+    Attributes:
+        ax (matplotlib.axes.Axes): Axes to draw on.
+        fig (matplotlib.figure.Figure): Figure window.
+    """
     def __init__(self, fig=graphrc['fig'], ax=graphrc['ax']):
         super().__init__()
         if fig is None and ax is None:
@@ -38,66 +58,120 @@ class SingleAxisFigureCreator(FigureCreator):
             self.fig = fig
             self.ax = ax
 
-"""Interface for base-level plotting and figure manipulation classes"""
 class STPlotter(SingleAxisFigureCreator, ABC):
-    """Draw a spacetime point
-    tag = text to be displayed over the point in an implementation-specific way
-    Other kwargs are standard MPL plotting kwargs"""
+    """Base-level plotting interface."""
+
     @abstractmethod
     def draw_point(self, point, tag, **kwargs):
+        """Draws a single spacetime point.
+
+        Args:
+            point (specrel.geom.STVector): Point to draw.
+            tag (str): Tag to draw with the point.
+            **kwargs: Matplotlib plot keyword arguments.
+
+        Raises:
+            NotImplementedError:
+                Abstract method.
+        """
         raise NotImplementedError
 
-    """Draw a line segment in spacetime
-    tag = text to be displayed over the segment
-    Other kwargs are standard MPL plotting kwargs"""
     @abstractmethod
     def draw_line_segment(self, point1, point2, tag, **kwargs):
+        """Draws a line segment between two spacetime points.
+
+        Args:
+            point1 (specrel.geom.STVector): One line segment endpoint.
+            point2 (specrel.geom.STVector): Other line segment endpoint.
+            tag (str): Tag to draw with the point.
+            **kwargs: Matplotlib plot keyword arguments.
+
+        Raises:
+            NotImplementedError:
+                Abstract method.
+        """
         raise NotImplementedError
 
-    """Draw a shaded polygon in spacetime
-    tag = text to be displayed over the polygon
-    Other kwargs are standard MPL plotting kwargs"""
     @abstractmethod
     def draw_shaded_polygon(self, vertices, tag, **kwargs):
+        """Draws a shaded polygon in spacetime.
+
+        Args:
+            vertices (list): List of `specrel.geom.STVector` objects defining
+                the polygon vertices.
+            tag (str): Tag to draw with the point.
+            **kwargs: Matplotlib plot keyword arguments.
+
+        Raises:
+            NotImplementedError:
+                Abstract method.
+        """
         raise NotImplementedError
 
-    """Separate time and space values in a list of STVectors"""
     @staticmethod
     def _decouple_stvectors(stvectors):
+        """Separate time and space values in a list of STVectors."""
         if stvectors:
             return tuple(zip(*stvectors))
         return tuple(), tuple()
 
-    """Set the plotting limits for this plotter
-    tlim and xlim are 2-tuples with (min, max) values. Any None values (within
-    the tuples) are filled in automatically"""
     @abstractmethod
     def set_lims(self, tlim, xlim):
+        """Sets the plotting limits for the plotter.
+
+        Args:
+            tlim (tuple): Minimum and maximum time values of the plot. `None`
+                values are filled automatically.
+            xlim (tuple): Minimum and maximum position values of the plot.
+                `None` values are filled automatically.
+
+        Raises:
+            NotImplementedError:
+                Abstract method.
+        """
         raise NotImplementedError
 
-    """Show the plot in interactive mode"""
     @abstractmethod
     def show(self):
+        """Shows the plot in interactive mode.
+
+        Raises:
+            NotImplementedError:
+                Abstract method.
+        """
         raise NotImplementedError
 
-    """Save the plot to a file."""
     def save(self, filename, **kwargs):
+        """Saves the plot to a file.
+
+        Args:
+            filename (str): Output file name.
+            **kwargs: Keyword arguments to `matplotlib.figure.Figure.savefig`.
+        """
         self.fig.savefig(filename, **kwargs)
 
-"""Plotter for creating spacetime/worldline diagrams"""
 class WorldlinePlotter(STPlotter):
+    """Plotter for creating static spacetime diagrams.
+
+    Args:
+        fig (matplotlib.figure.Figure, optional): See
+            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+        ax (matplotlib.axes.Axes, optional): See
+            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+        others: See attributes.
+
+    Attributes:
+        equal_lim_expand (float): If the limits on an axis are specified to be
+            equal, they will be expanded symmetrically until the axis size is
+            this value.
+        grid (bool): Flag for whether or not to plot background grid lines.
+        legend (bool): Flag for whether or not to plot a legend.
+        legend_loc (str): Legend location according to the Matplotlib
+            `loc` parameter. If `legend` is `False`, this attribute is ignored.
+        lim_padding (float): Extra padding on spacetime diagram axis limits,
+            relative to the axis sizes.
     """
-    fig, ax = MPL figure, axis to plot on. If both are None, a new set will
-        be created. Otherwise, fig/ax are used as given, or the missing one is
-        inferred from the other
-    grid = flag for whether to include grids in the spacetime plot
-    legend = flag for whether to include a legend in the spacetime plot
-    legend_loc = MPL specification for the legend location, if legend == True
-    lim_padding = the padding, relative to the overall axis range size, when
-        setting the axis limits
-    equal_lim_expand = the limit range to expand to when given limit endpoints
-        are identical (i.e. limit range of 0)
-    """
+
     def __init__(self,
         fig=graphrc['fig'],
         ax=graphrc['ax'],
@@ -114,31 +188,40 @@ class WorldlinePlotter(STPlotter):
         self.lim_padding = lim_padding
         self.equal_lim_expand = equal_lim_expand
 
-    """Do any axis preparation before drawing stuff"""
-    def prepare_ax(self):
+    def _prepare_ax(self):
+        """Do any axis preparation before drawing stuff."""
         self.ax.grid(self.grid)
         # Ensure grid lines are behind other objects
         self.ax.set_axisbelow(True)
 
-    """Turn on the legend, or do nothing, depending on self.legend"""
-    def set_legend(self):
+    def _set_legend(self):
+        """Turn on the legend, or do nothing, depending on self.legend"""
         if self.legend:
             self.ax.legend(loc=self.legend_loc)
 
-    """Draws a geometric point"""
     def draw_point(self, point, tag=None, **kwargs):
-        self.prepare_ax()
+        """See `specrel.graphics.simpgraph.STPlotter.draw_point`.
+
+        Kwargs:
+            linestyle: Forced to be `'None'`
+            marker: Default is `'.'`.
+        """
+        self._prepare_ax()
         marker = kwargs.pop('marker', '.')
         # Force linestyle to be none for a point
         kwargs['linestyle'] = 'None'
         self.ax.plot(point[1], point[0], marker=marker, **kwargs)
         if tag:
             self.ax.text(point[1], point[0], tag)
-        self.set_legend()
+        self._set_legend()
 
-    """Draws a geometric line segment"""
     def draw_line_segment(self, point1, point2, tag=None, **kwargs):
-        self.prepare_ax()
+        """See `specrel.graphics.simpgraph.STPlotter.draw_line_segment`.
+
+        Kwargs:
+            marker: Forced to be `None`.
+        """
+        self._prepare_ax()
         # Ignore the "marker" parameter
         kwargs.pop('marker', None)
         self.ax.plot((point1[1], point2[1]), (point1[0], point2[0]), **kwargs)
@@ -147,11 +230,15 @@ class WorldlinePlotter(STPlotter):
             self.ax.text((point1[1] + point2[1])/2, (point1[0] + point2[0])/2,
                 tag, ha='center', va='center', bbox={'boxstyle': 'round',
                     'ec': 'black', 'fc': (1, 1, 1, 0.5)})
-        self.set_legend()
+        self._set_legend()
 
-    """Draws a geometric filled polygon"""
     def draw_shaded_polygon(self, vertices, tag=None, **kwargs):
-        self.prepare_ax()
+        """See `specrel.graphics.simpgraph.STPlotter.draw_shaded_polygon`.
+
+        Kwargs:
+            linewidth: Forced to be `None`.
+        """
+        self._prepare_ax()
         tvals, xvals = self._decouple_stvectors(vertices)
         # Ignore the "linewidth" parameter
         kwargs.pop('linewidth', None)
@@ -161,9 +248,8 @@ class WorldlinePlotter(STPlotter):
             self.ax.text(sum(xvals)/len(xvals), sum(tvals)/len(tvals), tag,
                 ha='center', va='center', bbox={'boxstyle': 'round',
                     'ec': 'black', 'fc': (1, 1, 1, 0.5)})
-        self.set_legend()
+        self._set_legend()
 
-    """Set the spacetime axis limits"""
     def set_lims(self, tlim, xlim):
         # Pad the limits
         tpad = self.lim_padding/2 * (tlim[1] - tlim[0])
@@ -193,24 +279,31 @@ class WorldlinePlotter(STPlotter):
     def show(self):
         plt.show()
 
-    """Set axis labels"""
     def set_labels(self):
+        """Set labels for the time and space axes. See
+        `specrel.graphics.graphrc`.
+        """
         self.ax.set_xlabel(graphrc['xlabel'])
         self.ax.set_ylabel(graphrc['tlabel'])
 
-"""ABC for all animation classes, animated over some control variable, like
-time or velocity"""
 class BaseAnimator(ABC):
-    """
-    fig = MPL figure to plot on
-    stepsize = stepsize of the control variable between animation frames
-    fps = animation frames per second
-    display_current = flag for whether to display the current control variable
-        value in the animation
-    display_current_decimals = number of decimal places at which to display the
-        current control variable value
-    title = static title to be displayed throughout the animation
-    frame_lim = frame index limits
+    """Base class for animators that animate over some changing control
+    variable, like time or velocity.
+
+    Args:
+        frame_lim (tuple, optional): Minimum and maximum frame index of the
+            animation. See `BaseAnimator.calc_frame_idx`.
+        others: See attributes.
+
+    Attributes:
+        display_current (bool): Flag for displaying the control variable value
+            of the current animation frame.
+        display_current_decimals (int): Number of decimals to display the
+            current control variable to.
+        fig (matplotlib.figure.Figure): Matplotlib figure window.
+        fps (float): Animation frames per second.
+        stepsize (float): Change in control variable value over one frame.
+        title (str): Animation title; static throughout all frames.
     """
     def __init__(self,
         fig=graphrc['fig'],
@@ -231,43 +324,91 @@ class BaseAnimator(ABC):
         # Cached animation if already created previously
         self._cached_anim = None
 
-    """Clear persistent data from the last animation"""
     def clear(self):
+        """Clear persistent data from the last animation."""
         self._frame_lim = (0, 0)
         self._cached_anim = None
 
-    """Snap a value to the closest corresponding frame"""
     def calc_frame_idx(self, val):
+        """Snap a value to the closest corresponding frame. Frames are indexed
+        as multiples of the stepsize. Note that frame indexes can be either
+        positive or negative.
+
+        Args:
+            val (float): Value of the frame.
+
+        Returns:
+            int:
+                Closest frame index corresponding to `val`.
+        """
         return round(val / self.stepsize)
 
-    """Get the corresponding value of a specific frame"""
     def calc_frame_val(self, idx):
+        """Get the corresponding value of a frame at a specified index, rounded
+        to the same precision as the stepsize, but with one extra decimal place.
+
+        Args:
+            idx (int): Frame index.
+
+        Returns:
+            float:
+                Value of the frame.
+        """
         # Round to the same order of magnitude (one smaller for safety) as the
         # stepsize to ensure precision, but to mitigate floating-point error
         def order_of_mag(x):
             return int(math.floor(math.log10(abs(x))))
         return round(idx * self.stepsize, 1-order_of_mag(self.stepsize))
 
-    """Initialize frame for FuncAnimation"""
     @abstractmethod
     def init_func(self):
+        """Initialization function for `matplotlib.animation.FuncAnimation`.
+
+        Returns:
+            matplotlib.artist.Artist
+
+        Raises:
+            NotImplementedError:
+                Abstract method.
+        """
         raise NotImplementedError
 
-    """Update frame for FuncAnimation"""
     @abstractmethod
     def update(self, frame):
+        """Update the animation frame.
+
+        Args:
+            frame (int): Index of the frame to draw.
+
+        Returns:
+            matplotlib.artist.Artist
+
+        Raises:
+            NotImplementedError:
+                Abstract method.
+        """
         raise NotImplementedError
 
     def get_frame_lim(self):
+        """
+        Returns:
+            tuple:
+                The animation frame index limits.
+        """
         return self._frame_lim
 
-    """Get a full list of all frame values to be played in the animation"""
     def _get_frame_list(self):
+        """Get a full list of all frame values to be played in the animation."""
         frame_lim = self.get_frame_lim()
         return list(range(frame_lim[0], frame_lim[1]+1))
 
-    """Synthesize an animation"""
     def animate(self):
+        """Synthesize an animation. If an animation was already synthesized and
+        cached, return the cached animation.
+
+        Returns:
+            matplotlib.animation.FuncAnimation
+        """
         # Only create a new animation if the cache is empty
         if self._cached_anim is None:
             self._cached_anim = FuncAnimation(self.fig, self.update,
@@ -277,23 +418,34 @@ class BaseAnimator(ABC):
                 repeat=False)
         return self._cached_anim
 
-    """Play the animation in interactive mode"""
     def show(self):
+        """Play the animation in interactive mode."""
         plt.show(self.animate())
 
-    """Save the animation to a file"""
     def save(self, filename, **kwargs):
+        """Save the animation to a file.
+
+        Kwargs:
+            fps: Fixed to the animator's `fps` attribute.
+        """
         kwargs.pop('fps', None) # FPS is fixed
         self.animate().save(filename, fps=self.fps, **kwargs)
 
-"""Animator where the frame variable is time, i.e. depicts a sequence evolving
-in time"""
 class TimeAnimator(BaseAnimator):
-    """
-    ct_per_sec = Amount of time that passes in the system per real second of
-        animation
-    instant_pause_time = animation pause time in seconds for an instantaneous
-        event, so that they're more noticeable
+    """Animator where the frame variable is time, i.e. depicts a sequence
+    evolving in time.
+
+    Args:
+        ct_per_sec (float, optional): Amount of time to pass within an animation
+            for every second of real time.
+        instant_pause_time (float, optional): Amount of pause time in seconds
+            for instantaneous events (appear in a single instant of time).
+        display_current_time (bool, optional): Same as `display_current` in
+            `specrel.graphics.simpgraph.BaseAnimator`.
+        display_current_time_decimals (int, optional): Same as
+            `display_current_decimals` in
+            `specrel.graphics.simpgraph.BaseAnimator`.
+        others: See `specrel.graphics.simpgraph.BaseAnimator`.
     """
     def __init__(self,
         fig=graphrc['fig'],
@@ -310,9 +462,22 @@ class TimeAnimator(BaseAnimator):
         # Number of frames corresponding to the desired pause time
         self._pause_frames = round(instant_pause_time * fps)
 
-"""TimeAnimator that fulfills the STPlotter interface, and hence can be used
-in the geom draw() methods"""
 class STAnimator(TimeAnimator, STPlotter, ABC):
+    """TimeAnimator that fulfills the `specrel.graphics.simpgraph.STPlotter`
+    interface, and hence can be used by
+    `specrel.geom.LorentzTransformable.draw`.
+
+    Attributes:
+        frame_pause_flags (dict): Maps frame indexes to a flag for whether or
+            not the animation should pause on that frame.
+        frame_plotters (dict): Maps frame indexes to lists of plotting functions
+            that should be called to draw that frame.
+        grid (bool): Flag for whether or not to plot background grid lines.
+        legend (bool): Flag for whether or not to plot a legend.
+        legend_loc (str): Legend location according to the Matplotlib
+            `loc` parameter. If `legend` is `False`, this attribute is ignored.
+        xlim (tuple): Position axis draw limits.
+    """
     def __init__(self,
         fig=graphrc['fig'],
         ax=graphrc['ax'],
@@ -343,8 +508,8 @@ class STAnimator(TimeAnimator, STPlotter, ABC):
         # Flags for whether each frame should be paused
         self.frame_pause_flags = {}
 
-    """Initialize the frame plotters at some frame index"""
     def _init_frame(self, idx):
+        """Initialize the frame plotters at some frame index."""
         self.frame_plotters[idx] = []
         # Set the given title, current time, both, or neither
         titles = []
@@ -359,9 +524,14 @@ class STAnimator(TimeAnimator, STPlotter, ABC):
             self.frame_plotters[idx] += [lambda: self.ax.set_title(title_str)]
         self.frame_pause_flags[idx] = False
 
-    """Expand the animator's stored frame range to accomodate a given time
-    range, in the form of (tmin, tmax)"""
     def resize(self, tlim):
+        """Expand the animator's stored frame range to accomodate a given time
+        range. Otherwise, the animator won't know how to plot an out-of-range
+        time value.
+
+        Args:
+            tlim (tuple): Time range to accomodate, in the form (min, max).
+        """
         # Convert tlim to frame indexes
         flims = [
             self.calc_frame_idx(tlim[0]),
@@ -441,12 +611,25 @@ class STAnimator(TimeAnimator, STPlotter, ABC):
         return [f for f in super()._get_frame_list() for repeat in range(
             self._pause_frames if self.frame_pause_flags[f] else 1)]
 
-"""Animates a spacetime plot with a sweeping horizontal line overlaid to mark
-the current time"""
 class WorldlineAnimator(STAnimator):
+    """Animates a spacetime plot with a sweeping horizontal line overlaid to
+    indicate the current time.
+
+    Args:
+        current_time_style (linestyle, optional): See attributes.
+        current_time_color (color, optional): See attributes.
+        lim_padding (float, optional): See
+            `specrel.graphics.simpgraph.WorldlinePlotter`.
+        equal_lim_expand (float, optional): See
+            `specrel.graphics.simpgraph.WorldlinePlotter`.
+        others: See `specrel.graphics.simpgraph.STAnimator`.
+
+    Attributes:
+        current_time_color (TYPE): Matplotlib color for the line of current
+            time.
+        current_time_style (TYPE): Matplotlib linestyle for the line of current
+            time.
     """
-    current_time_style, current_time_color = style and color
-        (MPL specifications) of the sweeping line marking the current time"""
     def __init__(self,
         fig=graphrc['fig'],
         ax=graphrc['ax'],
@@ -489,8 +672,8 @@ class WorldlineAnimator(STAnimator):
         # Line object for current time
         self._current_time = None
 
-    """Draw the actual line marking the current time"""
     def _draw_current_time(self, t):
+        """Draw the actual line marking the current time."""
         # Update the line's position
         self._current_time.set_data(self.xlim, (t, t))
 
@@ -545,12 +728,18 @@ class WorldlineAnimator(STAnimator):
         self._worldline_plotter.set_labels()
         return [self.ax]
 
-"""Animates objects in real-space (1D) over time"""
 class ObjectAnimator(STAnimator):
+    """Animates objects in real space over time.
+
+    Args:
+        tag_height (float, optional): See attributes.
+        others: See `specrel.graphics.simpgraph.STAnimator`.
+
+    Attributes:
+        tag_height (float): The height (relative to the axis height) above the
+            actual objects of any tag text that's drawn.
     """
-    tag_height = The height (relative to the axis height) above the actual
-        objects of any tag text that's drawn
-    """
+
     def __init__(self,
         fig=graphrc['fig'],
         ax=graphrc['ax'],
@@ -578,9 +767,8 @@ class ObjectAnimator(STAnimator):
             title=title)
         self.tag_height = tag_height
 
-
-    """Hide the y-axis ticks because they mean nothing"""
     def _disable_y_axis(self):
+        """Hide the y-axis ticks because they mean nothing."""
         # Hard-coded fixed y-axis size with length 1
         self.ax.set_ylim((-0.5, 0.5))
         self.ax.set_yticks([])
@@ -607,19 +795,19 @@ class ObjectAnimator(STAnimator):
             # Set the x grid
             self.frame_plotters[idx] += [self._set_grid]
 
-    """Set the x-grid"""
     def _set_grid(self):
+        """Set the x-grid."""
         self.ax.grid(True, axis='x')   # Only the x grid
         # Ensure grid lines are behind other objects
         self.ax.set_axisbelow(True)
 
-    """Set the x-label"""
     def _set_labels(self):
+        """Set the x-label."""
         self.ax.set_xlabel(graphrc['xlabel'])
 
-    """Factory function for point drawing functions. Needed to save persistent
-    copies of xval calculated in loops"""
     def _generate_point_drawer(self, xval, tag, **kwargs):
+        """Factory function for point drawing functions. Needed to save
+        persistent copies of xval calculated in loops."""
         marker = kwargs.pop('marker', '.')
         # Force linestyle to be none for a point
         kwargs['linestyle'] = 'None'
@@ -629,9 +817,9 @@ class ObjectAnimator(STAnimator):
                 self.ax.text(xval, self.tag_height, tag)
         return point_drawer
 
-    """Factory function for line drawing functions. Needed to save persistent
-    copies of xval1/2 calculated in loops"""
     def _generate_line_drawer(self, xval1, xval2, tag, **kwargs):
+        """Factory function for line drawing functions. Needed to save
+        persistent copies of xval calculated in loops."""
         def line_drawer():
             self.ax.plot([xval1, xval2], [0, 0], **kwargs)
             if tag:
@@ -639,8 +827,8 @@ class ObjectAnimator(STAnimator):
                     ha='center')
         return line_drawer
 
-    """Draw a plot legend"""
     def _draw_legend(self):
+        """Draw a plot legend."""
         self.ax.legend(loc=self.legend_loc)
 
     def draw_point(self, point, tag=None, **kwargs):
@@ -656,23 +844,24 @@ class ObjectAnimator(STAnimator):
                 self._draw_legend
             ]
 
-    """Linearly interpolate the position value at a specific time value
-    between two points. Assumes the two points have different time values."""
     def _interpolate(self, point1, point2, t):
+        """Linearly interpolate the position value at a specific time value
+        between two points. Assumes the two points have different time values.
+        """
         return point1[1] + \
             (t - point1[0]) / (point2[0] - point1[0]) * (point2[1] - point1[1])
 
-    """If the time value isn't between the two points, return None."""
     def _strict_interpolate(self, point1, point2, t, precision):
+        """If the time value isn't between the two points, return None."""
         # Do bounds checking at a given precision level
         if (t < round(min(point1[0], point2[0]), precision) or
             t > round(max(point1[0], point2[0]), precision)):
             return None
         return self._interpolate(point1, point2, t)
 
-    """Only looking at the internal frame resolution, if the time value isn't
-    between the two points, return None."""
     def _loose_interpolate(self, point1, point2, t):
+        """Only looking at the internal frame resolution, if the time value
+        isn't between the two points, return None."""
         # Do bounds checking at the internal frame resolution
         snapped_t, snapped_t1, snapped_t2 = [
             self.calc_frame_val(val) for val in [t, point1[0], point2[0]]]
@@ -791,13 +980,7 @@ class ObjectAnimator(STAnimator):
                             line_tag = None
                     i += 2
 
-"""Animator where the frame variable is velocity. I.e. animates a spacetime
-transformation as the object is accelerated instantaneously.
-Steals frames from an STAnimator at a fixed time, for a LorentzTransformable
-in a continuum of frames starting from v = 0 to some given velocity
 """
-class TransformAnimator(BaseAnimator, SingleAxisFigureCreator):
-    """
     lorentz_transformable = a LorentzTransformable to animate a transformation
         for
     velocity = final velocity for the transformation. Initial velocity is
@@ -817,7 +1000,54 @@ class TransformAnimator(BaseAnimator, SingleAxisFigureCreator):
     transition_duration = duration in seconds of the animation
     title = static title to be displayed throughout the animation
     """
+class TransformAnimator(BaseAnimator, SingleAxisFigureCreator):
+    """Animator where the frame variable is velocity, i.e. animates a spacetime
+    transformation as the object is accelerated instantaneously.
 
+    Args:
+        lorentz_transformable (specrel.geom.LorentzTransformable): Object to
+            animate.
+        velocity (float): Relative velocity of the frame to transform to.
+        origin (tuple, optional): See attributes.
+        stanimator (type, optional): initializer of the
+            `specrel.graphics.simpgraph.STAnimator` to take drawing
+            functionality from.
+        stanimator_options (dict, optional): Dictionary of certain keyword
+            arguments for `stanimator`, *except* for the following:
+
+            - `fig`
+            - `ax`
+            - `instant_pause_time`
+            - `fps`
+            - `display_current_time`
+            - `title`
+
+        tlim (tuple, optional): See attributes.
+        xlim (tuple, optional): See attributes.
+        time (float, optional): Frame-local time value to fix during
+            transformation animation.
+        fig (matplotlib.figure.Figure, optional): See
+            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+        ax (matplotlib.axes.Axes, optional): See
+            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+        transition_duration (float, optional):
+        fps (float, optional): Animation frames per second.
+        display_current_velocity (bool, optional): Same as `display_current` in
+            `specrel.graphics.simpgraph.BaseAnimator`.
+        display_current_velocity_decimals (int, optional): Same as
+            `display_current_decimals` in
+            `specrel.graphics.simpgraph.BaseAnimator`.
+        title (str, optional): Animation title.
+
+    Attributes:
+        origin (tuple): Origin used for Lorentz transformation, in the form
+            (t, x).
+        tlim (tuple): Time drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+        transformable (specrel.geom.LorentzTransformable): Object to animate.
+        xlim (tuple): Position drawing limits. See
+            `specrel.geom.LorentzTransformable.draw`.
+    """
     def __init__(self,
         lorentz_transformable,
         velocity,

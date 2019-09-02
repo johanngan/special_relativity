@@ -1,5 +1,7 @@
-"""Core graphics for composite graphics (combinations of graphics) spacetime
-plots and animations in special relativity"""
+"""Composite graphics that glue together one or more simple spacetime plots and
+animations in special relativity.
+"""
+
 from abc import abstractmethod
 import copy
 import os
@@ -10,11 +12,19 @@ import matplotlib.pyplot as plt
 from specrel.graphics.graphrc import graphrc
 import specrel.graphics.simpgraph as simpg
 
-"""Runs multiple animations simultaneously on different subplots"""
 class MultiAnimator(simpg.FigureCreator, simpg.BaseAnimator):
-    """
-    axs = simple list of axes to plot different animations on
-    title = static title to be displayed throughout the animations
+    """Runs multiple animations simultaneously on different subplots.
+
+    Args:
+        n_animations (int): Number of animations to run simultaneously.
+        fig (matplotlib.figure.Figure, optional): Figure window. If `None`, a
+            new figure window is created.
+        axs (list, optional): List of axes in row major format. If `None`, a
+            new set of axes is created under a new figure window.
+        others: See `specrel.graphics.simpgraph.BaseAnimator`.
+
+    Attributes:
+        axs (list): List of axes to draw on in row major format.
     """
     def __init__(self,
         n_animations,
@@ -63,13 +73,13 @@ class MultiAnimator(simpg.FigureCreator, simpg.BaseAnimator):
     def init_func(self):
         return [anim.init_func() for anim in self._animators]
 
-    """Return formatted display text for the given frame value"""
     @abstractmethod
     def _val_text(self, val):
+        """Return formatted display text for the given frame value."""
         return ''
 
-    """Update the current title text for a given frame value"""
     def _update_current_text(self, val):
+        """Update the current title text for a given frame value."""
         new_text = ''
         if self.title:
             new_text += self.title + '\n'
@@ -108,8 +118,7 @@ class MultiAnimator(simpg.FigureCreator, simpg.BaseAnimator):
 
 """Runs multiple time-evolution animations simultaneously on different subplots
 """
-class MultiTimeAnimator(MultiAnimator, simpg.TimeAnimator):
-    """
+"""
     animation_params = list of dictionaries containing parameters for animators
         in each subplot, in the following format:
         [
@@ -128,6 +137,38 @@ class MultiTimeAnimator(MultiAnimator, simpg.TimeAnimator):
                 }
             }
         ]
+    """
+class MultiTimeAnimator(MultiAnimator, simpg.TimeAnimator):
+    """Runs multiple time-evolution animations simultaneously on different
+    subplots.
+
+    Args:
+        animations_params (list): List of dictionaries containing parameters for
+            animators in each subplot. Each individual dictionary has the
+            following items:
+
+            - **animator**: `type`, initializer for the
+                `specrel.graphics.simpgraph.STAnimator` to use.
+            - **transformable**: `specrel.geom.LorentzTransformable` object to
+                animate.
+            - **animator_options**: optional, dictionary of certain keyword
+                arguments for `animator`, *except* for the following:
+                - `fig`
+                - `ax`
+                - `ct_per_sec`
+                - `instant_pause_time`
+                - `fps`
+                - `display_current_time`
+                - `display_current_time_decimals`
+            - **draw_options**: optional, dictionary of keyword arguments to
+                `specrel.geom.LorentzTransformable.draw`, except for the
+                `plotter` argument.
+
+        fig (matplotlib.figure.Figure, optional): See
+            `specrel.graphics.compgraph.MultiAnimator`.
+        axs (list, optional): See `specrel.graphics.compgraph.MultiAnimator`.
+        tlim (tuple, optional): Start and end time of the animation.
+        others: See `specrel.graphics.simpgraph.TimeAnimator`.
     """
     def __init__(self,
         animations_params,
@@ -205,24 +246,32 @@ class MultiTimeAnimator(MultiAnimator, simpg.TimeAnimator):
             for repeat in range(
                 self._pause_frames if self._get_frame_pause_flags()[f] else 1)]
 
-"""Runs multiple velocity-evolution animations simultaneously on different
-subplots"""
 class MultiTransformAnimator(MultiAnimator):
-    """
-    animation_params = list of dictionaries containing parameters for animators
-        in each subplot, in the following format:
-        [
-            {
-                "animator_options":
-                {
-                    <kwargs for the TransformAnimator except
-                        lorentz_transformable, velocity, fig, ax,
-                        transition_duration, fps, display_current_velocity,
-                        display_current_velocity_decimals>
-                },
-                "transformable": <LorentzTransformable object>
-            }
-        ]
+    """Runs multiple Lorentz transform animations simultaneously on different
+    subplots.
+
+    Args:
+        animation_params (list): List of dictionaries containing parameters for
+            animators in each subplot. Each individual dictionary has the
+            following items:
+
+            - **transformable**: `specrel.geom.LorentzTransformable` object to
+                animate.
+            - **animator_options**: optional, dictionary of certain keyword
+                arguments for `specrel.graphics.simpgraph.TransformAnimator`
+                initialization, from the following list:
+                - `origin`
+                - `stanimator`
+                - `stanimator_options`
+                - `tlim`
+                - `xlim`
+                - `time`
+                - `title`
+
+        fig (matplotlib.figure.Figure, optional): See
+            `specrel.graphics.compgraph.MultiAnimator`.
+        axs (list, optional): See `specrel.graphics.compgraph.MultiAnimator`.
+        others: See `specrel.graphics.simpgraph.TransformAnimator`.
     """
     def __init__(self,
         animations_params,
@@ -268,17 +317,25 @@ class MultiTransformAnimator(MultiAnimator):
     def _val_text(self, val):
         return f'$v = {{:.{self.display_current_decimals}f}}c$'.format(val)
 
-"""Animates the "rewinding" of an animator's animation"""
 class Rewinder(simpg.BaseAnimator):
+    """Animates the "rewinding" of an animator's animation.
+
+    Args:
+        animator (specrel.graphics.simpgraph.BaseAnimator): Animator to rewind.
+        rewind_rate (int, optional): See `rewind_rate` attribute.
+        rewind_title (str, optional): Rewind animation title; overrides title of
+            the original animation.
+        end_pause (float, optional): Pause length in seconds to insert at the
+            beginning and end of the rewind animation.
+
+    Attributes:
+        animator (specrel.graphics.simpgraph.BaseAnimator): Animator to rewind.
+        end_pause_frames (int): Number of pause frame at the beginning and end
+            of the rewind animation.
+        rewind_rate (int): Speedup factor of the rewind animation relative to
+            the original.
     """
-    rewind_rate = The speedup factor for the rewind animation relative to the
-        forward animation
-    rewind_title = The title to override the animation title during the rewind
-        process
-    end_pause = Pause time in seconds to add at the front and back of the
-        animation; meant for adding padding between an animation and a rewind
-        when concatenating animations together
-    """
+
     def __init__(self, animator, rewind_rate=2,
         rewind_title='Rewinding \u25C0 \u25C0', end_pause=1):
         super().__init__(animator.fig, animator.stepsize, animator.fps,
@@ -304,9 +361,9 @@ class Rewinder(simpg.BaseAnimator):
         self.animator.title = old_title
         return artist
 
-    # Run through frames backwards, at rewind_rate times the rate of the
-    # original
     def _get_frame_list(self):
+        # Run through frames backwards, at rewind_rate times the rate of the
+        # original
         frame_lim = self.get_frame_lim()
         frame_list = list(range(
             frame_lim[1], frame_lim[0]-1, -self.rewind_rate))
@@ -319,9 +376,13 @@ class Rewinder(simpg.BaseAnimator):
             + frame_list + (self.end_pause_frames - 1)*frame_list[-1:]
         return frame_list
 
-"""Use FFmpeg's concat demuxer to concatenate input video files and write the
-output to a new file"""
 def concat_demuxer(input_files, output_file):
+    """Concatenate video files.
+
+    Args:
+        input_files (list): List of input file names.
+        output_file (str): Output file name.
+    """
     # Write temporary file list as input for FFmpeg
     tempfilename = 'concat_demuxer_temp_input_file.txt'
     with open(tempfilename, 'w+') as tempfile:

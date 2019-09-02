@@ -1,5 +1,10 @@
-"""Physical objects, events, and other useful compound objects in spacetime.
-Core geometric classes are in geom.py"""
+"""Contains convenience classes and synthesis functions for common spacetime
+objects whose functionality would be possible to implement through just the
+`specrel.geom` API, but would be rather annoying in practice.
+
+Core geometric classes are in `specrel.geom`.
+"""
+
 import copy
 import math
 
@@ -7,10 +12,34 @@ from matplotlib.colors import to_rgba
 
 import specrel.geom as geom
 
-"""Spacetime grid with some spacing on some range"""
 def stgrid(tlim, xlim, origin=geom.geomrc['origin'], t_spacing=1, x_spacing=1,
     axis_draw_options=geom.geomrc['draw_options'],
     grid_draw_options=geom.geomrc['draw_options']):
+    """Spacetime grid with some spacing on some range
+
+    Args:
+        tlim (tuple): Minimum and maximum time values for the grid.
+        xlim (tuple): Minimum and maximum position values for the grid.
+        origin (tuple, optional): (t, x) value defining the grid "center".
+        t_spacing (float, optional): The spacing between grid lines of constant
+            time.
+        x_spacing (float, optional): The spacing between grid lines of constant
+            position.
+        axis_draw_options (dict, optional): Draw options for the axis lines
+            passing through the origin. See `specrel.geom.LorentzTransformable`
+            for details.
+        grid_draw_options (dict, optional): Draw options for the grid lines
+            not including the axis lines. See
+            `specrel.geom.LorentzTransformable` for details.
+
+    Returns:
+        specrel.geom.Collection:
+            collection of grid lines in the order
+            `[constant t lines in ascending order of t,
+            constant x lines in ascending order of x,
+            t axis,
+            x axis]`
+    """
     # Default draw options if none are specified
     axis_draw_options = {'color': 'black', 'linewidth': 2, **axis_draw_options}
     grid_draw_options = {'color': 'darkgray', 'linewidth': 1, **grid_draw_options}
@@ -42,10 +71,21 @@ def stgrid(tlim, xlim, origin=geom.geomrc['origin'], t_spacing=1, x_spacing=1,
     return gridlines
 
 """An object moving at some velocity"""
-class MovingObject(geom.Ribbon):
-    """
+"""
     left_start_pos is the position of the left end of the object at
     t = start_time
+    """
+class MovingObject(geom.Ribbon):
+    """An object moving at a constant velocity.
+
+    Args:
+        left_start_pos (float): Position of the object's left end at
+            t = `start_time`.
+        length (float, optional): Length of the object.
+        velocity (float, optional): Velocity of the object.
+        start_time (float, optional): Time corresponding to `left_start_pos`.
+        tag (str, optional): See `specrel.geom.LorentzTransformable`.
+        draw_options (dict, optional): See `specrel.geom.LorentzTransformable`.
     """
     def __init__(self, left_start_pos, length=0, velocity=0, start_time=0,
         tag=geom.geomrc['tag'], draw_options=geom.geomrc['draw_options']):
@@ -56,71 +96,158 @@ class MovingObject(geom.Ribbon):
             draw_options=draw_options
         )
 
-    """Returns the left end"""
     def left(self):
+        """
+        Returns:
+            specrel.geom.Line:
+                Left end of the object throughout time.
+        """
         return self[0]
 
-    """Returns the right end"""
     def right(self):
+        """
+        Returns:
+            specrel.geom.Line:
+                Right end of the object throughout time.
+        """
         return self[1]
 
-    """Returns position of an object (represented by a line) at a given time"""
     @staticmethod
     def _pos_at_time(line, time):
+        """Returns position of an object (represented by a line) at a given
+        time."""
         return line.intersect(geom.fixedtime(time)).x
 
-    """Returns time at which an object (represented by a line) will reach a
-    specified position"""
     @staticmethod
     def _time_for_pos(line, pos):
+        """Returns time at which an object (represented by a line) will reach a
+        specified position."""
         # Throw an error if the object isn't moving
         if line.slope() is None:
             raise RuntimeError('Object is not moving.')
         return line.intersect(geom.fixedspace(pos)).t
 
-    """Returns left end position at some time"""
     def left_pos(self, time):
+        """Returns the left end position at some time.
+
+        Args:
+            time (float): Time at which to get the position.
+
+        Returns:
+            float:
+                Position of the object's left end at t = `time`.
+        """
         return self._pos_at_time(self.left(), time)
 
-    """Returns right end position at some time"""
     def right_pos(self, time):
+        """Returns the right end position at some time.
+
+        Args:
+            time (float): Time at which to get the position.
+
+        Returns:
+            float:
+                Position of the object's right end at t = `time`.
+        """
         return self._pos_at_time(self.right(), time)
 
-    """Returns the centroid position at some time"""
     def center_pos(self, time):
+        """Returns the middle position at some time.
+
+        Args:
+            time (float): Time at which to get the position.
+
+        Returns:
+            float:
+                Position of the object's midpoint at t = `time`.
+        """
         return (self.left_pos(time) + self.right_pos(time)) / 2
 
-    """Returns the time when the left end reaches some position"""
     def time_for_left_pos(self, pos):
+        """Returns the time when the left end reaches some position.
+
+        Args:
+            pos (float): Target position.
+
+        Returns:
+            float:
+                Time at which the object's left end is at the target position.
+
+        Raises:
+            RuntimeError:
+                If the object isn't moving.
+        """
         return self._time_for_pos(self.left(), pos)
 
-    """Returns the time when the right end reaches some position"""
     def time_for_right_pos(self, pos):
+        """Returns the time when the right end reaches some position.
+
+        Args:
+            pos (float): Target position.
+
+        Returns:
+            float:
+                Time at which the object's right end is at the target position.
+
+        Raises:
+            RuntimeError:
+                If the object isn't moving.
+        """
         return self._time_for_pos(self.right(), pos)
 
-    """Returns the time when the centroid reaches some position"""
     def time_for_center_pos(self, pos):
+        """Returns the time when the center reaches some position.
+
+        Args:
+            pos (float): Target position.
+
+        Returns:
+            float:
+                Time at which the object's midpoint is at the target position.
+
+        Raises:
+            RuntimeError:
+                If the object isn't moving.
+        """
         return (self.time_for_left_pos(pos) + self.time_for_right_pos(pos)) / 2
 
-    """Returns the current physical length of the object"""
     def length(self):
+        """
+        Returns:
+            float:
+                The physical length of the object.
+        """
         # Compare when fixing to t = 0
         return self.right_pos(0) - self.left_pos(0)
 
-    """Has spatial extent and isn't just a 0-D point object"""
     def has_extent(self):
+        """Checks whether the object has spatial extent or not.
+
+        Returns:
+            bool:
+                Flag for whether the object has a nonzero length.
+        """
         return self.length() != 0
 
-    """Return the velocity of the object"""
     def velocity(self):
+        """
+        Returns:
+            float:
+                The velocity of the object.
+        """
         return self[0].direction().x / self[0].direction().t
 
-"""A point or interval of time (exists across all space), possibly with a
-possible delay across space"""
 class TimeInterval(geom.Ribbon):
-    """
-    unit_delay is the delay between start times at the x and x + 1
-    start_time is the starting time of the interval at x = start_pos
+    """A time interval moving with some amount of spatial lag (starts at
+    different times at different positions).
+
+    Args:
+        start_time (float): Start time of the interval at x = `start_pos`.
+        duration (float, optional): Interval duration.
+        unit_delay (float, optional): Delay between start times at x and x + 1.
+        start_pos (float, optional): Position corresponding to `start_time`.
+        tag (str, optional): See `specrel.geom.LorentzTransformable`.
+        draw_options (dict, optional): See `specrel.geom.LorentzTransformable`.
     """
     def __init__(self, start_time, duration=0, unit_delay=0, start_pos=0,
         tag=geom.geomrc['tag'], draw_options=geom.geomrc['draw_options']):
@@ -131,59 +258,102 @@ class TimeInterval(geom.Ribbon):
             draw_options=draw_options
         )
 
-    """Returns the interval start"""
     def start(self):
+        """
+        Returns:
+            specrel.geom.Line:
+                The start of the interval across all space.
+        """
         return self[0]
 
-    """Returns the interval end"""
     def end(self):
+        """
+        Returns:
+            specrel.geom.Line:
+                The end of the interval across all space.
+        """
         return self[1]
 
-    """Returns the time value of an event (represented by a line) at a given
-    position"""
     @staticmethod
     def _time_at_pos(line, position):
+        """Returns the time value of an event (represented by a line) at a given
+        position."""
         return line.intersect(geom.fixedspace(position)).t
 
-    """Returns start time at some position"""
     def start_time(self, position):
+        """Returns start time at some position.
+
+        Args:
+            position (float): Position at which to get the starting time.
+
+        Returns:
+            float:
+                The starting time at x = `position`.
+        """
         return self._time_at_pos(self.start(), position)
 
-    """Returns the end time at some position"""
     def end_time(self, position):
+        """Returns end time at some position.
+
+        Args:
+            position (float): Position at which to get the ending time.
+
+        Returns:
+            float:
+                The ending time at x = `position`.
+        """
         return self._time_at_pos(self.end(), position)
 
-    """Return the current duration of the interval"""
     def duration(self):
+        """
+        Returns:
+            float:
+                The duration of the time interval.
+        """
         # Compare when fixing to x = 0
         return self.end_time(0) - self.start_time(0)
 
-    """Has temporal extent and isn't just a single time value"""
     def has_extent(self):
+        """Checks whether the interval has temporal extent or not.
+
+        Returns:
+            bool:
+                Flag for whether the object has a nonzero duration.
+        """
         return self.duration() != 0
 
-    """Return the delay between start times at positions separated by
-    one spatial unit. A delay of 0 implies simultaneity"""
     def unit_delay(self):
+        """Return the delay between start times at positions separated by
+        one spatial unit. A delay of 0 implies simultaneity.
+
+        Returns:
+            float:
+                Unit delay between the interval at x and x + 1.
+        """
         return self[0].direction().t / self[0].direction().x
 
-"""Calculate a linear color gradient value between two points at some
-proportion x, where 0 is the start point/color, and 1 is the end point/color"""
 def _calc_colorgrad(x, point1, point2, color1, color2):
+    """Calculate a linear color gradient value between two points at some
+    proportion x, where 0 is the start point/color, and 1 is the end
+    point/color.
+    """
     color1 = to_rgba(color1)
     color2 = to_rgba(color2)
     xpoint = tuple([p1 + x*(p2 - p1) for p1, p2 in zip(point1, point2)])
     xcolor = tuple([c1 + x*(c2 - c1) for c1, c2 in zip(color1, color2)])
     return xpoint, xcolor
-"""Checks whether an rgba value is a valid color or not"""
+
 def _valid_color(col):
+    """Checks whether an rgba value is a valid color or not."""
     for c in col:
         if c < 0 or c > 1:
             return False
     return True
-"""Extrapolates a linear color gradient between two points to the extreme
-endpoints of colorspace, at some interval resolution"""
+
 def _colorgrad_extremes(point1, point2, color1, color2, divisions):
+    """Extrapolates a linear color gradient between two points to the extreme
+    endpoints of colorspace, at some interval resolution.
+    """
     # Extend the range backwards
     i1 = 0
     while _valid_color(_calc_colorgrad(
@@ -202,10 +372,34 @@ def _colorgrad_extremes(point1, point2, color1, color2, divisions):
         point1, point2, color1, color2)
     return ext_point1, ext_point2, ext_color1, ext_color2, divisions + i1 + i2
 
-"""Forms a line with a color gradient. Divisions is the number of line segment
-divisions in the gradient."""
 def gradient_line(point1, point2, color1, color2, divisions=100,
     extrapolate_color=True, draw_options=geom.geomrc['draw_options']):
+    """A line with a color gradient. The gradient transition will happen over
+    a finite range in spacetime, and be monochromatic at either end.
+
+    Args:
+        point1 (specrel.geom.STVector or iterable): Starting point of the
+            gradient.
+        point2 (specrel.geom.STVector or iterable): Ending point of the
+            gradient.
+        color1 (color): A Matplotlib color for the gradient starting color.
+        color2 (color): A Matplotlib color for the gradient ending color.
+        divisions (int, optional): The number of line segment divisions in the
+            gradient. More divisions means a smoother gradient.
+        extrapolate_color (bool, optional): Flag for whether or not to
+            extrapolate the color gradient across the line past the specified
+            endpoints so that the color change spans as far as possible across
+            the line.
+        draw_options (dict, optional): See `specrel.geom.LorentzTransformable`.
+
+    Returns:
+        specrel.geom.Collection:
+            Collection containing the color gradient increments, in the order:
+
+            1. `specrel.geom.Ray` before `point1` with `color1`.
+            2. Line segments changing color from `point1` to `point2`.
+            3. `specrel.geom.Ray` after `point2` with `color2`.
+    """
     # Copy draw_options and remove color if it's there
     draw_options = dict(draw_options)
     draw_options.pop('color', None)
@@ -241,6 +435,35 @@ def gradient_line(point1, point2, color1, color2, divisions=100,
 def longitudinal_gradient_ribbon(line1_endpoints, line2_endpoints, color1,
     color2, divisions=100, extrapolate_color=True,
     draw_options=geom.geomrc['draw_options']):
+    """A `specrel.geom.Ribbon`-esque object with a longitudinal color gradient
+    (across the infinite direction).
+
+    Args:
+        line1_endpoints (list): list of two `specrel.geom.STVector`-convertible
+            points defining the start and end positions of the gradient along
+            the first edge of the ribbon.
+        line2_endpoints (list): Same as `line1_endpoints`, but for the second
+            edge of the ribbon.
+        color1 (color): A Matplotlib color for the gradient starting color.
+        color2 (color): A Matplotlib color for the gradient ending color.
+        divisions (int, optional): The number of line segment divisions in the
+            gradient. More divisions means a smoother gradient.
+        extrapolate_color (bool, optional): Flag for whether or not to
+            extrapolate the color gradient across the ribbon past the specified
+            endpoints so that the color change spans as far as possible across
+            the ribbon.
+        draw_options (TYPE, optional): See `specrel.geom.LorentzTransformable`.
+
+    Returns:
+        specrel.geom.Collection:
+            Collection containing the color gradient increments, in the order:
+
+            1. `specrel.geom.HalfRibbon` with `color1` before both line starting
+                points.
+            2. Polygons changing color from starts of the lines to the ends.
+            3. `specrel.geom.HalfRibbon` with `color2` after both line ending
+                points.
+    """
     # Copy draw_options and remove color, facecolor, and edgecolor if they're
     # there
     draw_options = dict(draw_options)
@@ -297,6 +520,27 @@ def longitudinal_gradient_ribbon(line1_endpoints, line2_endpoints, color1,
 
 def lateral_gradient_ribbon(direction, point1, point2, color1, color2,
     divisions=100, draw_options=geom.geomrc['draw_options']):
+    """A `specrel.geom.Ribbon`-esque object with a lateral color gradient
+    (across the finite direction).
+
+    Args:
+        direction (specrel.geom.STVector or iterable): Direction vector for the
+            gradient.
+        point1 (specrel.geom.STVector or iterable): A point that the first edge
+            of the ribbon passes through.
+        point2 (specrel.geom.STVector or iterable): A point that the second edge
+            of the ribbon passes through.
+        color1 (color): A Matplotlib color for the gradient starting color.
+        color2 (color): A Matplotlib color for the gradient ending color.
+        divisions (int, optional): The number of line segment divisions in the
+            gradient. More divisions means a smoother gradient.
+        draw_options (TYPE, optional): See `specrel.geom.LorentzTransformable`.
+
+    Returns:
+        specrel.geom.Collection:
+            Collection containing the `specrel.geom.Ribbon` objects of slowly
+            changing color from `point1` to `point2`.
+    """
     # Copy draw_options and remove color, facecolor, and edgecolor if they're
     # there
     draw_options = dict(draw_options)
