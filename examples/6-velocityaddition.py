@@ -3,18 +3,18 @@ import sys
 sys.path.append('..')
 
 import specrel.geom as geom
-import specrel.spacetime as st
+import specrel.spacetime.physical as phy
 import specrel.visualize as vis
 
 # A Lorentz-boosted satellite system
 v = 4/5
-earth = st.MovingObject(0,
+earth = phy.MovingObject(0,
     draw_options={'label': 'Earth', 'color': 'blue'})
-rocket = st.MovingObject(0, velocity=v,
+rocket = phy.MovingObject(0, velocity=v,
     draw_options={'label': 'Rocket', 'color': 'gray'})
-satellite = st.MovingObject(0, velocity=v,
+satellite = phy.MovingObject(0, velocity=v,
     draw_options={'label': 'Satellite', 'color': 'red'})
-light = st.MovingObject(0, velocity=1,
+light = phy.MovingObject(0, velocity=1,
     draw_options={'label': 'Light', 'color': 'gold'})
 satellite.lorentz_boost(v)
 objects = geom.Collection([earth, rocket, satellite, light])

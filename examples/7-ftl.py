@@ -3,13 +3,13 @@ import sys
 sys.path.append('..')
 
 import specrel.geom as geom
-import specrel.spacetime as st
+import specrel.spacetime.physical as phy
 import specrel.visualize as vis
 
 # An FTL meterstick
 v_ftl = 2
 v_frame = 4/5
-meterstick = st.MovingObject(-0.5, 1, velocity=v_ftl)
+meterstick = phy.MovingObject(-0.5, 1, velocity=v_ftl)
 tlim = (-1, 1)
 xlim = (-2, 2)
 include_grid = True
@@ -25,13 +25,13 @@ xlim = (-1.6, 1.6)
 v_away = 1/2
 v_message = 4
 t_send = 1
-person1 = st.MovingObject(0, velocity=-v_away,
+person1 = phy.MovingObject(0, velocity=-v_away,
     draw_options={'color': 'red', 'label': 'Person 1', 'markersize': 15})
-person2 = st.MovingObject(0, velocity=v_away,
+person2 = phy.MovingObject(0, velocity=v_away,
     draw_options={'color': 'blue', 'label': 'Person 2', 'markersize': 15})
 # Extensions of the messages to all time, even though they don't exist for all
 # time. The lines are useful for intersection calculations
-joke_alltime = st.MovingObject(person2.center_pos(t_send), start_time=t_send,
+joke_alltime = phy.MovingObject(person2.center_pos(t_send), start_time=t_send,
     velocity=-v_message)
 # Get the left edge of the MovingObject; since it's a point object it's just
 # the worldline
@@ -48,7 +48,7 @@ joke_received.draw_options = {
     'label': 'Joke received'
 }
 # Repeat for the response stuff
-response_alltime = st.MovingObject(person1.center_pos(t_send),
+response_alltime = phy.MovingObject(person1.center_pos(t_send),
     start_time=t_send, velocity=v_message, tag='Hahaha!',
     draw_options={'color': 'blue', 'linestyle': '--', 'marker': '<'})
 response_sent = response_alltime.left().intersect(person2.left())

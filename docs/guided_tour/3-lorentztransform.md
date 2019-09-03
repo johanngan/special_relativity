@@ -18,10 +18,10 @@ We can apply the Lorentz transformation to any `LorentzTransformable` object, so
 tlim = (-5, 5)
 xlim = (-5, 5)
 # Draw more lines than needed right now; they will appear once we transform
-stgrid = st.stgrid([2*t for t in tlim], [2*x for x in xlim])
+stgrid = phy.stgrid([2*t for t in tlim], [2*x for x in xlim])
 light_draw_options = {'color': 'gold'}
-left_light = st.MovingObject(0, velocity=-1, draw_options=light_draw_options)
-right_light = st.MovingObject(0, velocity=1, draw_options=light_draw_options)
+left_light = phy.MovingObject(0, velocity=-1, draw_options=light_draw_options)
+right_light = phy.MovingObject(0, velocity=1, draw_options=light_draw_options)
 grid_with_light = geom.Collection([stgrid, left_light, right_light])
 
 v = 3/5
@@ -55,7 +55,7 @@ Other than animating the Lorentz transformation, we can also just transform spac
 ```python
 tlim = (0, 2)
 xlim = (-2, 2)
-meterstick = st.MovingObject(-1/2, length=1, velocity=1/2)
+meterstick = phy.MovingObject(-1/2, length=1, velocity=1/2)
 meterstick_copy = geom.lorentz_transformed(meterstick, 1/2)
 p = vis.stplot(meterstick_copy, tlim=tlim, xlim=xlim,
     title='Stationary meterstick')

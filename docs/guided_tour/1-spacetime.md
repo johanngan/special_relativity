@@ -5,7 +5,7 @@
 ### Features Introduced
 - The `geom.LorentzTransformable` type, and one example, the `geom.STVector`
 - The `LorentzTransformable.draw_options` attribute
-- The`spacetime.stgrid` function
+- The`spacetime.physical.stgrid` function
 - Spacetime diagrams using `visualize.stplot`
     - Plotter objects
 
@@ -19,7 +19,7 @@ Before we make any plots, let's make the necessary imports.
 # Core geometry objects
 import specrel.geom as geom
 # Common spacetime objects
-import specrel.spacetime as st
+import specrel.spacetime.physical as phy
 # Visualization tools
 import specrel.visualize as vis
 ```
@@ -31,7 +31,7 @@ To start simple, let's plot a simple grid. First, we need to create a spacetime 
 ```python
 tlim = (-5, 5)
 xlim = (-5, 5)
-stgrid = st.stgrid(tlim, xlim)
+stgrid = phy.stgrid(tlim, xlim)
 ```
 
 The variable `stgrid` now holds an object of the type `LorentzTransformable`. These are objects that can be plotted and animated in spacetime, as well as manipulated according to the rules special relativity. For now let's just plot it on a normal spacetime diagram.

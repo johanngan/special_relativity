@@ -20,9 +20,9 @@ To make things clear, let's plot the scenario. First, the planets.
 origin = 0
 planetdist = 1
 x_planet = origin + planetdist
-earth = st.MovingObject(origin,
+earth = phy.MovingObject(origin,
     draw_options={'color': 'blue', 'markersize': 20, 'label': 'Earth'})
-planet = st.MovingObject(x_planet,
+planet = phy.MovingObject(x_planet,
     draw_options={'color': 'purple', 'markersize': 15, 'label': 'Planet'})
 ```
 
@@ -30,7 +30,7 @@ Next, the traveling rockets. Note that since the twin had to turn around, we nee
 
 ```python
 v = 3/5
-rocket_forward_alltime = st.MovingObject(origin, velocity=v)
+rocket_forward_alltime = phy.MovingObject(origin, velocity=v)
 t_turnaround = rocket_forward_alltime.time_for_left_pos(x_planet)
 rocket_forward = geom.line_segment((0, 0), (t_turnaround, x_planet),
     draw_options={
@@ -41,7 +41,7 @@ rocket_forward = geom.line_segment((0, 0), (t_turnaround, x_planet),
         'label': 'Traveler (forward)',
     }
 )
-rocket_backward_alltime = st.MovingObject(origin + 2*planetdist, velocity=-v)
+rocket_backward_alltime = phy.MovingObject(origin + 2*planetdist, velocity=-v)
 t_return = rocket_backward_alltime.time_for_left_pos(origin)
 rocket_backward = geom.line_segment((t_turnaround, x_planet), (t_return, 0),
     draw_options={

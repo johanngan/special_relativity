@@ -3,7 +3,7 @@
 # 2. Objects in Spacetime
 
 ## Features Introduced
-- The `spacetime.MovingObject` type
+- The `spacetime.physical.MovingObject` type
 - Object and spacetime animations using `visualize.stanimate` and `visualize.stanimate_with_worldline`
     - Animator objects
 - The basic `geom` objects:
@@ -27,7 +27,7 @@ xlim = (-2, 2)
 One of the most common things we'll want to plot is an object moving through space at a constant speed and direction. This is what the `MovingObject` is for. Let's plot a stationary point object at x = 0.
 
 ```python
-stationary = st.MovingObject(0, draw_options={'label': '$v = 0$'})
+stationary = phy.MovingObject(0, draw_options={'label': '$v = 0$'})
 title='Stationary object'
 p = vis.stplot(stationary, title=title, tlim=tlim, xlim=xlim,
     grid=include_grid, legend=include_legend)
@@ -78,11 +78,11 @@ stationary = geom.Line(direction, point, draw_options={'label': '$v = 0$'})
 None of this is very interesting, of course. Let's make things move! Here, we'll create objects moving at half the speed of light, at the speed of light, and 50% faster than light. All of them will start at the position x = 0. Velocities are specified in terms of the speed of light (*c*), so we just need to specify a velocity of 1/2, 1, and 3/2, respectively.
 
 ```python
-moving = st.MovingObject(0, velocity=1/2,
+moving = phy.MovingObject(0, velocity=1/2,
     draw_options={'color': 'red', 'label': '$v = c/2$'})
-light = st.MovingObject(0, velocity=1,
+light = phy.MovingObject(0, velocity=1,
     draw_options={'color': 'gold', 'label': '$v = c$'})
-ftl = st.MovingObject(0, velocity=3/2,
+ftl = phy.MovingObject(0, velocity=3/2,
     draw_options={'color': 'cyan', 'label': '$v = 3c/2$'})
 ```
 
@@ -102,7 +102,7 @@ anim.show()
 We can also have objects with an actual length. We can do this by specifying the `length` parameter when making a `MovingObject`. Let's make a "meterstick" with length 1 (really, it should be a "light-second-stick"), moving at half the speed of light. The starting position parameter specifies the left end, so let's make it -1/2 so the center of the meterstick starts at x = 0.
 
 ```python
-meterstick = st.MovingObject(-1/2, length=1, velocity=1/2,
+meterstick = phy.MovingObject(-1/2, length=1, velocity=1/2,
     draw_options={'label': 'Meterstick'})
 title = 'Moving meterstick ($v = c/2$)'
 anim = vis.stanimate_with_worldline(meterstick, title=title,

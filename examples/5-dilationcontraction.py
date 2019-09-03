@@ -2,14 +2,15 @@
 import sys
 sys.path.append('..')
 
-import specrel.spacetime as st
+import specrel.spacetime.gradient as grad
+import specrel.spacetime.physical as phy
 import specrel.visualize as vis
 
 # A color changing signal
 duration = 3
 v = 4/5
 # The color change starts at (t = 0, x = 0), and ends at (t = 3, x = 0)
-colorchange = st.gradient_line((0, 0), (duration, 0), 'red', 'blue')
+colorchange = grad.gradient_line((0, 0), (duration, 0), 'red', 'blue')
 # Set the limits with the magic of foresight
 tlim = (0, 5/3*duration)
 xlim = (-5/3*duration*v, 0.1)
@@ -33,7 +34,7 @@ duration = 5
 # The two boundary lines have a direction vector (t = 0, x = 1), and the bottom
 # and top boundaries pass through (t = 0, x = 0) and (t = 5, x = 0),
 # respectively
-onesecond = st.lateral_gradient_ribbon((0, 1), (0, 0), (duration, 0),
+onesecond = grad.lateral_gradient_ribbon((0, 1), (0, 0), (duration, 0),
     'red', 'blue')
 onesecond[0].tag = 'Start'
 onesecond[-1].tag = 'Finish'
@@ -46,10 +47,10 @@ anim.save('5-timedilation2.mp4')
 anim.show()
 
 # Length contraction of a meterstick
-meterstick = st.MovingObject(-0.5, 1)
+meterstick = phy.MovingObject(-0.5, 1)
 tlim = (0, 2)
 xlim = (-2, 0.5)
-meterstick = st.longitudinal_gradient_ribbon(
+meterstick = grad.longitudinal_gradient_ribbon(
     [(tlim[0], meterstick.left_pos(tlim[0])),
         (tlim[1], meterstick.left_pos(tlim[1]))],
     [(tlim[0], meterstick.right_pos(tlim[0])),

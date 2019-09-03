@@ -3,13 +3,13 @@ import sys
 sys.path.append('..')
 
 import specrel.geom as geom
-import specrel.spacetime as st
+import specrel.spacetime.physical as phy
 import specrel.visualize as vis
 
 # Plot a spacetime grid
 tlim = (-5, 5)
 xlim = (-5, 5)
-stgrid = st.stgrid(tlim, xlim)
+stgrid = phy.stgrid(tlim, xlim)
 plotter = vis.stplot(stgrid,
     title='Spacetime diagram\n(Also known as "Minkowski" or "Worldline" diagram)',
     lim_padding=0)

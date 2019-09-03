@@ -4,9 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.6.3" />
-<title>specrel API documentation</title>
-<meta name="description" content="`specrel` provides a framework for creating, manipulating, measuring, and
-visualizing relativistic objects and systems in (1+1)-D (one spatial …" />
+<title>specrel.spacetime API documentation</title>
+<meta name="description" content="Contains convenience classes and synthesis functions for common spacetime
+objects whose functionality would be possible to implement through just the
+…" />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
@@ -18,41 +19,35 @@ visualizing relativistic objects and systems in (1+1)-D (one spatial …" />
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>specrel</code></h1>
+<h1 class="title">Module <code>specrel.spacetime</code></h1>
 </header>
 <section id="section-intro">
-<p><a title="specrel" href="#specrel"><code>specrel</code></a> provides a framework for creating, manipulating, measuring, and
-visualizing relativistic objects and systems in (1+1)-D (one spatial dimension,
-one temporal dimension) spacetime.</p>
+<p>Contains convenience classes and synthesis functions for common spacetime
+objects whose functionality would be possible to implement through just the
+<a title="specrel.geom" href="../geom.html"><code>specrel.geom</code></a> API, but would be rather annoying in practice.</p>
+<p>Core geometric classes are in <a title="specrel.geom" href="../geom.html"><code>specrel.geom</code></a>.</p>
 <details class="source">
 <summary>Source code</summary>
-<pre><code class="python">&#34;&#34;&#34;`specrel` provides a framework for creating, manipulating, measuring, and
-visualizing relativistic objects and systems in (1+1)-D (one spatial dimension,
-one temporal dimension) spacetime.
+<pre><code class="python">&#34;&#34;&#34;Contains convenience classes and synthesis functions for common spacetime
+objects whose functionality would be possible to implement through just the
+`specrel.geom` API, but would be rather annoying in practice.
+
+Core geometric classes are in `specrel.geom`.
 &#34;&#34;&#34;</code></pre>
 </details>
 </section>
 <section>
 <h2 class="section-title" id="header-submodules">Sub-modules</h2>
 <dl>
-<dt><code class="name"><a title="specrel.geom" href="geom.html">specrel.geom</a></code></dt>
+<dt><code class="name"><a title="specrel.spacetime.gradient" href="gradient.html">specrel.spacetime.gradient</a></code></dt>
 <dd>
-<section class="desc"><p>Defines the geometry of special relativity, meaning core geometry classes and
-relevant transformation operations on them …</p></section>
+<section class="desc"><p>Objects that form color gradients across regions of spacetime, representing
+continuous change of some sort.</p></section>
 </dd>
-<dt><code class="name"><a title="specrel.graphics" href="graphics/index.html">specrel.graphics</a></code></dt>
+<dt><code class="name"><a title="specrel.spacetime.physical" href="physical.html">specrel.spacetime.physical</a></code></dt>
 <dd>
-<section class="desc"><p>Core graphics-generation code for spacetime plots.</p></section>
-</dd>
-<dt><code class="name"><a title="specrel.spacetime" href="spacetime/index.html">specrel.spacetime</a></code></dt>
-<dd>
-<section class="desc"><p>Contains convenience classes and synthesis functions for common spacetime
-objects whose functionality would be possible to implement through just the
-…</p></section>
-</dd>
-<dt><code class="name"><a title="specrel.visualize" href="visualize.html">specrel.visualize</a></code></dt>
-<dd>
-<section class="desc"><p>Visualization tools for special relativity …</p></section>
+<section class="desc"><p>Spacetime objects with direct physical relevance that ease measurement and
+calculation of physical properties.</p></section>
 </dd>
 </dl>
 </section>
@@ -69,12 +64,15 @@ objects whose functionality would be possible to implement through just the
 <ul></ul>
 </div>
 <ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="specrel" href="../index.html">specrel</a></code></li>
+</ul>
+</li>
 <li><h3><a href="#header-submodules">Sub-modules</a></h3>
 <ul>
-<li><code><a title="specrel.geom" href="geom.html">specrel.geom</a></code></li>
-<li><code><a title="specrel.graphics" href="graphics/index.html">specrel.graphics</a></code></li>
-<li><code><a title="specrel.spacetime" href="spacetime/index.html">specrel.spacetime</a></code></li>
-<li><code><a title="specrel.visualize" href="visualize.html">specrel.visualize</a></code></li>
+<li><code><a title="specrel.spacetime.gradient" href="gradient.html">specrel.spacetime.gradient</a></code></li>
+<li><code><a title="specrel.spacetime.physical" href="physical.html">specrel.spacetime.physical</a></code></li>
 </ul>
 </li>
 </ul>

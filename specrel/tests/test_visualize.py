@@ -1,7 +1,7 @@
 import unittest
 
 import specrel.geom as geom
-import specrel.spacetime as st
+import specrel.spacetime.physical as phy
 import specrel.visualize as vis
 
 def _arrays_to_lists(arrarr, precision=7):
@@ -14,7 +14,7 @@ class VisualizationTests(unittest.TestCase):
     """Set up a scenario to perform tests on."""
     def setUp(self):
         # Set up a scene to visualize
-        self.meterstick = st.MovingObject(0, length=3/5, velocity=4/5)
+        self.meterstick = phy.MovingObject(0, length=3/5, velocity=4/5)
         self.tlim = (0, 2)
         self.xlim = (0, 2.2)
         self.vertices_moving = [[0, 0], [3/5, 0], [2.2, 2], [1.6, 2], [0, 0]]

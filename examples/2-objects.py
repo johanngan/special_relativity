@@ -3,7 +3,7 @@ import sys
 sys.path.append('..')
 
 import specrel.geom as geom
-import specrel.spacetime as st
+import specrel.spacetime.physical as phy
 import specrel.visualize as vis
 
 # Shared parameters
@@ -13,7 +13,7 @@ tlim = (0, 2)
 xlim = (-2, 2)
 
 # A stationary point object
-stationary = st.MovingObject(0, draw_options={'label': '$v = 0$'})
+stationary = phy.MovingObject(0, draw_options={'label': '$v = 0$'})
 ## Alternate:
 # direction = (1, 0)
 # point = (0, 0)
@@ -38,11 +38,11 @@ anim.save('2-objects_stationary_point_anim_worldline.mp4')
 anim.show()
 
 # A bunch of moving point objects, animated
-moving = st.MovingObject(0, velocity=1/2,
+moving = phy.MovingObject(0, velocity=1/2,
     draw_options={'color': 'red', 'label': '$v = c/2$'})
-light = st.MovingObject(0, velocity=1,
+light = phy.MovingObject(0, velocity=1,
     draw_options={'color': 'gold', 'label': '$v = c$'})
-ftl = st.MovingObject(0, velocity=3/2,
+ftl = phy.MovingObject(0, velocity=3/2,
     draw_options={'color': 'cyan', 'label': '$v = 3c/2$'})
 objects = geom.Collection([stationary, moving, light, ftl])
 title = 'Various objects'
@@ -53,7 +53,7 @@ anim.save('2-objects_moving_points.mp4')
 anim.show()
 
 # A moving meterstick
-meterstick = st.MovingObject(-1/2, length=1, velocity=1/2,
+meterstick = phy.MovingObject(-1/2, length=1, velocity=1/2,
     draw_options={'label': 'Meterstick'})
 # # Alternate:
 # direction = (1, 1/2)

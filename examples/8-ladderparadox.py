@@ -4,7 +4,7 @@ sys.path.append('..')
 
 import specrel.graphics.companim as canim
 import specrel.geom as geom
-import specrel.spacetime as st
+import specrel.spacetime.physical as phy
 import specrel.visualize as vis
 
 # Ladder information
@@ -12,12 +12,12 @@ v = 4/5
 ladder_left_start = 0
 ladder_length = 1
 alpha = 0.5 # For transparency
-ladder = st.MovingObject(ladder_left_start, ladder_length, v,
+ladder = phy.MovingObject(ladder_left_start, ladder_length, v,
     draw_options={'color': (0, 0, 1, alpha), 'label': 'Ladder'})
 
 # Garage information
 garage_left_start = 4
-garage = st.MovingObject(garage_left_start, ladder_length,
+garage = phy.MovingObject(garage_left_start, ladder_length,
     draw_options={
         'facecolor': (1, 0.5, 0, alpha),
         'edgecolor': 'limegreen',

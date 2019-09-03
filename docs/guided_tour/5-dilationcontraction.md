@@ -3,7 +3,7 @@
 # 5. Time Dilation and Length Contraction
 
 ### Features Introduced
-- The `spacetime` gradient objects:
+- The `spacetime.gradient` gradient objects:
     - `gradient_line`
     - `lateral_gradient_ribbon`
     - `longitudinal_gradient_ribbon`
@@ -16,13 +16,19 @@
 
 Let's say that we have a light at x = 0 that gradually changes color from red to blue. What does this look like from a frame moving at 80% the speed of light?
 
+Continuous color gradients are a convenient way to track gradual changes throughout spacetime. The `spacetime.gradient` module contains utilities for forming various gradient objects.
+
+```python
+import specrel.spacetime.gradient as grad
+```
+
 We can use the `gradient_line` function to fully track the "progress" of an event over time as it proceeds, and how the progression of an event varies from frame to frame. A `gradient_line` is just a `Collection` of line segments (`PointGroup` objects), with `Ray` objects at the front and back. A `Ray` is like a `Line`, but only infinite in one direction.
 
 ```python
 duration = 3
 v = 4/5
 # The color change starts at (t = 0, x = 0), and ends at (t = 3, x = 0)
-colorchange = st.gradient_line((0, 0), (duration, 0), 'red', 'blue')
+colorchange = grad.gradient_line((0, 0), (duration, 0), 'red', 'blue')
 # Set the limits with the magic of foresight
 tlim = (0, 5/3*duration)
 xlim = (-5/3*duration*v, 0.1)
@@ -62,7 +68,7 @@ duration = 5
 # The two boundary lines have a direction vector (t = 0, x = 1), and the bottom
 # and top boundaries pass through (t = 0, x = 0) and (t = 5, x = 0),
 # respectively
-onesecond = st.lateral_gradient_ribbon((0, 1), (0, 0), (duration, 0),
+onesecond = grad.lateral_gradient_ribbon((0, 1), (0, 0), (duration, 0),
     'red', 'blue')
 ```
 
@@ -94,10 +100,10 @@ A stationary meterstick exists across a range of positions of length one, and ac
 We can track an object as it moves through time using the `longitudinal_gradient_ribbon`. Like the `lateral_gradient_ribbon`, it's a `Collection`, but this time is composed of polygons of changing color, and capped off at the front and back by `HalfRibbon` objects. These "half-infinite" `Ribbons`, in the same sense that `Rays` are "half-infinite" `Lines`.
 
 ```python
-meterstick = st.MovingObject(-0.5, 1)
+meterstick = phy.MovingObject(-0.5, 1)
 tlim = (0, 2)
 xlim = (-2, 0.5)
-meterstick = st.longitudinal_gradient_ribbon(
+meterstick = grad.longitudinal_gradient_ribbon(
     [(tlim[0], meterstick.left_pos(tlim[0])),
         (tlim[1], meterstick.left_pos(tlim[1]))],
     [(tlim[0], meterstick.right_pos(tlim[0])),
