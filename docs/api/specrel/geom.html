@@ -119,13 +119,13 @@ class LorentzTransformable(ABC):
         self.lorentz_transform(-velocity, origin)
 
     &#34;&#34;&#34;Drawing logic for an object, contingent on a DI for boilerplate plotting
-    implementation via plotter (a graphics.simpgraph.STPlotter instance)&#34;&#34;&#34;
+    implementation via plotter (a graphics.basegraph.STPlotter instance)&#34;&#34;&#34;
     @abstractmethod
     def draw(self, plotter, tlim, xlim, **kwargs):
         &#34;&#34;&#34;Drawing logic for an object, contingent on a plotter object.
 
         Args:
-            plotter (`specrel.graphics.simpgraph.STPlotter`): Plotter object to
+            plotter (`specrel.graphics.basegraph.STPlotter`): Plotter object to
                 implement plotting functionality.
             tlim (tuple): Minimum and maximum time values when drawing the
                 object. Any `None` entries are replaced with a class-specific
@@ -2066,13 +2066,13 @@ in the <code>draw_options</code> property/parameter.</p>
         self.lorentz_transform(-velocity, origin)
 
     &#34;&#34;&#34;Drawing logic for an object, contingent on a DI for boilerplate plotting
-    implementation via plotter (a graphics.simpgraph.STPlotter instance)&#34;&#34;&#34;
+    implementation via plotter (a graphics.basegraph.STPlotter instance)&#34;&#34;&#34;
     @abstractmethod
     def draw(self, plotter, tlim, xlim, **kwargs):
         &#34;&#34;&#34;Drawing logic for an object, contingent on a plotter object.
 
         Args:
-            plotter (`specrel.graphics.simpgraph.STPlotter`): Plotter object to
+            plotter (`specrel.graphics.basegraph.STPlotter`): Plotter object to
                 implement plotting functionality.
             tlim (tuple): Minimum and maximum time values when drawing the
                 object. Any `None` entries are replaced with a class-specific
@@ -2130,7 +2130,7 @@ in the <code>draw_options</code> property/parameter.</p>
 <section class="desc"><p>Drawing logic for an object, contingent on a plotter object.</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt>plotter (<a title="specrel.graphics.simpgraph.STPlotter" href="graphics/simpgraph.html#specrel.graphics.simpgraph.STPlotter"><code>STPlotter</code></a>): Plotter object to</dt>
+<dt>plotter (<a title="specrel.graphics.basegraph.STPlotter" href="graphics/basegraph.html#specrel.graphics.basegraph.STPlotter"><code>STPlotter</code></a>): Plotter object to</dt>
 <dt>implement plotting functionality.</dt>
 <dt><strong><code>tlim</code></strong> :&ensp;<code>tuple</code></dt>
 <dd>Minimum and maximum time values when drawing the
@@ -2156,7 +2156,7 @@ def draw(self, plotter, tlim, xlim, **kwargs):
     &#34;&#34;&#34;Drawing logic for an object, contingent on a plotter object.
 
     Args:
-        plotter (`specrel.graphics.simpgraph.STPlotter`): Plotter object to
+        plotter (`specrel.graphics.basegraph.STPlotter`): Plotter object to
             implement plotting functionality.
         tlim (tuple): Minimum and maximum time values when drawing the
             object. Any `None` entries are replaced with a class-specific

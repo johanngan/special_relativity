@@ -88,13 +88,13 @@ class LorentzTransformable(ABC):
         self.lorentz_transform(-velocity, origin)
 
     """Drawing logic for an object, contingent on a DI for boilerplate plotting
-    implementation via plotter (a graphics.simpgraph.STPlotter instance)"""
+    implementation via plotter (a graphics.basegraph.STPlotter instance)"""
     @abstractmethod
     def draw(self, plotter, tlim, xlim, **kwargs):
         """Drawing logic for an object, contingent on a plotter object.
 
         Args:
-            plotter (`specrel.graphics.simpgraph.STPlotter`): Plotter object to
+            plotter (`specrel.graphics.basegraph.STPlotter`): Plotter object to
                 implement plotting functionality.
             tlim (tuple): Minimum and maximum time values when drawing the
                 object. Any `None` entries are replaced with a class-specific

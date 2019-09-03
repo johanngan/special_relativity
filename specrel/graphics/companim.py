@@ -1,4 +1,4 @@
-"""Composite graphics that glue together one or more simple spacetime plots and
+"""Composite graphics that glue together one or more simple spacetime
 animations in special relativity.
 """
 
@@ -10,9 +10,10 @@ import subprocess
 import matplotlib.pyplot as plt
 
 from specrel.graphics import graphrc
-import specrel.graphics.simpgraph as simpg
+import specrel.graphics.basegraph as bgraph
+import specrel.graphics.simpanim as sanim
 
-class MultiAnimator(simpg.FigureCreator, simpg.BaseAnimator):
+class MultiAnimator(bgraph.FigureCreator, sanim.BaseAnimator):
     """Runs multiple animations simultaneously on different subplots.
 
     Args:
@@ -21,7 +22,7 @@ class MultiAnimator(simpg.FigureCreator, simpg.BaseAnimator):
             new figure window is created.
         axs (list, optional): List of axes in row major format. If `None`, a
             new set of axes is created under a new figure window.
-        others: See `specrel.graphics.simpgraph.BaseAnimator`.
+        others: See `specrel.graphics.simpanim.BaseAnimator`.
 
     Attributes:
         axs (list): List of axes to draw on in row major format.
@@ -38,7 +39,7 @@ class MultiAnimator(simpg.FigureCreator, simpg.BaseAnimator):
         title=graphrc['title'],
         frame_lim=(0, 0)):
 
-        simpg.FigureCreator.__init__(self)
+        bgraph.FigureCreator.__init__(self)
         # Make a new figure if necessary
         if fig is None and axs is None:
             # Default to a (1 x n) subplot
@@ -46,7 +47,7 @@ class MultiAnimator(simpg.FigureCreator, simpg.BaseAnimator):
         elif fig is None or axs is None:
             raise ValueError('Must give both figure and axes, or neither.')
         self.axs = axs
-        simpg.BaseAnimator.__init__(self, fig, stepsize, fps, display_current,
+        sanim.BaseAnimator.__init__(self, fig, stepsize, fps, display_current,
             display_current_decimals, title, frame_lim)
 
         # Make sure there's at least one animation
@@ -116,29 +117,7 @@ class MultiAnimator(simpg.FigureCreator, simpg.BaseAnimator):
 
         return (start_frame, end_frame)
 
-"""Runs multiple time-evolution animations simultaneously on different subplots
-"""
-"""
-    animation_params = list of dictionaries containing parameters for animators
-        in each subplot, in the following format:
-        [
-            {
-                "animator": <STAnimator constructor>,
-                "animator_options":
-                {
-                    <kwargs except fig, ax, ct_per_sec, instant_pause_time,
-                        fps, display_current_time,
-                        display_current_time_decimals>
-                },
-                "transformable": <LorentzTransformable object>,
-                "draw_options":
-                {
-                    <kwargs except plotter>
-                }
-            }
-        ]
-    """
-class MultiTimeAnimator(MultiAnimator, simpg.TimeAnimator):
+class MultiTimeAnimator(MultiAnimator, sanim.TimeAnimator):
     """Runs multiple time-evolution animations simultaneously on different
     subplots.
 
@@ -148,7 +127,7 @@ class MultiTimeAnimator(MultiAnimator, simpg.TimeAnimator):
             following items:
 
             - **animator**: `type`, initializer for the
-                `specrel.graphics.simpgraph.STAnimator` to use.
+                `specrel.graphics.simpanim.STAnimator` to use.
             - **transformable**: `specrel.geom.LorentzTransformable` object to
                 animate.
             - **animator_options**: optional, dictionary of certain keyword
@@ -165,10 +144,10 @@ class MultiTimeAnimator(MultiAnimator, simpg.TimeAnimator):
                 `plotter` argument.
 
         fig (matplotlib.figure.Figure, optional): See
-            `specrel.graphics.compgraph.MultiAnimator`.
-        axs (list, optional): See `specrel.graphics.compgraph.MultiAnimator`.
+            `specrel.graphics.companim.MultiAnimator`.
+        axs (list, optional): See `specrel.graphics.companim.MultiAnimator`.
         tlim (tuple, optional): Start and end time of the animation.
-        others: See `specrel.graphics.simpgraph.TimeAnimator`.
+        others: See `specrel.graphics.simpanim.TimeAnimator`.
     """
     def __init__(self,
         animations_params,
@@ -183,7 +162,7 @@ class MultiTimeAnimator(MultiAnimator, simpg.TimeAnimator):
             graphrc['anim.display_current_decimals'],
         title=graphrc['title']):
 
-        simpg.TimeAnimator.__init__(self, fig, ct_per_sec, instant_pause_time,
+        sanim.TimeAnimator.__init__(self, fig, ct_per_sec, instant_pause_time,
             fps, display_current_time, display_current_time_decimals)
         frame_lim = (self.calc_frame_idx(tlim[0]), self.calc_frame_idx(tlim[1]))
         MultiAnimator.__init__(self, len(animations_params), fig, axs,
@@ -258,7 +237,7 @@ class MultiTransformAnimator(MultiAnimator):
             - **transformable**: `specrel.geom.LorentzTransformable` object to
                 animate.
             - **animator_options**: optional, dictionary of certain keyword
-                arguments for `specrel.graphics.simpgraph.TransformAnimator`
+                arguments for `specrel.graphics.simpanim.TransformAnimator`
                 initialization, from the following list:
                 - `origin`
                 - `stanimator`
@@ -269,9 +248,9 @@ class MultiTransformAnimator(MultiAnimator):
                 - `title`
 
         fig (matplotlib.figure.Figure, optional): See
-            `specrel.graphics.compgraph.MultiAnimator`.
-        axs (list, optional): See `specrel.graphics.compgraph.MultiAnimator`.
-        others: See `specrel.graphics.simpgraph.TransformAnimator`.
+            `specrel.graphics.companim.MultiAnimator`.
+        axs (list, optional): See `specrel.graphics.companim.MultiAnimator`.
+        others: See `specrel.graphics.simpanim.TransformAnimator`.
     """
     def __init__(self,
         animations_params,
@@ -302,7 +281,7 @@ class MultiTransformAnimator(MultiAnimator):
                     anim_kwargs.pop(omit, None)
             # Add animator to the master list
             self._animators.append(
-                simpg.TransformAnimator(
+                sanim.TransformAnimator(
                     copy.deepcopy(params['transformable']),
                     velocity,
                     fig=self.fig,
@@ -317,11 +296,11 @@ class MultiTransformAnimator(MultiAnimator):
     def _val_text(self, val):
         return f'$v = {{:.{self.display_current_decimals}f}}c$'.format(val)
 
-class Rewinder(simpg.BaseAnimator):
+class Rewinder(sanim.BaseAnimator):
     """Animates the "rewinding" of an animator's animation.
 
     Args:
-        animator (specrel.graphics.simpgraph.BaseAnimator): Animator to rewind.
+        animator (specrel.graphics.simpanim.BaseAnimator): Animator to rewind.
         rewind_rate (int, optional): See `rewind_rate` attribute.
         rewind_title (str, optional): Rewind animation title; overrides title of
             the original animation.
@@ -329,7 +308,7 @@ class Rewinder(simpg.BaseAnimator):
             beginning and end of the rewind animation.
 
     Attributes:
-        animator (specrel.graphics.simpgraph.BaseAnimator): Animator to rewind.
+        animator (specrel.graphics.simpanim.BaseAnimator): Animator to rewind.
         end_pause_frames (int): Number of pause frame at the beginning and end
             of the rewind animation.
         rewind_rate (int): Speedup factor of the rewind animation relative to

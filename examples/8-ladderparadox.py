@@ -2,7 +2,7 @@
 import sys
 sys.path.append('..')
 
-import specrel.graphics.compgraph as compg
+import specrel.graphics.companim as canim
 import specrel.geom as geom
 import specrel.spacetime as st
 import specrel.visualize as vis
@@ -102,9 +102,9 @@ anim_lt = vis.animate_lt_worldline_and_realspace(scene, v,
 anim_lt.save(lt_fname)
 # Animate the rewind from the lab frame
 rew_fname = '8-ladderparadox_rewind.mp4'
-anim_rew = compg.Rewinder(anim_lab, rewind_rate=5)
+anim_rew = canim.Rewinder(anim_lab, rewind_rate=5)
 anim_rew.save(rew_fname)
 
 # Glue the animations together
-compg.concat_demuxer([lab_fname, rew_fname, lt_fname, ladder_fname],
+canim.concat_demuxer([lab_fname, rew_fname, lt_fname, ladder_fname],
     '8-ladderparadox.mp4')

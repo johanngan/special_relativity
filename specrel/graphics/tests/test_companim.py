@@ -1,8 +1,8 @@
 import unittest
 
 import specrel.geom as geom
-import specrel.graphics.simpgraph as simpg
-import specrel.graphics.compgraph as compg
+import specrel.graphics.simpanim as sanim
+import specrel.graphics.companim as canim
 
 class MultiTimeAnimatorTests(unittest.TestCase):
     def setUp(self):
@@ -10,15 +10,15 @@ class MultiTimeAnimatorTests(unittest.TestCase):
         xlim = (0, 2)
         tlim = (0, 2)
         draw_options = {'tlim': tlim, 'xlim': xlim}
-        self.multi = compg.MultiTimeAnimator(
+        self.multi = canim.MultiTimeAnimator(
             [
                 {
-                    'animator': simpg.WorldlineAnimator,
+                    'animator': sanim.WorldlineAnimator,
                     'transformable': trans,
                     'draw_options':draw_options,
                 },
                 {
-                    'animator': simpg.ObjectAnimator,
+                    'animator': sanim.ObjectAnimator,
                     'transformable': trans,
                     'draw_options': draw_options,
                 }
@@ -68,16 +68,16 @@ class MultiTransformAnimatorTests(unittest.TestCase):
         tlim = (0, 2)
         time = 1
         anim_opt = {'tlim': tlim, 'xlim': xlim, 'time': time}
-        self.multi = compg.MultiTransformAnimator(
+        self.multi = canim.MultiTransformAnimator(
             [
                 {
                     'animator_options': {
-                        'stanimator': simpg.WorldlineAnimator, **anim_opt},
+                        'stanimator': sanim.WorldlineAnimator, **anim_opt},
                     'transformable': trans,
                 },
                 {
                     'animator_options': {
-                        'stanimator': simpg.ObjectAnimator, **anim_opt},
+                        'stanimator': sanim.ObjectAnimator, **anim_opt},
                     'transformable': trans,
                 },
             ], -4/5, fps=1, transition_duration=2,
@@ -124,15 +124,15 @@ class RewinderTests(unittest.TestCase):
         xlim = (0, 3)
         tlim = (0, 3)
         draw_options = {'tlim': tlim, 'xlim': xlim}
-        multi = compg.MultiTimeAnimator(
+        multi = canim.MultiTimeAnimator(
             [
                 {
-                    'animator': simpg.WorldlineAnimator,
+                    'animator': sanim.WorldlineAnimator,
                     'transformable': trans,
                     'draw_options':draw_options,
                 },
                 {
-                    'animator': simpg.ObjectAnimator,
+                    'animator': sanim.ObjectAnimator,
                     'transformable': trans,
                     'draw_options': draw_options,
                 }
@@ -140,7 +140,7 @@ class RewinderTests(unittest.TestCase):
             fps=1, ct_per_sec=1, tlim=tlim,
             display_current_time=True, display_current_time_decimals=3,
             title='Title')
-        self.rew = compg.Rewinder(multi, end_pause=2)
+        self.rew = canim.Rewinder(multi, end_pause=2)
         self.rew.init_func()
 
     def test_rewind(self):

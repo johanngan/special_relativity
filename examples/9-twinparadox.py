@@ -3,7 +3,7 @@ import sys
 sys.path.append('..')
 
 import specrel.geom as geom
-import specrel.graphics.compgraph as compg
+import specrel.graphics.companim as canim
 import specrel.spacetime as st
 import specrel.visualize as vis
 
@@ -87,7 +87,7 @@ anim_earth = vis.stanimate_with_worldline(scene,
 anim_earth.save(earth_fname)
 # Rewind
 rew_fname = '9-twinparadox_rewind.mp4'
-anim_rew = compg.Rewinder(anim_earth, rewind_rate=5)
+anim_rew = canim.Rewinder(anim_earth, rewind_rate=5)
 anim_rew.save(rew_fname)
 # Transformation
 lt_fname = '9-twinparadox_transform.mp4'
@@ -131,6 +131,6 @@ anim_backward = vis.stanimate_with_worldline(scene,
 anim_backward.save(backward_fname)
 
 # Glue all the parts together
-compg.concat_demuxer([earth_fname, rew_fname, lt_fname,
+canim.concat_demuxer([earth_fname, rew_fname, lt_fname,
     forward_fname, accel_fname, backward_fname], '9-twinparadox.mp4')
 

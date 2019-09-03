@@ -1,7 +1,7 @@
 import unittest
 
 import specrel.geom as geom
-from specrel.graphics.simpgraph import STPlotter
+from specrel.graphics.basegraph import STPlotter
 
 class _MockSTPlotter(STPlotter):
     """Mock plotter for draw() methods.

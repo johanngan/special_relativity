@@ -3,8 +3,8 @@
 # 8. Ladder Paradox
 
 ### Features Introduced
-- The `graphics.compgraph.Rewinder` class
-- The `graphics.compgraph.concat_demuxer` utility
+- The `graphics.companim.Rewinder` class
+- The `graphics.companim.concat_demuxer` utility
 
 ---
 
@@ -130,20 +130,20 @@ anim_lt = vis.animate_lt_worldline_and_realspace(scene, v,
 anim_lt.save(lt_fname)
 ```
 
-Lastly, let's add a "rewind" transition to go between the end of the first frame's part to the transformation. The `graphics.compgraph` module has a class called `Rewinder` for this purpose. We just need to give it the animator we want to rewind. Let's also rewind quickly, at five times the original animation speed. By default a one-second delay is added at the front and back of the rewind animation, to give a little space between the other animations.
+Lastly, let's add a "rewind" transition to go between the end of the first frame's part to the transformation. The `graphics.companim` module has a class called `Rewinder` for this purpose. We just need to give it the animator we want to rewind. Let's also rewind quickly, at five times the original animation speed. By default a one-second delay is added at the front and back of the rewind animation, to give a little space between the other animations.
 
 ```python
-import specrel.graphics.compgraph as compg
+import specrel.graphics.companim as canim
 # Animate the rewind from the lab frame
 rew_fname = '8-ladderparadox_rewind.mp4'
-anim_rew = compg.Rewinder(anim_lab, rewind_rate=4)
+anim_rew = canim.Rewinder(anim_lab, rewind_rate=4)
 anim_rew.save(rew_fname)
 ```
 
-Those are all the components. All that remains it to bind the animation together into one file. We can do that with `concat_demuxer`, also in `graphics.compgraph`. We just provide a list of input file names, and an output file name to write to.
+Those are all the components. All that remains it to bind the animation together into one file. We can do that with `concat_demuxer`, also in `graphics.companim`. We just provide a list of input file names, and an output file name to write to.
 
 ```python
-compg.concat_demuxer([lab_fname, rew_fname, lt_fname, ladder_fname],
+canim.concat_demuxer([lab_fname, rew_fname, lt_fname, ladder_fname],
     '8-ladderparadox.mp4')
 ```
 ![The ladder paradox](figures/8-ladderparadox.gif)

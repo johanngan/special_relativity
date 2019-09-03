@@ -105,7 +105,7 @@ anim_earth = vis.stanimate_with_worldline(scene,
 anim_earth.save(earth_fname)
 # Rewind
 rew_fname = '9-twinparadox_rewind.mp4'
-anim_rew = compg.Rewinder(anim_earth, rewind_rate=5)
+anim_rew = canim.Rewinder(anim_earth, rewind_rate=5)
 anim_rew.save(rew_fname)
 # Transformation
 lt_fname = '9-twinparadox_transform.mp4'
@@ -156,7 +156,7 @@ Finally, gluing everything together, we get the final animation.
 
 ```python
 # Glue all the parts together
-compg.concat_demuxer([earth_fname, rew_fname, lt_fname,
+canim.concat_demuxer([earth_fname, rew_fname, lt_fname,
     forward_fname, accel_fname, backward_fname], '9-twinparadox.mp4')
 ```
 ![The twin paradox](figures/9-twinparadox.gif)

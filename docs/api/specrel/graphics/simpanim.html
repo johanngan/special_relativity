@@ -4,9 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.6.3" />
-<title>specrel.graphics.simpgraph API documentation</title>
-<meta name="description" content="Simple (one set of axes) spacetime plots and animations in special
-relativity." />
+<title>specrel.graphics.simpanim API documentation</title>
+<meta name="description" content="Simple (one set of axes) spacetime animations in special relativity." />
 <link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
 <link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
@@ -18,16 +17,13 @@ relativity." />
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>specrel.graphics.simpgraph</code></h1>
+<h1 class="title">Module <code>specrel.graphics.simpanim</code></h1>
 </header>
 <section id="section-intro">
-<p>Simple (one set of axes) spacetime plots and animations in special
-relativity.</p>
+<p>Simple (one set of axes) spacetime animations in special relativity.</p>
 <details class="source">
 <summary>Source code</summary>
-<pre><code class="python">&#34;&#34;&#34;Simple (one set of axes) spacetime plots and animations in special
-relativity.
-&#34;&#34;&#34;
+<pre><code class="python">&#34;&#34;&#34;Simple (one set of axes) spacetime animations in special relativity.&#34;&#34;&#34;
 
 from abc import ABC, abstractmethod
 import copy
@@ -38,280 +34,7 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
 from specrel.graphics import graphrc
-
-class FigureCreator:
-    &#34;&#34;&#34;Something that can create and own a figure.
-
-    Attributes:
-        fig (matplotlib.figure.Figure): Figure handle.
-    &#34;&#34;&#34;
-    def __init__(self):
-        self.fig = None
-        self._created_own_fig = False
-
-    def close(self):
-        &#34;&#34;&#34;Close the figure window if it was created by the class.&#34;&#34;&#34;
-        if self._created_own_fig:
-            plt.close(self.fig)
-
-class SingleAxisFigureCreator(FigureCreator):
-    &#34;&#34;&#34;Something that creates and owns a figure with a single axis
-    (i.e. not a subplot).
-
-    Args:
-        fig (matplotlib.figure.Figure, optional): Figure window. If `None` and
-            `ax` is not `None`, will be set to `ax.figure`. If both are `None`,
-            a new figure will be created.
-        ax (matplotlib.axes.Axes, optional): Axes to draw on. If `None` and
-            `fig` is not `None`, will be set to `fig.gca()`. If both are `None`,
-            a new set of axes will be created.
-
-    Attributes:
-        ax (matplotlib.axes.Axes): Axes to draw on.
-        fig (matplotlib.figure.Figure): Figure window.
-    &#34;&#34;&#34;
-    def __init__(self, fig=graphrc[&#39;fig&#39;], ax=graphrc[&#39;ax&#39;]):
-        super().__init__()
-        if fig is None and ax is None:
-            self.fig, self.ax = plt.subplots()
-            self._created_own_fig = True
-        elif fig is not None and ax is None:
-            self.fig = fig
-            self.ax = fig.gca()
-        elif fig is None and ax is not None:
-            self.fig = ax.figure
-            self.ax = ax
-        else:
-            self.fig = fig
-            self.ax = ax
-
-class STPlotter(SingleAxisFigureCreator, ABC):
-    &#34;&#34;&#34;Base-level plotting interface.&#34;&#34;&#34;
-
-    @abstractmethod
-    def draw_point(self, point, tag, **kwargs):
-        &#34;&#34;&#34;Draws a single spacetime point.
-
-        Args:
-            point (specrel.geom.STVector): Point to draw.
-            tag (str): Tag to draw with the point.
-            **kwargs: Matplotlib plot keyword arguments.
-
-        Raises:
-            NotImplementedError:
-                Abstract method.
-        &#34;&#34;&#34;
-        raise NotImplementedError
-
-    @abstractmethod
-    def draw_line_segment(self, point1, point2, tag, **kwargs):
-        &#34;&#34;&#34;Draws a line segment between two spacetime points.
-
-        Args:
-            point1 (specrel.geom.STVector): One line segment endpoint.
-            point2 (specrel.geom.STVector): Other line segment endpoint.
-            tag (str): Tag to draw with the point.
-            **kwargs: Matplotlib plot keyword arguments.
-
-        Raises:
-            NotImplementedError:
-                Abstract method.
-        &#34;&#34;&#34;
-        raise NotImplementedError
-
-    @abstractmethod
-    def draw_shaded_polygon(self, vertices, tag, **kwargs):
-        &#34;&#34;&#34;Draws a shaded polygon in spacetime.
-
-        Args:
-            vertices (list): List of `specrel.geom.STVector` objects defining
-                the polygon vertices.
-            tag (str): Tag to draw with the point.
-            **kwargs: Matplotlib plot keyword arguments.
-
-        Raises:
-            NotImplementedError:
-                Abstract method.
-        &#34;&#34;&#34;
-        raise NotImplementedError
-
-    @staticmethod
-    def _decouple_stvectors(stvectors):
-        &#34;&#34;&#34;Separate time and space values in a list of STVectors.&#34;&#34;&#34;
-        if stvectors:
-            return tuple(zip(*stvectors))
-        return tuple(), tuple()
-
-    @abstractmethod
-    def set_lims(self, tlim, xlim):
-        &#34;&#34;&#34;Sets the plotting limits for the plotter.
-
-        Args:
-            tlim (tuple): Minimum and maximum time values of the plot. `None`
-                values are filled automatically.
-            xlim (tuple): Minimum and maximum position values of the plot.
-                `None` values are filled automatically.
-
-        Raises:
-            NotImplementedError:
-                Abstract method.
-        &#34;&#34;&#34;
-        raise NotImplementedError
-
-    @abstractmethod
-    def show(self):
-        &#34;&#34;&#34;Shows the plot in interactive mode.
-
-        Raises:
-            NotImplementedError:
-                Abstract method.
-        &#34;&#34;&#34;
-        raise NotImplementedError
-
-    def save(self, filename, **kwargs):
-        &#34;&#34;&#34;Saves the plot to a file.
-
-        Args:
-            filename (str): Output file name.
-            **kwargs: Keyword arguments to `matplotlib.figure.Figure.savefig`.
-        &#34;&#34;&#34;
-        self.fig.savefig(filename, **kwargs)
-
-class WorldlinePlotter(STPlotter):
-    &#34;&#34;&#34;Plotter for creating static spacetime diagrams.
-
-    Args:
-        fig (matplotlib.figure.Figure, optional): See
-            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
-        ax (matplotlib.axes.Axes, optional): See
-            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
-        others: See attributes.
-
-    Attributes:
-        equal_lim_expand (float): If the limits on an axis are specified to be
-            equal, they will be expanded symmetrically until the axis size is
-            this value.
-        grid (bool): Flag for whether or not to plot background grid lines.
-        legend (bool): Flag for whether or not to plot a legend.
-        legend_loc (str): Legend location according to the Matplotlib
-            `loc` parameter. If `legend` is `False`, this attribute is ignored.
-        lim_padding (float): Extra padding on spacetime diagram axis limits,
-            relative to the axis sizes.
-    &#34;&#34;&#34;
-
-    def __init__(self,
-        fig=graphrc[&#39;fig&#39;],
-        ax=graphrc[&#39;ax&#39;],
-        grid=graphrc[&#39;grid&#39;],
-        legend=graphrc[&#39;legend&#39;],
-        legend_loc=graphrc[&#39;legend_loc&#39;],
-        lim_padding=graphrc[&#39;worldline.lim_padding&#39;],
-        equal_lim_expand=graphrc[&#39;worldline.equal_lim_expand&#39;]):
-
-        super().__init__(fig, ax)
-        self.grid = grid
-        self.legend = legend
-        self.legend_loc = legend_loc
-        self.lim_padding = lim_padding
-        self.equal_lim_expand = equal_lim_expand
-
-    def _prepare_ax(self):
-        &#34;&#34;&#34;Do any axis preparation before drawing stuff.&#34;&#34;&#34;
-        self.ax.grid(self.grid)
-        # Ensure grid lines are behind other objects
-        self.ax.set_axisbelow(True)
-
-    def _set_legend(self):
-        &#34;&#34;&#34;Turn on the legend, or do nothing, depending on self.legend&#34;&#34;&#34;
-        if self.legend:
-            self.ax.legend(loc=self.legend_loc)
-
-    def draw_point(self, point, tag=None, **kwargs):
-        &#34;&#34;&#34;See `specrel.graphics.simpgraph.STPlotter.draw_point`.
-
-        Kwargs:
-            linestyle: Forced to be `&#39;None&#39;`
-            marker: Default is `&#39;.&#39;`.
-        &#34;&#34;&#34;
-        self._prepare_ax()
-        marker = kwargs.pop(&#39;marker&#39;, &#39;.&#39;)
-        # Force linestyle to be none for a point
-        kwargs[&#39;linestyle&#39;] = &#39;None&#39;
-        self.ax.plot(point[1], point[0], marker=marker, **kwargs)
-        if tag:
-            self.ax.text(point[1], point[0], tag)
-        self._set_legend()
-
-    def draw_line_segment(self, point1, point2, tag=None, **kwargs):
-        &#34;&#34;&#34;See `specrel.graphics.simpgraph.STPlotter.draw_line_segment`.
-
-        Kwargs:
-            marker: Forced to be `None`.
-        &#34;&#34;&#34;
-        self._prepare_ax()
-        # Ignore the &#34;marker&#34; parameter
-        kwargs.pop(&#39;marker&#39;, None)
-        self.ax.plot((point1[1], point2[1]), (point1[0], point2[0]), **kwargs)
-        # Put the tag at the midpoint
-        if tag:
-            self.ax.text((point1[1] + point2[1])/2, (point1[0] + point2[0])/2,
-                tag, ha=&#39;center&#39;, va=&#39;center&#39;, bbox={&#39;boxstyle&#39;: &#39;round&#39;,
-                    &#39;ec&#39;: &#39;black&#39;, &#39;fc&#39;: (1, 1, 1, 0.5)})
-        self._set_legend()
-
-    def draw_shaded_polygon(self, vertices, tag=None, **kwargs):
-        &#34;&#34;&#34;See `specrel.graphics.simpgraph.STPlotter.draw_shaded_polygon`.
-
-        Kwargs:
-            linewidth: Forced to be `None`.
-        &#34;&#34;&#34;
-        self._prepare_ax()
-        tvals, xvals = self._decouple_stvectors(vertices)
-        # Ignore the &#34;linewidth&#34; parameter
-        kwargs.pop(&#39;linewidth&#39;, None)
-        self.ax.fill(xvals, tvals, **kwargs)
-        # Put tag at the centroid
-        if vertices and tag:
-            self.ax.text(sum(xvals)/len(xvals), sum(tvals)/len(tvals), tag,
-                ha=&#39;center&#39;, va=&#39;center&#39;, bbox={&#39;boxstyle&#39;: &#39;round&#39;,
-                    &#39;ec&#39;: &#39;black&#39;, &#39;fc&#39;: (1, 1, 1, 0.5)})
-        self._set_legend()
-
-    def set_lims(self, tlim, xlim):
-        # Pad the limits
-        tpad = self.lim_padding/2 * (tlim[1] - tlim[0])
-        xpad = self.lim_padding/2 * (xlim[1] - xlim[0])
-        # If the limits are identical, expand them
-        if tlim[0] == tlim[1]:
-            tpad = self.equal_lim_expand/2
-        if xlim[0] == xlim[1]:
-            xpad = self.equal_lim_expand/2
-
-        padded_tlim = (tlim[0] - tpad, tlim[1] + tpad)
-        padded_xlim = (xlim[0] - xpad, xlim[1] + xpad)
-
-        # Set the actual limits
-        self.ax.set_xlim(padded_xlim)
-        self.ax.set_ylim(padded_tlim)
-
-        # Clip lines and polygons objects to the actual limits
-        clipbox = self.ax.fill([xlim[0], xlim[0], xlim[1], xlim[1]],
-            [tlim[0], tlim[1], tlim[1], tlim[0]], color=&#39;None&#39;)[0]
-        # Only clip lines, not points
-        for artist in [ln for ln in self.ax.lines if len(ln.get_xdata()) &gt; 1] \
-            + self.ax.patches[:-1]:
-            artist.set_clip_path(clipbox)
-        self.ax.patches.pop()
-
-    def show(self):
-        plt.show()
-
-    def set_labels(self):
-        &#34;&#34;&#34;Set labels for the time and space axes. See
-        `specrel.graphics.graphrc`.
-        &#34;&#34;&#34;
-        self.ax.set_xlabel(graphrc[&#39;xlabel&#39;])
-        self.ax.set_ylabel(graphrc[&#39;tlabel&#39;])
+import specrel.graphics.basegraph as bgraph
 
 class BaseAnimator(ABC):
     &#34;&#34;&#34;Base class for animators that animate over some changing control
@@ -468,11 +191,11 @@ class TimeAnimator(BaseAnimator):
         instant_pause_time (float, optional): Amount of pause time in seconds
             for instantaneous events (appear in a single instant of time).
         display_current_time (bool, optional): Same as `display_current` in
-            `specrel.graphics.simpgraph.BaseAnimator`.
+            `specrel.graphics.simpanim.BaseAnimator`.
         display_current_time_decimals (int, optional): Same as
             `display_current_decimals` in
-            `specrel.graphics.simpgraph.BaseAnimator`.
-        others: See `specrel.graphics.simpgraph.BaseAnimator`.
+            `specrel.graphics.simpanim.BaseAnimator`.
+        others: See `specrel.graphics.simpanim.BaseAnimator`.
     &#34;&#34;&#34;
     def __init__(self,
         fig=graphrc[&#39;fig&#39;],
@@ -489,8 +212,8 @@ class TimeAnimator(BaseAnimator):
         # Number of frames corresponding to the desired pause time
         self._pause_frames = round(instant_pause_time * fps)
 
-class STAnimator(TimeAnimator, STPlotter, ABC):
-    &#34;&#34;&#34;TimeAnimator that fulfills the `specrel.graphics.simpgraph.STPlotter`
+class STAnimator(TimeAnimator, bgraph.STPlotter, ABC):
+    &#34;&#34;&#34;TimeAnimator that fulfills the `specrel.graphics.basegraph.STPlotter`
     interface, and hence can be used by
     `specrel.geom.LorentzTransformable.draw`.
 
@@ -518,7 +241,7 @@ class STAnimator(TimeAnimator, STPlotter, ABC):
         display_current_time_decimals=graphrc[&#39;anim.display_current_decimals&#39;],
         title=graphrc[&#39;title&#39;]):
 
-        STPlotter.__init__(self, fig, ax)
+        bgraph.STPlotter.__init__(self, fig, ax)
         TimeAnimator.__init__(self, self.fig, ct_per_sec, instant_pause_time,
             fps, display_current_time, display_current_time_decimals, title)
         self.grid = grid
@@ -646,10 +369,10 @@ class WorldlineAnimator(STAnimator):
         current_time_style (linestyle, optional): See attributes.
         current_time_color (color, optional): See attributes.
         lim_padding (float, optional): See
-            `specrel.graphics.simpgraph.WorldlinePlotter`.
+            `specrel.graphics.basegraph.WorldlinePlotter`.
         equal_lim_expand (float, optional): See
-            `specrel.graphics.simpgraph.WorldlinePlotter`.
-        others: See `specrel.graphics.simpgraph.STAnimator`.
+            `specrel.graphics.basegraph.WorldlinePlotter`.
+        others: See `specrel.graphics.simpanim.STAnimator`.
 
     Attributes:
         current_time_color (TYPE): Matplotlib color for the line of current
@@ -686,7 +409,7 @@ class WorldlineAnimator(STAnimator):
             display_current_time_decimals=display_current_time_decimals,
             title=title)
         # Form a WorldlinePlotter to meet the animator&#39;s needs
-        self._worldline_plotter = WorldlinePlotter(self.fig, self.ax,
+        self._worldline_plotter = bgraph.WorldlinePlotter(self.fig, self.ax,
             self.grid, self.legend, self.legend_loc, lim_padding,
             equal_lim_expand)
         self.current_time_style = current_time_style
@@ -760,7 +483,7 @@ class ObjectAnimator(STAnimator):
 
     Args:
         tag_height (float, optional): See attributes.
-        others: See `specrel.graphics.simpgraph.STAnimator`.
+        others: See `specrel.graphics.simpanim.STAnimator`.
 
     Attributes:
         tag_height (float): The height (relative to the axis height) above the
@@ -1007,27 +730,7 @@ class ObjectAnimator(STAnimator):
                             line_tag = None
                     i += 2
 
-&#34;&#34;&#34;
-    lorentz_transformable = a LorentzTransformable to animate a transformation
-        for
-    velocity = final velocity for the transformation. Initial velocity is
-        assumed to be 0
-    origin = origin to be used for the transformation
-    stanimator = STAnimator initializer (NOT and instance). This is because
-        many properties depend on the TransformAnimator&#39;s params, and must be
-        initialized properly from within
-    stanimator_options = dict of allowed initializer options for the STAnimator
-        {
-            &lt;STAnimator kwargs except
-            fig, ax, instant_pause_time, fps, display_current_time, title&gt;
-        }
-    tlim, xlim = (min, max) tuples for the plotting limits for the animation.
-        Any element that&#39;s None will be automatically filled
-    time = fixed time value at which to carry out the transformation
-    transition_duration = duration in seconds of the animation
-    title = static title to be displayed throughout the animation
-    &#34;&#34;&#34;
-class TransformAnimator(BaseAnimator, SingleAxisFigureCreator):
+class TransformAnimator(BaseAnimator, bgraph.SingleAxisFigureCreator):
     &#34;&#34;&#34;Animator where the frame variable is velocity, i.e. animates a spacetime
     transformation as the object is accelerated instantaneously.
 
@@ -1037,7 +740,7 @@ class TransformAnimator(BaseAnimator, SingleAxisFigureCreator):
         velocity (float): Relative velocity of the frame to transform to.
         origin (tuple, optional): See attributes.
         stanimator (type, optional): initializer of the
-            `specrel.graphics.simpgraph.STAnimator` to take drawing
+            `specrel.graphics.simpanim.STAnimator` to take drawing
             functionality from.
         stanimator_options (dict, optional): Dictionary of certain keyword
             arguments for `stanimator`, *except* for the following:
@@ -1054,16 +757,16 @@ class TransformAnimator(BaseAnimator, SingleAxisFigureCreator):
         time (float, optional): Frame-local time value to fix during
             transformation animation.
         fig (matplotlib.figure.Figure, optional): See
-            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+            `specrel.graphics.basegraph.SingleAxisFigureCreator`.
         ax (matplotlib.axes.Axes, optional): See
-            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+            `specrel.graphics.basegraph.SingleAxisFigureCreator`.
         transition_duration (float, optional):
         fps (float, optional): Animation frames per second.
         display_current_velocity (bool, optional): Same as `display_current` in
-            `specrel.graphics.simpgraph.BaseAnimator`.
+            `specrel.graphics.simpanim.BaseAnimator`.
         display_current_velocity_decimals (int, optional): Same as
             `display_current_decimals` in
-            `specrel.graphics.simpgraph.BaseAnimator`.
+            `specrel.graphics.simpanim.BaseAnimator`.
         title (str, optional): Animation title.
 
     Attributes:
@@ -1093,7 +796,7 @@ class TransformAnimator(BaseAnimator, SingleAxisFigureCreator):
             graphrc[&#39;anim.display_current_decimals&#39;],
         title=graphrc[&#39;title&#39;]):
 
-        SingleAxisFigureCreator.__init__(self, fig, ax)
+        bgraph.SingleAxisFigureCreator.__init__(self, fig, ax)
         nsteps = round(transition_duration * fps)
         BaseAnimator.__init__(self, self.fig, velocity / nsteps, fps,
             display_current_velocity, display_current_velocity_decimals, title,
@@ -1162,7 +865,7 @@ class TransformAnimator(BaseAnimator, SingleAxisFigureCreator):
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="specrel.graphics.simpgraph.BaseAnimator"><code class="flex name class">
+<dt id="specrel.graphics.simpanim.BaseAnimator"><code class="flex name class">
 <span>class <span class="ident">BaseAnimator</span></span>
 <span>(</span><span>fig=None, stepsize=None, fps=50, display_current=True, display_current_decimals=3, title=None, frame_lim=(0, 0))</span>
 </code></dt>
@@ -1173,7 +876,7 @@ variable, like time or velocity.</p>
 <dl>
 <dt><strong><code>frame_lim</code></strong> :&ensp;<code>tuple</code>, optional</dt>
 <dd>Minimum and maximum frame index of the
-animation. See <a title="specrel.graphics.simpgraph.BaseAnimator.calc_frame_idx" href="#specrel.graphics.simpgraph.BaseAnimator.calc_frame_idx"><code>BaseAnimator.calc_frame_idx()</code></a>.</dd>
+animation. See <a title="specrel.graphics.simpanim.BaseAnimator.calc_frame_idx" href="#specrel.graphics.simpanim.BaseAnimator.calc_frame_idx"><code>BaseAnimator.calc_frame_idx()</code></a>.</dd>
 <dt><strong><code>others</code></strong></dt>
 <dd>See attributes.</dd>
 </dl>
@@ -1347,14 +1050,14 @@ current control variable to.</dd>
 </ul>
 <h3>Subclasses</h3>
 <ul class="hlist">
-<li><a title="specrel.graphics.simpgraph.TimeAnimator" href="#specrel.graphics.simpgraph.TimeAnimator">TimeAnimator</a></li>
-<li><a title="specrel.graphics.simpgraph.TransformAnimator" href="#specrel.graphics.simpgraph.TransformAnimator">TransformAnimator</a></li>
-<li><a title="specrel.graphics.compgraph.MultiAnimator" href="compgraph.html#specrel.graphics.compgraph.MultiAnimator">MultiAnimator</a></li>
-<li><a title="specrel.graphics.compgraph.Rewinder" href="compgraph.html#specrel.graphics.compgraph.Rewinder">Rewinder</a></li>
+<li><a title="specrel.graphics.simpanim.TimeAnimator" href="#specrel.graphics.simpanim.TimeAnimator">TimeAnimator</a></li>
+<li><a title="specrel.graphics.simpanim.TransformAnimator" href="#specrel.graphics.simpanim.TransformAnimator">TransformAnimator</a></li>
+<li><a title="specrel.graphics.companim.MultiAnimator" href="companim.html#specrel.graphics.companim.MultiAnimator">MultiAnimator</a></li>
+<li><a title="specrel.graphics.companim.Rewinder" href="companim.html#specrel.graphics.companim.Rewinder">Rewinder</a></li>
 </ul>
 <h3>Methods</h3>
 <dl>
-<dt id="specrel.graphics.simpgraph.BaseAnimator.animate"><code class="name flex">
+<dt id="specrel.graphics.simpanim.BaseAnimator.animate"><code class="name flex">
 <span>def <span class="ident">animate</span></span>(<span>self)</span>
 </code></dt>
 <dd>
@@ -1384,7 +1087,7 @@ cached, return the cached animation.</p>
     return self._cached_anim</code></pre>
 </details>
 </dd>
-<dt id="specrel.graphics.simpgraph.BaseAnimator.calc_frame_idx"><code class="name flex">
+<dt id="specrel.graphics.simpanim.BaseAnimator.calc_frame_idx"><code class="name flex">
 <span>def <span class="ident">calc_frame_idx</span></span>(<span>self, val)</span>
 </code></dt>
 <dd>
@@ -1418,7 +1121,7 @@ positive or negative.</p>
     return round(val / self.stepsize)</code></pre>
 </details>
 </dd>
-<dt id="specrel.graphics.simpgraph.BaseAnimator.calc_frame_val"><code class="name flex">
+<dt id="specrel.graphics.simpanim.BaseAnimator.calc_frame_val"><code class="name flex">
 <span>def <span class="ident">calc_frame_val</span></span>(<span>self, idx)</span>
 </code></dt>
 <dd>
@@ -1454,7 +1157,7 @@ to the same precision as the stepsize, but with one extra decimal place.</p>
     return round(idx * self.stepsize, 1-order_of_mag(self.stepsize))</code></pre>
 </details>
 </dd>
-<dt id="specrel.graphics.simpgraph.BaseAnimator.clear"><code class="name flex">
+<dt id="specrel.graphics.simpanim.BaseAnimator.clear"><code class="name flex">
 <span>def <span class="ident">clear</span></span>(<span>self)</span>
 </code></dt>
 <dd>
@@ -1467,7 +1170,7 @@ to the same precision as the stepsize, but with one extra decimal place.</p>
     self._cached_anim = None</code></pre>
 </details>
 </dd>
-<dt id="specrel.graphics.simpgraph.BaseAnimator.get_frame_lim"><code class="name flex">
+<dt id="specrel.graphics.simpanim.BaseAnimator.get_frame_lim"><code class="name flex">
 <span>def <span class="ident">get_frame_lim</span></span>(<span>self)</span>
 </code></dt>
 <dd>
@@ -1487,7 +1190,7 @@ to the same precision as the stepsize, but with one extra decimal place.</p>
     return self._frame_lim</code></pre>
 </details>
 </dd>
-<dt id="specrel.graphics.simpgraph.BaseAnimator.init_func"><code class="name flex">
+<dt id="specrel.graphics.simpanim.BaseAnimator.init_func"><code class="name flex">
 <span>def <span class="ident">init_func</span></span>(<span>self)</span>
 </code></dt>
 <dd>
@@ -1518,7 +1221,7 @@ def init_func(self):
     raise NotImplementedError</code></pre>
 </details>
 </dd>
-<dt id="specrel.graphics.simpgraph.BaseAnimator.save"><code class="name flex">
+<dt id="specrel.graphics.simpanim.BaseAnimator.save"><code class="name flex">
 <span>def <span class="ident">save</span></span>(<span>self, filename, **kwargs)</span>
 </code></dt>
 <dd>
@@ -1540,7 +1243,7 @@ def init_func(self):
     self.animate().save(filename, fps=self.fps, **kwargs)</code></pre>
 </details>
 </dd>
-<dt id="specrel.graphics.simpgraph.BaseAnimator.show"><code class="name flex">
+<dt id="specrel.graphics.simpanim.BaseAnimator.show"><code class="name flex">
 <span>def <span class="ident">show</span></span>(<span>self)</span>
 </code></dt>
 <dd>
@@ -1552,7 +1255,7 @@ def init_func(self):
     plt.show(self.animate())</code></pre>
 </details>
 </dd>
-<dt id="specrel.graphics.simpgraph.BaseAnimator.update"><code class="name flex">
+<dt id="specrel.graphics.simpanim.BaseAnimator.update"><code class="name flex">
 <span>def <span class="ident">update</span></span>(<span>self, frame)</span>
 </code></dt>
 <dd>
@@ -1593,56 +1296,7 @@ def update(self, frame):
 </dd>
 </dl>
 </dd>
-<dt id="specrel.graphics.simpgraph.FigureCreator"><code class="flex name class">
-<span>class <span class="ident">FigureCreator</span></span>
-</code></dt>
-<dd>
-<section class="desc"><p>Something that can create and own a figure.</p>
-<h2 id="attributes">Attributes</h2>
-<dl>
-<dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.figure.Figure</code></dt>
-<dd>Figure handle.</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">class FigureCreator:
-    &#34;&#34;&#34;Something that can create and own a figure.
-
-    Attributes:
-        fig (matplotlib.figure.Figure): Figure handle.
-    &#34;&#34;&#34;
-    def __init__(self):
-        self.fig = None
-        self._created_own_fig = False
-
-    def close(self):
-        &#34;&#34;&#34;Close the figure window if it was created by the class.&#34;&#34;&#34;
-        if self._created_own_fig:
-            plt.close(self.fig)</code></pre>
-</details>
-<h3>Subclasses</h3>
-<ul class="hlist">
-<li><a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="#specrel.graphics.simpgraph.SingleAxisFigureCreator">SingleAxisFigureCreator</a></li>
-<li><a title="specrel.graphics.compgraph.MultiAnimator" href="compgraph.html#specrel.graphics.compgraph.MultiAnimator">MultiAnimator</a></li>
-</ul>
-<h3>Methods</h3>
-<dl>
-<dt id="specrel.graphics.simpgraph.FigureCreator.close"><code class="name flex">
-<span>def <span class="ident">close</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>Close the figure window if it was created by the class.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def close(self):
-    &#34;&#34;&#34;Close the figure window if it was created by the class.&#34;&#34;&#34;
-    if self._created_own_fig:
-        plt.close(self.fig)</code></pre>
-</details>
-</dd>
-</dl>
-</dd>
-<dt id="specrel.graphics.simpgraph.ObjectAnimator"><code class="flex name class">
+<dt id="specrel.graphics.simpanim.ObjectAnimator"><code class="flex name class">
 <span>class <span class="ident">ObjectAnimator</span></span>
 <span>(</span><span>fig=None, ax=None, grid=False, legend=False, legend_loc='upper right', ct_per_sec=1, instant_pause_time=1, fps=50, display_current_time=True, display_current_time_decimals=3, title=None, tag_height=0.025)</span>
 </code></dt>
@@ -1653,7 +1307,7 @@ def update(self, frame):
 <dt><strong><code>tag_height</code></strong> :&ensp;<code>float</code>, optional</dt>
 <dd>See attributes.</dd>
 <dt><strong><code>others</code></strong></dt>
-<dd>See <a title="specrel.graphics.simpgraph.STAnimator" href="#specrel.graphics.simpgraph.STAnimator"><code>STAnimator</code></a>.</dd>
+<dd>See <a title="specrel.graphics.simpanim.STAnimator" href="#specrel.graphics.simpanim.STAnimator"><code>STAnimator</code></a>.</dd>
 </dl>
 <h2 id="attributes">Attributes</h2>
 <dl>
@@ -1668,7 +1322,7 @@ actual objects of any tag text that's drawn.</dd>
 
     Args:
         tag_height (float, optional): See attributes.
-        others: See `specrel.graphics.simpgraph.STAnimator`.
+        others: See `specrel.graphics.simpanim.STAnimator`.
 
     Attributes:
         tag_height (float): The height (relative to the axis height) above the
@@ -1917,43 +1571,43 @@ actual objects of any tag text that's drawn.</dd>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
-<li><a title="specrel.graphics.simpgraph.STAnimator" href="#specrel.graphics.simpgraph.STAnimator">STAnimator</a></li>
-<li><a title="specrel.graphics.simpgraph.TimeAnimator" href="#specrel.graphics.simpgraph.TimeAnimator">TimeAnimator</a></li>
-<li><a title="specrel.graphics.simpgraph.BaseAnimator" href="#specrel.graphics.simpgraph.BaseAnimator">BaseAnimator</a></li>
-<li><a title="specrel.graphics.simpgraph.STPlotter" href="#specrel.graphics.simpgraph.STPlotter">STPlotter</a></li>
-<li><a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="#specrel.graphics.simpgraph.SingleAxisFigureCreator">SingleAxisFigureCreator</a></li>
-<li><a title="specrel.graphics.simpgraph.FigureCreator" href="#specrel.graphics.simpgraph.FigureCreator">FigureCreator</a></li>
+<li><a title="specrel.graphics.simpanim.STAnimator" href="#specrel.graphics.simpanim.STAnimator">STAnimator</a></li>
+<li><a title="specrel.graphics.simpanim.TimeAnimator" href="#specrel.graphics.simpanim.TimeAnimator">TimeAnimator</a></li>
+<li><a title="specrel.graphics.simpanim.BaseAnimator" href="#specrel.graphics.simpanim.BaseAnimator">BaseAnimator</a></li>
+<li><a title="specrel.graphics.basegraph.STPlotter" href="basegraph.html#specrel.graphics.basegraph.STPlotter">STPlotter</a></li>
+<li><a title="specrel.graphics.basegraph.SingleAxisFigureCreator" href="basegraph.html#specrel.graphics.basegraph.SingleAxisFigureCreator">SingleAxisFigureCreator</a></li>
+<li><a title="specrel.graphics.basegraph.FigureCreator" href="basegraph.html#specrel.graphics.basegraph.FigureCreator">FigureCreator</a></li>
 <li>abc.ABC</li>
 </ul>
 <h3>Inherited members</h3>
 <ul class="hlist">
-<li><code><b><a title="specrel.graphics.simpgraph.STAnimator" href="#specrel.graphics.simpgraph.STAnimator">STAnimator</a></b></code>:
+<li><code><b><a title="specrel.graphics.simpanim.STAnimator" href="#specrel.graphics.simpanim.STAnimator">STAnimator</a></b></code>:
 <ul class="hlist">
-<li><code><a title="specrel.graphics.simpgraph.STAnimator.animate" href="#specrel.graphics.simpgraph.BaseAnimator.animate">animate</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STAnimator.calc_frame_idx" href="#specrel.graphics.simpgraph.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STAnimator.calc_frame_val" href="#specrel.graphics.simpgraph.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STAnimator.clear" href="#specrel.graphics.simpgraph.BaseAnimator.clear">clear</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STAnimator.close" href="#specrel.graphics.simpgraph.FigureCreator.close">close</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STAnimator.draw_line_segment" href="#specrel.graphics.simpgraph.STPlotter.draw_line_segment">draw_line_segment</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STAnimator.draw_point" href="#specrel.graphics.simpgraph.STPlotter.draw_point">draw_point</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STAnimator.draw_shaded_polygon" href="#specrel.graphics.simpgraph.STPlotter.draw_shaded_polygon">draw_shaded_polygon</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STAnimator.get_frame_lim" href="#specrel.graphics.simpgraph.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STAnimator.init_func" href="#specrel.graphics.simpgraph.BaseAnimator.init_func">init_func</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STAnimator.resize" href="#specrel.graphics.simpgraph.STAnimator.resize">resize</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STAnimator.save" href="#specrel.graphics.simpgraph.BaseAnimator.save">save</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STAnimator.set_lims" href="#specrel.graphics.simpgraph.STPlotter.set_lims">set_lims</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STAnimator.show" href="#specrel.graphics.simpgraph.BaseAnimator.show">show</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STAnimator.update" href="#specrel.graphics.simpgraph.BaseAnimator.update">update</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.animate" href="#specrel.graphics.simpanim.BaseAnimator.animate">animate</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.calc_frame_idx" href="#specrel.graphics.simpanim.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.calc_frame_val" href="#specrel.graphics.simpanim.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.clear" href="#specrel.graphics.simpanim.BaseAnimator.clear">clear</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.close" href="basegraph.html#specrel.graphics.basegraph.FigureCreator.close">close</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.draw_line_segment" href="basegraph.html#specrel.graphics.basegraph.STPlotter.draw_line_segment">draw_line_segment</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.draw_point" href="basegraph.html#specrel.graphics.basegraph.STPlotter.draw_point">draw_point</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.draw_shaded_polygon" href="basegraph.html#specrel.graphics.basegraph.STPlotter.draw_shaded_polygon">draw_shaded_polygon</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.get_frame_lim" href="#specrel.graphics.simpanim.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.init_func" href="#specrel.graphics.simpanim.BaseAnimator.init_func">init_func</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.resize" href="#specrel.graphics.simpanim.STAnimator.resize">resize</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.save" href="#specrel.graphics.simpanim.BaseAnimator.save">save</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.set_lims" href="basegraph.html#specrel.graphics.basegraph.STPlotter.set_lims">set_lims</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.show" href="#specrel.graphics.simpanim.BaseAnimator.show">show</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.update" href="#specrel.graphics.simpanim.BaseAnimator.update">update</a></code></li>
 </ul>
 </li>
 </ul>
 </dd>
-<dt id="specrel.graphics.simpgraph.STAnimator"><code class="flex name class">
+<dt id="specrel.graphics.simpanim.STAnimator"><code class="flex name class">
 <span>class <span class="ident">STAnimator</span></span>
 <span>(</span><span>fig=None, ax=None, grid=False, legend=False, legend_loc='best', ct_per_sec=1, instant_pause_time=1, fps=50, display_current_time=True, display_current_time_decimals=3, title=None)</span>
 </code></dt>
 <dd>
-<section class="desc"><p>TimeAnimator that fulfills the <a title="specrel.graphics.simpgraph.STPlotter" href="#specrel.graphics.simpgraph.STPlotter"><code>STPlotter</code></a>
+<section class="desc"><p>TimeAnimator that fulfills the <a title="specrel.graphics.basegraph.STPlotter" href="basegraph.html#specrel.graphics.basegraph.STPlotter"><code>STPlotter</code></a>
 interface, and hence can be used by
 <a title="specrel.geom.LorentzTransformable.draw" href="../geom.html#specrel.geom.LorentzTransformable.draw"><code>LorentzTransformable.draw()</code></a>.</p>
 <h2 id="attributes">Attributes</h2>
@@ -1976,8 +1630,8 @@ that should be called to draw that frame.</dd>
 </dl></section>
 <details class="source">
 <summary>Source code</summary>
-<pre><code class="python">class STAnimator(TimeAnimator, STPlotter, ABC):
-    &#34;&#34;&#34;TimeAnimator that fulfills the `specrel.graphics.simpgraph.STPlotter`
+<pre><code class="python">class STAnimator(TimeAnimator, bgraph.STPlotter, ABC):
+    &#34;&#34;&#34;TimeAnimator that fulfills the `specrel.graphics.basegraph.STPlotter`
     interface, and hence can be used by
     `specrel.geom.LorentzTransformable.draw`.
 
@@ -2005,7 +1659,7 @@ that should be called to draw that frame.</dd>
         display_current_time_decimals=graphrc[&#39;anim.display_current_decimals&#39;],
         title=graphrc[&#39;title&#39;]):
 
-        STPlotter.__init__(self, fig, ax)
+        bgraph.STPlotter.__init__(self, fig, ax)
         TimeAnimator.__init__(self, self.fig, ct_per_sec, instant_pause_time,
             fps, display_current_time, display_current_time_decimals, title)
         self.grid = grid
@@ -2127,21 +1781,21 @@ that should be called to draw that frame.</dd>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
-<li><a title="specrel.graphics.simpgraph.TimeAnimator" href="#specrel.graphics.simpgraph.TimeAnimator">TimeAnimator</a></li>
-<li><a title="specrel.graphics.simpgraph.BaseAnimator" href="#specrel.graphics.simpgraph.BaseAnimator">BaseAnimator</a></li>
-<li><a title="specrel.graphics.simpgraph.STPlotter" href="#specrel.graphics.simpgraph.STPlotter">STPlotter</a></li>
-<li><a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="#specrel.graphics.simpgraph.SingleAxisFigureCreator">SingleAxisFigureCreator</a></li>
-<li><a title="specrel.graphics.simpgraph.FigureCreator" href="#specrel.graphics.simpgraph.FigureCreator">FigureCreator</a></li>
+<li><a title="specrel.graphics.simpanim.TimeAnimator" href="#specrel.graphics.simpanim.TimeAnimator">TimeAnimator</a></li>
+<li><a title="specrel.graphics.simpanim.BaseAnimator" href="#specrel.graphics.simpanim.BaseAnimator">BaseAnimator</a></li>
+<li><a title="specrel.graphics.basegraph.STPlotter" href="basegraph.html#specrel.graphics.basegraph.STPlotter">STPlotter</a></li>
+<li><a title="specrel.graphics.basegraph.SingleAxisFigureCreator" href="basegraph.html#specrel.graphics.basegraph.SingleAxisFigureCreator">SingleAxisFigureCreator</a></li>
+<li><a title="specrel.graphics.basegraph.FigureCreator" href="basegraph.html#specrel.graphics.basegraph.FigureCreator">FigureCreator</a></li>
 <li>abc.ABC</li>
 </ul>
 <h3>Subclasses</h3>
 <ul class="hlist">
-<li><a title="specrel.graphics.simpgraph.WorldlineAnimator" href="#specrel.graphics.simpgraph.WorldlineAnimator">WorldlineAnimator</a></li>
-<li><a title="specrel.graphics.simpgraph.ObjectAnimator" href="#specrel.graphics.simpgraph.ObjectAnimator">ObjectAnimator</a></li>
+<li><a title="specrel.graphics.simpanim.WorldlineAnimator" href="#specrel.graphics.simpanim.WorldlineAnimator">WorldlineAnimator</a></li>
+<li><a title="specrel.graphics.simpanim.ObjectAnimator" href="#specrel.graphics.simpanim.ObjectAnimator">ObjectAnimator</a></li>
 </ul>
 <h3>Methods</h3>
 <dl>
-<dt id="specrel.graphics.simpgraph.STAnimator.resize"><code class="name flex">
+<dt id="specrel.graphics.simpanim.STAnimator.resize"><code class="name flex">
 <span>def <span class="ident">resize</span></span>(<span>self, tlim)</span>
 </code></dt>
 <dd>
@@ -2184,439 +1838,39 @@ time value.</p>
 </dl>
 <h3>Inherited members</h3>
 <ul class="hlist">
-<li><code><b><a title="specrel.graphics.simpgraph.TimeAnimator" href="#specrel.graphics.simpgraph.TimeAnimator">TimeAnimator</a></b></code>:
+<li><code><b><a title="specrel.graphics.simpanim.TimeAnimator" href="#specrel.graphics.simpanim.TimeAnimator">TimeAnimator</a></b></code>:
 <ul class="hlist">
-<li><code><a title="specrel.graphics.simpgraph.TimeAnimator.clear" href="#specrel.graphics.simpgraph.BaseAnimator.clear">clear</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.TimeAnimator.clear" href="#specrel.graphics.simpanim.BaseAnimator.clear">clear</a></code></li>
 </ul>
 </li>
-<li><code><b><a title="specrel.graphics.simpgraph.TimeAnimator" href="#specrel.graphics.simpgraph.TimeAnimator">TimeAnimator</a></b></code>:
+<li><code><b><a title="specrel.graphics.simpanim.TimeAnimator" href="#specrel.graphics.simpanim.TimeAnimator">TimeAnimator</a></b></code>:
 <ul class="hlist">
-<li><code><a title="specrel.graphics.simpgraph.TimeAnimator.animate" href="#specrel.graphics.simpgraph.BaseAnimator.animate">animate</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.TimeAnimator.calc_frame_idx" href="#specrel.graphics.simpgraph.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.TimeAnimator.calc_frame_val" href="#specrel.graphics.simpgraph.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.TimeAnimator.get_frame_lim" href="#specrel.graphics.simpgraph.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.TimeAnimator.init_func" href="#specrel.graphics.simpgraph.BaseAnimator.init_func">init_func</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.TimeAnimator.save" href="#specrel.graphics.simpgraph.BaseAnimator.save">save</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.TimeAnimator.show" href="#specrel.graphics.simpgraph.BaseAnimator.show">show</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.TimeAnimator.update" href="#specrel.graphics.simpgraph.BaseAnimator.update">update</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.TimeAnimator.animate" href="#specrel.graphics.simpanim.BaseAnimator.animate">animate</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.TimeAnimator.calc_frame_idx" href="#specrel.graphics.simpanim.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.TimeAnimator.calc_frame_val" href="#specrel.graphics.simpanim.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.TimeAnimator.get_frame_lim" href="#specrel.graphics.simpanim.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.TimeAnimator.init_func" href="#specrel.graphics.simpanim.BaseAnimator.init_func">init_func</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.TimeAnimator.save" href="#specrel.graphics.simpanim.BaseAnimator.save">save</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.TimeAnimator.show" href="#specrel.graphics.simpanim.BaseAnimator.show">show</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.TimeAnimator.update" href="#specrel.graphics.simpanim.BaseAnimator.update">update</a></code></li>
 </ul>
 </li>
-<li><code><b><a title="specrel.graphics.simpgraph.STPlotter" href="#specrel.graphics.simpgraph.STPlotter">STPlotter</a></b></code>:
+<li><code><b><a title="specrel.graphics.basegraph.STPlotter" href="basegraph.html#specrel.graphics.basegraph.STPlotter">STPlotter</a></b></code>:
 <ul class="hlist">
-<li><code><a title="specrel.graphics.simpgraph.STPlotter.draw_line_segment" href="#specrel.graphics.simpgraph.STPlotter.draw_line_segment">draw_line_segment</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STPlotter.draw_point" href="#specrel.graphics.simpgraph.STPlotter.draw_point">draw_point</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STPlotter.draw_shaded_polygon" href="#specrel.graphics.simpgraph.STPlotter.draw_shaded_polygon">draw_shaded_polygon</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STPlotter.set_lims" href="#specrel.graphics.simpgraph.STPlotter.set_lims">set_lims</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.STPlotter.draw_line_segment" href="basegraph.html#specrel.graphics.basegraph.STPlotter.draw_line_segment">draw_line_segment</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.STPlotter.draw_point" href="basegraph.html#specrel.graphics.basegraph.STPlotter.draw_point">draw_point</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.STPlotter.draw_shaded_polygon" href="basegraph.html#specrel.graphics.basegraph.STPlotter.draw_shaded_polygon">draw_shaded_polygon</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.STPlotter.set_lims" href="basegraph.html#specrel.graphics.basegraph.STPlotter.set_lims">set_lims</a></code></li>
 </ul>
 </li>
-<li><code><b><a title="specrel.graphics.simpgraph.STPlotter" href="#specrel.graphics.simpgraph.STPlotter">STPlotter</a></b></code>:
+<li><code><b><a title="specrel.graphics.basegraph.STPlotter" href="basegraph.html#specrel.graphics.basegraph.STPlotter">STPlotter</a></b></code>:
 <ul class="hlist">
-<li><code><a title="specrel.graphics.simpgraph.STPlotter.close" href="#specrel.graphics.simpgraph.FigureCreator.close">close</a></code></li>
-</ul>
-</li>
-</ul>
-</dd>
-<dt id="specrel.graphics.simpgraph.STPlotter"><code class="flex name class">
-<span>class <span class="ident">STPlotter</span></span>
-<span>(</span><span>fig=None, ax=None)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>Base-level plotting interface.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">class STPlotter(SingleAxisFigureCreator, ABC):
-    &#34;&#34;&#34;Base-level plotting interface.&#34;&#34;&#34;
-
-    @abstractmethod
-    def draw_point(self, point, tag, **kwargs):
-        &#34;&#34;&#34;Draws a single spacetime point.
-
-        Args:
-            point (specrel.geom.STVector): Point to draw.
-            tag (str): Tag to draw with the point.
-            **kwargs: Matplotlib plot keyword arguments.
-
-        Raises:
-            NotImplementedError:
-                Abstract method.
-        &#34;&#34;&#34;
-        raise NotImplementedError
-
-    @abstractmethod
-    def draw_line_segment(self, point1, point2, tag, **kwargs):
-        &#34;&#34;&#34;Draws a line segment between two spacetime points.
-
-        Args:
-            point1 (specrel.geom.STVector): One line segment endpoint.
-            point2 (specrel.geom.STVector): Other line segment endpoint.
-            tag (str): Tag to draw with the point.
-            **kwargs: Matplotlib plot keyword arguments.
-
-        Raises:
-            NotImplementedError:
-                Abstract method.
-        &#34;&#34;&#34;
-        raise NotImplementedError
-
-    @abstractmethod
-    def draw_shaded_polygon(self, vertices, tag, **kwargs):
-        &#34;&#34;&#34;Draws a shaded polygon in spacetime.
-
-        Args:
-            vertices (list): List of `specrel.geom.STVector` objects defining
-                the polygon vertices.
-            tag (str): Tag to draw with the point.
-            **kwargs: Matplotlib plot keyword arguments.
-
-        Raises:
-            NotImplementedError:
-                Abstract method.
-        &#34;&#34;&#34;
-        raise NotImplementedError
-
-    @staticmethod
-    def _decouple_stvectors(stvectors):
-        &#34;&#34;&#34;Separate time and space values in a list of STVectors.&#34;&#34;&#34;
-        if stvectors:
-            return tuple(zip(*stvectors))
-        return tuple(), tuple()
-
-    @abstractmethod
-    def set_lims(self, tlim, xlim):
-        &#34;&#34;&#34;Sets the plotting limits for the plotter.
-
-        Args:
-            tlim (tuple): Minimum and maximum time values of the plot. `None`
-                values are filled automatically.
-            xlim (tuple): Minimum and maximum position values of the plot.
-                `None` values are filled automatically.
-
-        Raises:
-            NotImplementedError:
-                Abstract method.
-        &#34;&#34;&#34;
-        raise NotImplementedError
-
-    @abstractmethod
-    def show(self):
-        &#34;&#34;&#34;Shows the plot in interactive mode.
-
-        Raises:
-            NotImplementedError:
-                Abstract method.
-        &#34;&#34;&#34;
-        raise NotImplementedError
-
-    def save(self, filename, **kwargs):
-        &#34;&#34;&#34;Saves the plot to a file.
-
-        Args:
-            filename (str): Output file name.
-            **kwargs: Keyword arguments to `matplotlib.figure.Figure.savefig`.
-        &#34;&#34;&#34;
-        self.fig.savefig(filename, **kwargs)</code></pre>
-</details>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li><a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="#specrel.graphics.simpgraph.SingleAxisFigureCreator">SingleAxisFigureCreator</a></li>
-<li><a title="specrel.graphics.simpgraph.FigureCreator" href="#specrel.graphics.simpgraph.FigureCreator">FigureCreator</a></li>
-<li>abc.ABC</li>
-</ul>
-<h3>Subclasses</h3>
-<ul class="hlist">
-<li><a title="specrel.graphics.simpgraph.WorldlinePlotter" href="#specrel.graphics.simpgraph.WorldlinePlotter">WorldlinePlotter</a></li>
-<li><a title="specrel.graphics.simpgraph.STAnimator" href="#specrel.graphics.simpgraph.STAnimator">STAnimator</a></li>
-</ul>
-<h3>Methods</h3>
-<dl>
-<dt id="specrel.graphics.simpgraph.STPlotter.draw_line_segment"><code class="name flex">
-<span>def <span class="ident">draw_line_segment</span></span>(<span>self, point1, point2, tag, **kwargs)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>Draws a line segment between two spacetime points.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>point1</code></strong> :&ensp;<a title="specrel.geom.STVector" href="../geom.html#specrel.geom.STVector"><code>STVector</code></a></dt>
-<dd>One line segment endpoint.</dd>
-<dt><strong><code>point2</code></strong> :&ensp;<a title="specrel.geom.STVector" href="../geom.html#specrel.geom.STVector"><code>STVector</code></a></dt>
-<dd>Other line segment endpoint.</dd>
-<dt><strong><code>tag</code></strong> :&ensp;<code>str</code></dt>
-<dd>Tag to draw with the point.</dd>
-<dt><strong><code>**kwargs</code></strong></dt>
-<dd>Matplotlib plot keyword arguments.</dd>
-</dl>
-<h2 id="raises">Raises</h2>
-<dl>
-<dt><code>NotImplementedError</code>:</dt>
-<dd>Abstract method.</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">@abstractmethod
-def draw_line_segment(self, point1, point2, tag, **kwargs):
-    &#34;&#34;&#34;Draws a line segment between two spacetime points.
-
-    Args:
-        point1 (specrel.geom.STVector): One line segment endpoint.
-        point2 (specrel.geom.STVector): Other line segment endpoint.
-        tag (str): Tag to draw with the point.
-        **kwargs: Matplotlib plot keyword arguments.
-
-    Raises:
-        NotImplementedError:
-            Abstract method.
-    &#34;&#34;&#34;
-    raise NotImplementedError</code></pre>
-</details>
-</dd>
-<dt id="specrel.graphics.simpgraph.STPlotter.draw_point"><code class="name flex">
-<span>def <span class="ident">draw_point</span></span>(<span>self, point, tag, **kwargs)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>Draws a single spacetime point.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>point</code></strong> :&ensp;<a title="specrel.geom.STVector" href="../geom.html#specrel.geom.STVector"><code>STVector</code></a></dt>
-<dd>Point to draw.</dd>
-<dt><strong><code>tag</code></strong> :&ensp;<code>str</code></dt>
-<dd>Tag to draw with the point.</dd>
-<dt><strong><code>**kwargs</code></strong></dt>
-<dd>Matplotlib plot keyword arguments.</dd>
-</dl>
-<h2 id="raises">Raises</h2>
-<dl>
-<dt><code>NotImplementedError</code>:</dt>
-<dd>Abstract method.</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">@abstractmethod
-def draw_point(self, point, tag, **kwargs):
-    &#34;&#34;&#34;Draws a single spacetime point.
-
-    Args:
-        point (specrel.geom.STVector): Point to draw.
-        tag (str): Tag to draw with the point.
-        **kwargs: Matplotlib plot keyword arguments.
-
-    Raises:
-        NotImplementedError:
-            Abstract method.
-    &#34;&#34;&#34;
-    raise NotImplementedError</code></pre>
-</details>
-</dd>
-<dt id="specrel.graphics.simpgraph.STPlotter.draw_shaded_polygon"><code class="name flex">
-<span>def <span class="ident">draw_shaded_polygon</span></span>(<span>self, vertices, tag, **kwargs)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>Draws a shaded polygon in spacetime.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>vertices</code></strong> :&ensp;<code>list</code></dt>
-<dd>List of <a title="specrel.geom.STVector" href="../geom.html#specrel.geom.STVector"><code>STVector</code></a> objects defining
-the polygon vertices.</dd>
-<dt><strong><code>tag</code></strong> :&ensp;<code>str</code></dt>
-<dd>Tag to draw with the point.</dd>
-<dt><strong><code>**kwargs</code></strong></dt>
-<dd>Matplotlib plot keyword arguments.</dd>
-</dl>
-<h2 id="raises">Raises</h2>
-<dl>
-<dt><code>NotImplementedError</code>:</dt>
-<dd>Abstract method.</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">@abstractmethod
-def draw_shaded_polygon(self, vertices, tag, **kwargs):
-    &#34;&#34;&#34;Draws a shaded polygon in spacetime.
-
-    Args:
-        vertices (list): List of `specrel.geom.STVector` objects defining
-            the polygon vertices.
-        tag (str): Tag to draw with the point.
-        **kwargs: Matplotlib plot keyword arguments.
-
-    Raises:
-        NotImplementedError:
-            Abstract method.
-    &#34;&#34;&#34;
-    raise NotImplementedError</code></pre>
-</details>
-</dd>
-<dt id="specrel.graphics.simpgraph.STPlotter.save"><code class="name flex">
-<span>def <span class="ident">save</span></span>(<span>self, filename, **kwargs)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>Saves the plot to a file.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>filename</code></strong> :&ensp;<code>str</code></dt>
-<dd>Output file name.</dd>
-<dt><strong><code>**kwargs</code></strong></dt>
-<dd>Keyword arguments to <code>matplotlib.figure.Figure.savefig</code>.</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def save(self, filename, **kwargs):
-    &#34;&#34;&#34;Saves the plot to a file.
-
-    Args:
-        filename (str): Output file name.
-        **kwargs: Keyword arguments to `matplotlib.figure.Figure.savefig`.
-    &#34;&#34;&#34;
-    self.fig.savefig(filename, **kwargs)</code></pre>
-</details>
-</dd>
-<dt id="specrel.graphics.simpgraph.STPlotter.set_lims"><code class="name flex">
-<span>def <span class="ident">set_lims</span></span>(<span>self, tlim, xlim)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>Sets the plotting limits for the plotter.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>tlim</code></strong> :&ensp;<code>tuple</code></dt>
-<dd>Minimum and maximum time values of the plot. <code>None</code>
-values are filled automatically.</dd>
-<dt><strong><code>xlim</code></strong> :&ensp;<code>tuple</code></dt>
-<dd>Minimum and maximum position values of the plot.
-<code>None</code> values are filled automatically.</dd>
-</dl>
-<h2 id="raises">Raises</h2>
-<dl>
-<dt><code>NotImplementedError</code>:</dt>
-<dd>Abstract method.</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">@abstractmethod
-def set_lims(self, tlim, xlim):
-    &#34;&#34;&#34;Sets the plotting limits for the plotter.
-
-    Args:
-        tlim (tuple): Minimum and maximum time values of the plot. `None`
-            values are filled automatically.
-        xlim (tuple): Minimum and maximum position values of the plot.
-            `None` values are filled automatically.
-
-    Raises:
-        NotImplementedError:
-            Abstract method.
-    &#34;&#34;&#34;
-    raise NotImplementedError</code></pre>
-</details>
-</dd>
-<dt id="specrel.graphics.simpgraph.STPlotter.show"><code class="name flex">
-<span>def <span class="ident">show</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>Shows the plot in interactive mode.</p>
-<h2 id="raises">Raises</h2>
-<dl>
-<dt><code>NotImplementedError</code>:</dt>
-<dd>Abstract method.</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">@abstractmethod
-def show(self):
-    &#34;&#34;&#34;Shows the plot in interactive mode.
-
-    Raises:
-        NotImplementedError:
-            Abstract method.
-    &#34;&#34;&#34;
-    raise NotImplementedError</code></pre>
-</details>
-</dd>
-</dl>
-<h3>Inherited members</h3>
-<ul class="hlist">
-<li><code><b><a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="#specrel.graphics.simpgraph.SingleAxisFigureCreator">SingleAxisFigureCreator</a></b></code>:
-<ul class="hlist">
-<li><code><a title="specrel.graphics.simpgraph.SingleAxisFigureCreator.close" href="#specrel.graphics.simpgraph.FigureCreator.close">close</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.STPlotter.close" href="basegraph.html#specrel.graphics.basegraph.FigureCreator.close">close</a></code></li>
 </ul>
 </li>
 </ul>
 </dd>
-<dt id="specrel.graphics.simpgraph.SingleAxisFigureCreator"><code class="flex name class">
-<span>class <span class="ident">SingleAxisFigureCreator</span></span>
-<span>(</span><span>fig=None, ax=None)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>Something that creates and owns a figure with a single axis
-(i.e. not a subplot).</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.figure.Figure</code>, optional</dt>
-<dd>Figure window. If <code>None</code> and
-<code>ax</code> is not <code>None</code>, will be set to <code>ax.figure</code>. If both are <code>None</code>,
-a new figure will be created.</dd>
-<dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.axes.Axes</code>, optional</dt>
-<dd>Axes to draw on. If <code>None</code> and
-<code>fig</code> is not <code>None</code>, will be set to <code>fig.gca()</code>. If both are <code>None</code>,
-a new set of axes will be created.</dd>
-</dl>
-<h2 id="attributes">Attributes</h2>
-<dl>
-<dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.axes.Axes</code></dt>
-<dd>Axes to draw on.</dd>
-<dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.figure.Figure</code></dt>
-<dd>Figure window.</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">class SingleAxisFigureCreator(FigureCreator):
-    &#34;&#34;&#34;Something that creates and owns a figure with a single axis
-    (i.e. not a subplot).
-
-    Args:
-        fig (matplotlib.figure.Figure, optional): Figure window. If `None` and
-            `ax` is not `None`, will be set to `ax.figure`. If both are `None`,
-            a new figure will be created.
-        ax (matplotlib.axes.Axes, optional): Axes to draw on. If `None` and
-            `fig` is not `None`, will be set to `fig.gca()`. If both are `None`,
-            a new set of axes will be created.
-
-    Attributes:
-        ax (matplotlib.axes.Axes): Axes to draw on.
-        fig (matplotlib.figure.Figure): Figure window.
-    &#34;&#34;&#34;
-    def __init__(self, fig=graphrc[&#39;fig&#39;], ax=graphrc[&#39;ax&#39;]):
-        super().__init__()
-        if fig is None and ax is None:
-            self.fig, self.ax = plt.subplots()
-            self._created_own_fig = True
-        elif fig is not None and ax is None:
-            self.fig = fig
-            self.ax = fig.gca()
-        elif fig is None and ax is not None:
-            self.fig = ax.figure
-            self.ax = ax
-        else:
-            self.fig = fig
-            self.ax = ax</code></pre>
-</details>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li><a title="specrel.graphics.simpgraph.FigureCreator" href="#specrel.graphics.simpgraph.FigureCreator">FigureCreator</a></li>
-</ul>
-<h3>Subclasses</h3>
-<ul class="hlist">
-<li><a title="specrel.graphics.simpgraph.STPlotter" href="#specrel.graphics.simpgraph.STPlotter">STPlotter</a></li>
-<li><a title="specrel.graphics.simpgraph.TransformAnimator" href="#specrel.graphics.simpgraph.TransformAnimator">TransformAnimator</a></li>
-</ul>
-<h3>Inherited members</h3>
-<ul class="hlist">
-<li><code><b><a title="specrel.graphics.simpgraph.FigureCreator" href="#specrel.graphics.simpgraph.FigureCreator">FigureCreator</a></b></code>:
-<ul class="hlist">
-<li><code><a title="specrel.graphics.simpgraph.FigureCreator.close" href="#specrel.graphics.simpgraph.FigureCreator.close">close</a></code></li>
-</ul>
-</li>
-</ul>
-</dd>
-<dt id="specrel.graphics.simpgraph.TimeAnimator"><code class="flex name class">
+<dt id="specrel.graphics.simpanim.TimeAnimator"><code class="flex name class">
 <span>class <span class="ident">TimeAnimator</span></span>
 <span>(</span><span>fig=None, ct_per_sec=1, instant_pause_time=1, fps=50, display_current_time=True, display_current_time_decimals=3, title=None)</span>
 </code></dt>
@@ -2633,13 +1887,13 @@ for every second of real time.</dd>
 for instantaneous events (appear in a single instant of time).</dd>
 <dt><strong><code>display_current_time</code></strong> :&ensp;<code>bool</code>, optional</dt>
 <dd>Same as <code>display_current</code> in
-<a title="specrel.graphics.simpgraph.BaseAnimator" href="#specrel.graphics.simpgraph.BaseAnimator"><code>BaseAnimator</code></a>.</dd>
+<a title="specrel.graphics.simpanim.BaseAnimator" href="#specrel.graphics.simpanim.BaseAnimator"><code>BaseAnimator</code></a>.</dd>
 <dt><strong><code>display_current_time_decimals</code></strong> :&ensp;<code>int</code>, optional</dt>
 <dd>Same as
 <code>display_current_decimals</code> in
-<a title="specrel.graphics.simpgraph.BaseAnimator" href="#specrel.graphics.simpgraph.BaseAnimator"><code>BaseAnimator</code></a>.</dd>
+<a title="specrel.graphics.simpanim.BaseAnimator" href="#specrel.graphics.simpanim.BaseAnimator"><code>BaseAnimator</code></a>.</dd>
 <dt><strong><code>others</code></strong></dt>
-<dd>See <a title="specrel.graphics.simpgraph.BaseAnimator" href="#specrel.graphics.simpgraph.BaseAnimator"><code>BaseAnimator</code></a>.</dd>
+<dd>See <a title="specrel.graphics.simpanim.BaseAnimator" href="#specrel.graphics.simpanim.BaseAnimator"><code>BaseAnimator</code></a>.</dd>
 </dl></section>
 <details class="source">
 <summary>Source code</summary>
@@ -2653,11 +1907,11 @@ for instantaneous events (appear in a single instant of time).</dd>
         instant_pause_time (float, optional): Amount of pause time in seconds
             for instantaneous events (appear in a single instant of time).
         display_current_time (bool, optional): Same as `display_current` in
-            `specrel.graphics.simpgraph.BaseAnimator`.
+            `specrel.graphics.simpanim.BaseAnimator`.
         display_current_time_decimals (int, optional): Same as
             `display_current_decimals` in
-            `specrel.graphics.simpgraph.BaseAnimator`.
-        others: See `specrel.graphics.simpgraph.BaseAnimator`.
+            `specrel.graphics.simpanim.BaseAnimator`.
+        others: See `specrel.graphics.simpanim.BaseAnimator`.
     &#34;&#34;&#34;
     def __init__(self,
         fig=graphrc[&#39;fig&#39;],
@@ -2676,34 +1930,34 @@ for instantaneous events (appear in a single instant of time).</dd>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
-<li><a title="specrel.graphics.simpgraph.BaseAnimator" href="#specrel.graphics.simpgraph.BaseAnimator">BaseAnimator</a></li>
+<li><a title="specrel.graphics.simpanim.BaseAnimator" href="#specrel.graphics.simpanim.BaseAnimator">BaseAnimator</a></li>
 <li>abc.ABC</li>
 </ul>
 <h3>Subclasses</h3>
 <ul class="hlist">
-<li><a title="specrel.graphics.simpgraph.STAnimator" href="#specrel.graphics.simpgraph.STAnimator">STAnimator</a></li>
-<li><a title="specrel.graphics.compgraph.MultiTimeAnimator" href="compgraph.html#specrel.graphics.compgraph.MultiTimeAnimator">MultiTimeAnimator</a></li>
+<li><a title="specrel.graphics.simpanim.STAnimator" href="#specrel.graphics.simpanim.STAnimator">STAnimator</a></li>
+<li><a title="specrel.graphics.companim.MultiTimeAnimator" href="companim.html#specrel.graphics.companim.MultiTimeAnimator">MultiTimeAnimator</a></li>
 </ul>
 <h3>Inherited members</h3>
 <ul class="hlist">
-<li><code><b><a title="specrel.graphics.simpgraph.BaseAnimator" href="#specrel.graphics.simpgraph.BaseAnimator">BaseAnimator</a></b></code>:
+<li><code><b><a title="specrel.graphics.simpanim.BaseAnimator" href="#specrel.graphics.simpanim.BaseAnimator">BaseAnimator</a></b></code>:
 <ul class="hlist">
-<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.animate" href="#specrel.graphics.simpgraph.BaseAnimator.animate">animate</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.calc_frame_idx" href="#specrel.graphics.simpgraph.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.calc_frame_val" href="#specrel.graphics.simpgraph.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.clear" href="#specrel.graphics.simpgraph.BaseAnimator.clear">clear</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.get_frame_lim" href="#specrel.graphics.simpgraph.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.init_func" href="#specrel.graphics.simpgraph.BaseAnimator.init_func">init_func</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.save" href="#specrel.graphics.simpgraph.BaseAnimator.save">save</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.show" href="#specrel.graphics.simpgraph.BaseAnimator.show">show</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.update" href="#specrel.graphics.simpgraph.BaseAnimator.update">update</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.BaseAnimator.animate" href="#specrel.graphics.simpanim.BaseAnimator.animate">animate</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.BaseAnimator.calc_frame_idx" href="#specrel.graphics.simpanim.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.BaseAnimator.calc_frame_val" href="#specrel.graphics.simpanim.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.BaseAnimator.clear" href="#specrel.graphics.simpanim.BaseAnimator.clear">clear</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.BaseAnimator.get_frame_lim" href="#specrel.graphics.simpanim.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.BaseAnimator.init_func" href="#specrel.graphics.simpanim.BaseAnimator.init_func">init_func</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.BaseAnimator.save" href="#specrel.graphics.simpanim.BaseAnimator.save">save</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.BaseAnimator.show" href="#specrel.graphics.simpanim.BaseAnimator.show">show</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.BaseAnimator.update" href="#specrel.graphics.simpanim.BaseAnimator.update">update</a></code></li>
 </ul>
 </li>
 </ul>
 </dd>
-<dt id="specrel.graphics.simpgraph.TransformAnimator"><code class="flex name class">
+<dt id="specrel.graphics.simpanim.TransformAnimator"><code class="flex name class">
 <span>class <span class="ident">TransformAnimator</span></span>
-<span>(</span><span>lorentz_transformable, velocity, origin=(0, 0), stanimator=<class 'specrel.graphics.simpgraph.WorldlineAnimator'>, stanimator_options={}, tlim=(None, None), xlim=(None, None), time=0, fig=None, ax=None, transition_duration=2, fps=50, display_current_velocity=True, display_current_velocity_decimals=3, title=None)</span>
+<span>(</span><span>lorentz_transformable, velocity, origin=(0, 0), stanimator=<class 'specrel.graphics.simpanim.WorldlineAnimator'>, stanimator_options={}, tlim=(None, None), xlim=(None, None), time=0, fig=None, ax=None, transition_duration=2, fps=50, display_current_velocity=True, display_current_velocity_decimals=3, title=None)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Animator where the frame variable is velocity, i.e. animates a spacetime
@@ -2719,7 +1973,7 @@ animate.</dd>
 <dd>See attributes.</dd>
 <dt><strong><code>stanimator</code></strong> :&ensp;<code>type</code>, optional</dt>
 <dd>initializer of the
-<a title="specrel.graphics.simpgraph.STAnimator" href="#specrel.graphics.simpgraph.STAnimator"><code>STAnimator</code></a> to take drawing
+<a title="specrel.graphics.simpanim.STAnimator" href="#specrel.graphics.simpanim.STAnimator"><code>STAnimator</code></a> to take drawing
 functionality from.</dd>
 <dt><strong><code>stanimator_options</code></strong> :&ensp;<code>dict</code>, optional</dt>
 <dd>
@@ -2743,20 +1997,20 @@ arguments for <code>stanimator</code>, <em>except</em> for the following:</p>
 transformation animation.</dd>
 <dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.figure.Figure</code>, optional</dt>
 <dd>See
-<a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="#specrel.graphics.simpgraph.SingleAxisFigureCreator"><code>SingleAxisFigureCreator</code></a>.</dd>
+<a title="specrel.graphics.basegraph.SingleAxisFigureCreator" href="basegraph.html#specrel.graphics.basegraph.SingleAxisFigureCreator"><code>SingleAxisFigureCreator</code></a>.</dd>
 <dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.axes.Axes</code>, optional</dt>
 <dd>See
-<a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="#specrel.graphics.simpgraph.SingleAxisFigureCreator"><code>SingleAxisFigureCreator</code></a>.</dd>
+<a title="specrel.graphics.basegraph.SingleAxisFigureCreator" href="basegraph.html#specrel.graphics.basegraph.SingleAxisFigureCreator"><code>SingleAxisFigureCreator</code></a>.</dd>
 <dt>transition_duration (float, optional):</dt>
 <dt><strong><code>fps</code></strong> :&ensp;<code>float</code>, optional</dt>
 <dd>Animation frames per second.</dd>
 <dt><strong><code>display_current_velocity</code></strong> :&ensp;<code>bool</code>, optional</dt>
 <dd>Same as <code>display_current</code> in
-<a title="specrel.graphics.simpgraph.BaseAnimator" href="#specrel.graphics.simpgraph.BaseAnimator"><code>BaseAnimator</code></a>.</dd>
+<a title="specrel.graphics.simpanim.BaseAnimator" href="#specrel.graphics.simpanim.BaseAnimator"><code>BaseAnimator</code></a>.</dd>
 <dt><strong><code>display_current_velocity_decimals</code></strong> :&ensp;<code>int</code>, optional</dt>
 <dd>Same as
 <code>display_current_decimals</code> in
-<a title="specrel.graphics.simpgraph.BaseAnimator" href="#specrel.graphics.simpgraph.BaseAnimator"><code>BaseAnimator</code></a>.</dd>
+<a title="specrel.graphics.simpanim.BaseAnimator" href="#specrel.graphics.simpanim.BaseAnimator"><code>BaseAnimator</code></a>.</dd>
 <dt><strong><code>title</code></strong> :&ensp;<code>str</code>, optional</dt>
 <dd>Animation title.</dd>
 </dl>
@@ -2776,7 +2030,7 @@ transformation animation.</dd>
 </dl></section>
 <details class="source">
 <summary>Source code</summary>
-<pre><code class="python">class TransformAnimator(BaseAnimator, SingleAxisFigureCreator):
+<pre><code class="python">class TransformAnimator(BaseAnimator, bgraph.SingleAxisFigureCreator):
     &#34;&#34;&#34;Animator where the frame variable is velocity, i.e. animates a spacetime
     transformation as the object is accelerated instantaneously.
 
@@ -2786,7 +2040,7 @@ transformation animation.</dd>
         velocity (float): Relative velocity of the frame to transform to.
         origin (tuple, optional): See attributes.
         stanimator (type, optional): initializer of the
-            `specrel.graphics.simpgraph.STAnimator` to take drawing
+            `specrel.graphics.simpanim.STAnimator` to take drawing
             functionality from.
         stanimator_options (dict, optional): Dictionary of certain keyword
             arguments for `stanimator`, *except* for the following:
@@ -2803,16 +2057,16 @@ transformation animation.</dd>
         time (float, optional): Frame-local time value to fix during
             transformation animation.
         fig (matplotlib.figure.Figure, optional): See
-            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+            `specrel.graphics.basegraph.SingleAxisFigureCreator`.
         ax (matplotlib.axes.Axes, optional): See
-            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+            `specrel.graphics.basegraph.SingleAxisFigureCreator`.
         transition_duration (float, optional):
         fps (float, optional): Animation frames per second.
         display_current_velocity (bool, optional): Same as `display_current` in
-            `specrel.graphics.simpgraph.BaseAnimator`.
+            `specrel.graphics.simpanim.BaseAnimator`.
         display_current_velocity_decimals (int, optional): Same as
             `display_current_decimals` in
-            `specrel.graphics.simpgraph.BaseAnimator`.
+            `specrel.graphics.simpanim.BaseAnimator`.
         title (str, optional): Animation title.
 
     Attributes:
@@ -2842,7 +2096,7 @@ transformation animation.</dd>
             graphrc[&#39;anim.display_current_decimals&#39;],
         title=graphrc[&#39;title&#39;]):
 
-        SingleAxisFigureCreator.__init__(self, fig, ax)
+        bgraph.SingleAxisFigureCreator.__init__(self, fig, ax)
         nsteps = round(transition_duration * fps)
         BaseAnimator.__init__(self, self.fig, velocity / nsteps, fps,
             display_current_velocity, display_current_velocity_decimals, title,
@@ -2903,34 +2157,34 @@ transformation animation.</dd>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
-<li><a title="specrel.graphics.simpgraph.BaseAnimator" href="#specrel.graphics.simpgraph.BaseAnimator">BaseAnimator</a></li>
+<li><a title="specrel.graphics.simpanim.BaseAnimator" href="#specrel.graphics.simpanim.BaseAnimator">BaseAnimator</a></li>
 <li>abc.ABC</li>
-<li><a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="#specrel.graphics.simpgraph.SingleAxisFigureCreator">SingleAxisFigureCreator</a></li>
-<li><a title="specrel.graphics.simpgraph.FigureCreator" href="#specrel.graphics.simpgraph.FigureCreator">FigureCreator</a></li>
+<li><a title="specrel.graphics.basegraph.SingleAxisFigureCreator" href="basegraph.html#specrel.graphics.basegraph.SingleAxisFigureCreator">SingleAxisFigureCreator</a></li>
+<li><a title="specrel.graphics.basegraph.FigureCreator" href="basegraph.html#specrel.graphics.basegraph.FigureCreator">FigureCreator</a></li>
 </ul>
 <h3>Inherited members</h3>
 <ul class="hlist">
-<li><code><b><a title="specrel.graphics.simpgraph.BaseAnimator" href="#specrel.graphics.simpgraph.BaseAnimator">BaseAnimator</a></b></code>:
+<li><code><b><a title="specrel.graphics.simpanim.BaseAnimator" href="#specrel.graphics.simpanim.BaseAnimator">BaseAnimator</a></b></code>:
 <ul class="hlist">
-<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.animate" href="#specrel.graphics.simpgraph.BaseAnimator.animate">animate</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.calc_frame_idx" href="#specrel.graphics.simpgraph.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.calc_frame_val" href="#specrel.graphics.simpgraph.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.clear" href="#specrel.graphics.simpgraph.BaseAnimator.clear">clear</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.get_frame_lim" href="#specrel.graphics.simpgraph.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.init_func" href="#specrel.graphics.simpgraph.BaseAnimator.init_func">init_func</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.save" href="#specrel.graphics.simpgraph.BaseAnimator.save">save</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.show" href="#specrel.graphics.simpgraph.BaseAnimator.show">show</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.update" href="#specrel.graphics.simpgraph.BaseAnimator.update">update</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.BaseAnimator.animate" href="#specrel.graphics.simpanim.BaseAnimator.animate">animate</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.BaseAnimator.calc_frame_idx" href="#specrel.graphics.simpanim.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.BaseAnimator.calc_frame_val" href="#specrel.graphics.simpanim.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.BaseAnimator.clear" href="#specrel.graphics.simpanim.BaseAnimator.clear">clear</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.BaseAnimator.get_frame_lim" href="#specrel.graphics.simpanim.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.BaseAnimator.init_func" href="#specrel.graphics.simpanim.BaseAnimator.init_func">init_func</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.BaseAnimator.save" href="#specrel.graphics.simpanim.BaseAnimator.save">save</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.BaseAnimator.show" href="#specrel.graphics.simpanim.BaseAnimator.show">show</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.BaseAnimator.update" href="#specrel.graphics.simpanim.BaseAnimator.update">update</a></code></li>
 </ul>
 </li>
-<li><code><b><a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="#specrel.graphics.simpgraph.SingleAxisFigureCreator">SingleAxisFigureCreator</a></b></code>:
+<li><code><b><a title="specrel.graphics.basegraph.SingleAxisFigureCreator" href="basegraph.html#specrel.graphics.basegraph.SingleAxisFigureCreator">SingleAxisFigureCreator</a></b></code>:
 <ul class="hlist">
-<li><code><a title="specrel.graphics.simpgraph.SingleAxisFigureCreator.close" href="#specrel.graphics.simpgraph.FigureCreator.close">close</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.SingleAxisFigureCreator.close" href="basegraph.html#specrel.graphics.basegraph.FigureCreator.close">close</a></code></li>
 </ul>
 </li>
 </ul>
 </dd>
-<dt id="specrel.graphics.simpgraph.WorldlineAnimator"><code class="flex name class">
+<dt id="specrel.graphics.simpanim.WorldlineAnimator"><code class="flex name class">
 <span>class <span class="ident">WorldlineAnimator</span></span>
 <span>(</span><span>fig=None, ax=None, grid=False, legend=False, legend_loc='best', ct_per_sec=1, instant_pause_time=1, fps=50, display_current_time=True, display_current_time_decimals=3, title=None, lim_padding=0.1, equal_lim_expand=1, current_time_style='--', current_time_color='red')</span>
 </code></dt>
@@ -2945,12 +2199,12 @@ indicate the current time.</p>
 <dd>See attributes.</dd>
 <dt><strong><code>lim_padding</code></strong> :&ensp;<code>float</code>, optional</dt>
 <dd>See
-<a title="specrel.graphics.simpgraph.WorldlinePlotter" href="#specrel.graphics.simpgraph.WorldlinePlotter"><code>WorldlinePlotter</code></a>.</dd>
+<a title="specrel.graphics.basegraph.WorldlinePlotter" href="basegraph.html#specrel.graphics.basegraph.WorldlinePlotter"><code>WorldlinePlotter</code></a>.</dd>
 <dt><strong><code>equal_lim_expand</code></strong> :&ensp;<code>float</code>, optional</dt>
 <dd>See
-<a title="specrel.graphics.simpgraph.WorldlinePlotter" href="#specrel.graphics.simpgraph.WorldlinePlotter"><code>WorldlinePlotter</code></a>.</dd>
+<a title="specrel.graphics.basegraph.WorldlinePlotter" href="basegraph.html#specrel.graphics.basegraph.WorldlinePlotter"><code>WorldlinePlotter</code></a>.</dd>
 <dt><strong><code>others</code></strong></dt>
-<dd>See <a title="specrel.graphics.simpgraph.STAnimator" href="#specrel.graphics.simpgraph.STAnimator"><code>STAnimator</code></a>.</dd>
+<dd>See <a title="specrel.graphics.simpanim.STAnimator" href="#specrel.graphics.simpanim.STAnimator"><code>STAnimator</code></a>.</dd>
 </dl>
 <h2 id="attributes">Attributes</h2>
 <dl>
@@ -2971,10 +2225,10 @@ time.</dd>
         current_time_style (linestyle, optional): See attributes.
         current_time_color (color, optional): See attributes.
         lim_padding (float, optional): See
-            `specrel.graphics.simpgraph.WorldlinePlotter`.
+            `specrel.graphics.basegraph.WorldlinePlotter`.
         equal_lim_expand (float, optional): See
-            `specrel.graphics.simpgraph.WorldlinePlotter`.
-        others: See `specrel.graphics.simpgraph.STAnimator`.
+            `specrel.graphics.basegraph.WorldlinePlotter`.
+        others: See `specrel.graphics.simpanim.STAnimator`.
 
     Attributes:
         current_time_color (TYPE): Matplotlib color for the line of current
@@ -3011,7 +2265,7 @@ time.</dd>
             display_current_time_decimals=display_current_time_decimals,
             title=title)
         # Form a WorldlinePlotter to meet the animator&#39;s needs
-        self._worldline_plotter = WorldlinePlotter(self.fig, self.ax,
+        self._worldline_plotter = bgraph.WorldlinePlotter(self.fig, self.ax,
             self.grid, self.legend, self.legend_loc, lim_padding,
             equal_lim_expand)
         self.current_time_style = current_time_style
@@ -3082,335 +2336,33 @@ time.</dd>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
-<li><a title="specrel.graphics.simpgraph.STAnimator" href="#specrel.graphics.simpgraph.STAnimator">STAnimator</a></li>
-<li><a title="specrel.graphics.simpgraph.TimeAnimator" href="#specrel.graphics.simpgraph.TimeAnimator">TimeAnimator</a></li>
-<li><a title="specrel.graphics.simpgraph.BaseAnimator" href="#specrel.graphics.simpgraph.BaseAnimator">BaseAnimator</a></li>
-<li><a title="specrel.graphics.simpgraph.STPlotter" href="#specrel.graphics.simpgraph.STPlotter">STPlotter</a></li>
-<li><a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="#specrel.graphics.simpgraph.SingleAxisFigureCreator">SingleAxisFigureCreator</a></li>
-<li><a title="specrel.graphics.simpgraph.FigureCreator" href="#specrel.graphics.simpgraph.FigureCreator">FigureCreator</a></li>
+<li><a title="specrel.graphics.simpanim.STAnimator" href="#specrel.graphics.simpanim.STAnimator">STAnimator</a></li>
+<li><a title="specrel.graphics.simpanim.TimeAnimator" href="#specrel.graphics.simpanim.TimeAnimator">TimeAnimator</a></li>
+<li><a title="specrel.graphics.simpanim.BaseAnimator" href="#specrel.graphics.simpanim.BaseAnimator">BaseAnimator</a></li>
+<li><a title="specrel.graphics.basegraph.STPlotter" href="basegraph.html#specrel.graphics.basegraph.STPlotter">STPlotter</a></li>
+<li><a title="specrel.graphics.basegraph.SingleAxisFigureCreator" href="basegraph.html#specrel.graphics.basegraph.SingleAxisFigureCreator">SingleAxisFigureCreator</a></li>
+<li><a title="specrel.graphics.basegraph.FigureCreator" href="basegraph.html#specrel.graphics.basegraph.FigureCreator">FigureCreator</a></li>
 <li>abc.ABC</li>
 </ul>
 <h3>Inherited members</h3>
 <ul class="hlist">
-<li><code><b><a title="specrel.graphics.simpgraph.STAnimator" href="#specrel.graphics.simpgraph.STAnimator">STAnimator</a></b></code>:
+<li><code><b><a title="specrel.graphics.simpanim.STAnimator" href="#specrel.graphics.simpanim.STAnimator">STAnimator</a></b></code>:
 <ul class="hlist">
-<li><code><a title="specrel.graphics.simpgraph.STAnimator.animate" href="#specrel.graphics.simpgraph.BaseAnimator.animate">animate</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STAnimator.calc_frame_idx" href="#specrel.graphics.simpgraph.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STAnimator.calc_frame_val" href="#specrel.graphics.simpgraph.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STAnimator.clear" href="#specrel.graphics.simpgraph.BaseAnimator.clear">clear</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STAnimator.close" href="#specrel.graphics.simpgraph.FigureCreator.close">close</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STAnimator.draw_line_segment" href="#specrel.graphics.simpgraph.STPlotter.draw_line_segment">draw_line_segment</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STAnimator.draw_point" href="#specrel.graphics.simpgraph.STPlotter.draw_point">draw_point</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STAnimator.draw_shaded_polygon" href="#specrel.graphics.simpgraph.STPlotter.draw_shaded_polygon">draw_shaded_polygon</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STAnimator.get_frame_lim" href="#specrel.graphics.simpgraph.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STAnimator.init_func" href="#specrel.graphics.simpgraph.BaseAnimator.init_func">init_func</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STAnimator.resize" href="#specrel.graphics.simpgraph.STAnimator.resize">resize</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STAnimator.save" href="#specrel.graphics.simpgraph.BaseAnimator.save">save</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STAnimator.set_lims" href="#specrel.graphics.simpgraph.STPlotter.set_lims">set_lims</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STAnimator.show" href="#specrel.graphics.simpgraph.BaseAnimator.show">show</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STAnimator.update" href="#specrel.graphics.simpgraph.BaseAnimator.update">update</a></code></li>
-</ul>
-</li>
-</ul>
-</dd>
-<dt id="specrel.graphics.simpgraph.WorldlinePlotter"><code class="flex name class">
-<span>class <span class="ident">WorldlinePlotter</span></span>
-<span>(</span><span>fig=None, ax=None, grid=False, legend=False, legend_loc='best', lim_padding=0.1, equal_lim_expand=1)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>Plotter for creating static spacetime diagrams.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.figure.Figure</code>, optional</dt>
-<dd>See
-<a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="#specrel.graphics.simpgraph.SingleAxisFigureCreator"><code>SingleAxisFigureCreator</code></a>.</dd>
-<dt><strong><code>ax</code></strong> :&ensp;<code>matplotlib.axes.Axes</code>, optional</dt>
-<dd>See
-<a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="#specrel.graphics.simpgraph.SingleAxisFigureCreator"><code>SingleAxisFigureCreator</code></a>.</dd>
-<dt><strong><code>others</code></strong></dt>
-<dd>See attributes.</dd>
-</dl>
-<h2 id="attributes">Attributes</h2>
-<dl>
-<dt><strong><code>equal_lim_expand</code></strong> :&ensp;<code>float</code></dt>
-<dd>If the limits on an axis are specified to be
-equal, they will be expanded symmetrically until the axis size is
-this value.</dd>
-<dt><strong><code>grid</code></strong> :&ensp;<code>bool</code></dt>
-<dd>Flag for whether or not to plot background grid lines.</dd>
-<dt><strong><code>legend</code></strong> :&ensp;<code>bool</code></dt>
-<dd>Flag for whether or not to plot a legend.</dd>
-<dt><strong><code>legend_loc</code></strong> :&ensp;<code>str</code></dt>
-<dd>Legend location according to the Matplotlib
-<code>loc</code> parameter. If <code>legend</code> is <code>False</code>, this attribute is ignored.</dd>
-<dt><strong><code>lim_padding</code></strong> :&ensp;<code>float</code></dt>
-<dd>Extra padding on spacetime diagram axis limits,
-relative to the axis sizes.</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">class WorldlinePlotter(STPlotter):
-    &#34;&#34;&#34;Plotter for creating static spacetime diagrams.
-
-    Args:
-        fig (matplotlib.figure.Figure, optional): See
-            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
-        ax (matplotlib.axes.Axes, optional): See
-            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
-        others: See attributes.
-
-    Attributes:
-        equal_lim_expand (float): If the limits on an axis are specified to be
-            equal, they will be expanded symmetrically until the axis size is
-            this value.
-        grid (bool): Flag for whether or not to plot background grid lines.
-        legend (bool): Flag for whether or not to plot a legend.
-        legend_loc (str): Legend location according to the Matplotlib
-            `loc` parameter. If `legend` is `False`, this attribute is ignored.
-        lim_padding (float): Extra padding on spacetime diagram axis limits,
-            relative to the axis sizes.
-    &#34;&#34;&#34;
-
-    def __init__(self,
-        fig=graphrc[&#39;fig&#39;],
-        ax=graphrc[&#39;ax&#39;],
-        grid=graphrc[&#39;grid&#39;],
-        legend=graphrc[&#39;legend&#39;],
-        legend_loc=graphrc[&#39;legend_loc&#39;],
-        lim_padding=graphrc[&#39;worldline.lim_padding&#39;],
-        equal_lim_expand=graphrc[&#39;worldline.equal_lim_expand&#39;]):
-
-        super().__init__(fig, ax)
-        self.grid = grid
-        self.legend = legend
-        self.legend_loc = legend_loc
-        self.lim_padding = lim_padding
-        self.equal_lim_expand = equal_lim_expand
-
-    def _prepare_ax(self):
-        &#34;&#34;&#34;Do any axis preparation before drawing stuff.&#34;&#34;&#34;
-        self.ax.grid(self.grid)
-        # Ensure grid lines are behind other objects
-        self.ax.set_axisbelow(True)
-
-    def _set_legend(self):
-        &#34;&#34;&#34;Turn on the legend, or do nothing, depending on self.legend&#34;&#34;&#34;
-        if self.legend:
-            self.ax.legend(loc=self.legend_loc)
-
-    def draw_point(self, point, tag=None, **kwargs):
-        &#34;&#34;&#34;See `specrel.graphics.simpgraph.STPlotter.draw_point`.
-
-        Kwargs:
-            linestyle: Forced to be `&#39;None&#39;`
-            marker: Default is `&#39;.&#39;`.
-        &#34;&#34;&#34;
-        self._prepare_ax()
-        marker = kwargs.pop(&#39;marker&#39;, &#39;.&#39;)
-        # Force linestyle to be none for a point
-        kwargs[&#39;linestyle&#39;] = &#39;None&#39;
-        self.ax.plot(point[1], point[0], marker=marker, **kwargs)
-        if tag:
-            self.ax.text(point[1], point[0], tag)
-        self._set_legend()
-
-    def draw_line_segment(self, point1, point2, tag=None, **kwargs):
-        &#34;&#34;&#34;See `specrel.graphics.simpgraph.STPlotter.draw_line_segment`.
-
-        Kwargs:
-            marker: Forced to be `None`.
-        &#34;&#34;&#34;
-        self._prepare_ax()
-        # Ignore the &#34;marker&#34; parameter
-        kwargs.pop(&#39;marker&#39;, None)
-        self.ax.plot((point1[1], point2[1]), (point1[0], point2[0]), **kwargs)
-        # Put the tag at the midpoint
-        if tag:
-            self.ax.text((point1[1] + point2[1])/2, (point1[0] + point2[0])/2,
-                tag, ha=&#39;center&#39;, va=&#39;center&#39;, bbox={&#39;boxstyle&#39;: &#39;round&#39;,
-                    &#39;ec&#39;: &#39;black&#39;, &#39;fc&#39;: (1, 1, 1, 0.5)})
-        self._set_legend()
-
-    def draw_shaded_polygon(self, vertices, tag=None, **kwargs):
-        &#34;&#34;&#34;See `specrel.graphics.simpgraph.STPlotter.draw_shaded_polygon`.
-
-        Kwargs:
-            linewidth: Forced to be `None`.
-        &#34;&#34;&#34;
-        self._prepare_ax()
-        tvals, xvals = self._decouple_stvectors(vertices)
-        # Ignore the &#34;linewidth&#34; parameter
-        kwargs.pop(&#39;linewidth&#39;, None)
-        self.ax.fill(xvals, tvals, **kwargs)
-        # Put tag at the centroid
-        if vertices and tag:
-            self.ax.text(sum(xvals)/len(xvals), sum(tvals)/len(tvals), tag,
-                ha=&#39;center&#39;, va=&#39;center&#39;, bbox={&#39;boxstyle&#39;: &#39;round&#39;,
-                    &#39;ec&#39;: &#39;black&#39;, &#39;fc&#39;: (1, 1, 1, 0.5)})
-        self._set_legend()
-
-    def set_lims(self, tlim, xlim):
-        # Pad the limits
-        tpad = self.lim_padding/2 * (tlim[1] - tlim[0])
-        xpad = self.lim_padding/2 * (xlim[1] - xlim[0])
-        # If the limits are identical, expand them
-        if tlim[0] == tlim[1]:
-            tpad = self.equal_lim_expand/2
-        if xlim[0] == xlim[1]:
-            xpad = self.equal_lim_expand/2
-
-        padded_tlim = (tlim[0] - tpad, tlim[1] + tpad)
-        padded_xlim = (xlim[0] - xpad, xlim[1] + xpad)
-
-        # Set the actual limits
-        self.ax.set_xlim(padded_xlim)
-        self.ax.set_ylim(padded_tlim)
-
-        # Clip lines and polygons objects to the actual limits
-        clipbox = self.ax.fill([xlim[0], xlim[0], xlim[1], xlim[1]],
-            [tlim[0], tlim[1], tlim[1], tlim[0]], color=&#39;None&#39;)[0]
-        # Only clip lines, not points
-        for artist in [ln for ln in self.ax.lines if len(ln.get_xdata()) &gt; 1] \
-            + self.ax.patches[:-1]:
-            artist.set_clip_path(clipbox)
-        self.ax.patches.pop()
-
-    def show(self):
-        plt.show()
-
-    def set_labels(self):
-        &#34;&#34;&#34;Set labels for the time and space axes. See
-        `specrel.graphics.graphrc`.
-        &#34;&#34;&#34;
-        self.ax.set_xlabel(graphrc[&#39;xlabel&#39;])
-        self.ax.set_ylabel(graphrc[&#39;tlabel&#39;])</code></pre>
-</details>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li><a title="specrel.graphics.simpgraph.STPlotter" href="#specrel.graphics.simpgraph.STPlotter">STPlotter</a></li>
-<li><a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="#specrel.graphics.simpgraph.SingleAxisFigureCreator">SingleAxisFigureCreator</a></li>
-<li><a title="specrel.graphics.simpgraph.FigureCreator" href="#specrel.graphics.simpgraph.FigureCreator">FigureCreator</a></li>
-<li>abc.ABC</li>
-</ul>
-<h3>Methods</h3>
-<dl>
-<dt id="specrel.graphics.simpgraph.WorldlinePlotter.draw_line_segment"><code class="name flex">
-<span>def <span class="ident">draw_line_segment</span></span>(<span>self, point1, point2, tag=None, **kwargs)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>See <a title="specrel.graphics.simpgraph.STPlotter.draw_line_segment" href="#specrel.graphics.simpgraph.STPlotter.draw_line_segment"><code>STPlotter.draw_line_segment()</code></a>.</p>
-<h2 id="kwargs">Kwargs</h2>
-<dl>
-<dt><strong><code>marker</code></strong></dt>
-<dd>Forced to be <code>None</code>.</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def draw_line_segment(self, point1, point2, tag=None, **kwargs):
-    &#34;&#34;&#34;See `specrel.graphics.simpgraph.STPlotter.draw_line_segment`.
-
-    Kwargs:
-        marker: Forced to be `None`.
-    &#34;&#34;&#34;
-    self._prepare_ax()
-    # Ignore the &#34;marker&#34; parameter
-    kwargs.pop(&#39;marker&#39;, None)
-    self.ax.plot((point1[1], point2[1]), (point1[0], point2[0]), **kwargs)
-    # Put the tag at the midpoint
-    if tag:
-        self.ax.text((point1[1] + point2[1])/2, (point1[0] + point2[0])/2,
-            tag, ha=&#39;center&#39;, va=&#39;center&#39;, bbox={&#39;boxstyle&#39;: &#39;round&#39;,
-                &#39;ec&#39;: &#39;black&#39;, &#39;fc&#39;: (1, 1, 1, 0.5)})
-    self._set_legend()</code></pre>
-</details>
-</dd>
-<dt id="specrel.graphics.simpgraph.WorldlinePlotter.draw_point"><code class="name flex">
-<span>def <span class="ident">draw_point</span></span>(<span>self, point, tag=None, **kwargs)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>See <a title="specrel.graphics.simpgraph.STPlotter.draw_point" href="#specrel.graphics.simpgraph.STPlotter.draw_point"><code>STPlotter.draw_point()</code></a>.</p>
-<h2 id="kwargs">Kwargs</h2>
-<dl>
-<dt><strong><code>linestyle</code></strong></dt>
-<dd>Forced to be <code>'None'</code></dd>
-<dt><strong><code>marker</code></strong></dt>
-<dd>Default is <code>'.'</code>.</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def draw_point(self, point, tag=None, **kwargs):
-    &#34;&#34;&#34;See `specrel.graphics.simpgraph.STPlotter.draw_point`.
-
-    Kwargs:
-        linestyle: Forced to be `&#39;None&#39;`
-        marker: Default is `&#39;.&#39;`.
-    &#34;&#34;&#34;
-    self._prepare_ax()
-    marker = kwargs.pop(&#39;marker&#39;, &#39;.&#39;)
-    # Force linestyle to be none for a point
-    kwargs[&#39;linestyle&#39;] = &#39;None&#39;
-    self.ax.plot(point[1], point[0], marker=marker, **kwargs)
-    if tag:
-        self.ax.text(point[1], point[0], tag)
-    self._set_legend()</code></pre>
-</details>
-</dd>
-<dt id="specrel.graphics.simpgraph.WorldlinePlotter.draw_shaded_polygon"><code class="name flex">
-<span>def <span class="ident">draw_shaded_polygon</span></span>(<span>self, vertices, tag=None, **kwargs)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>See <a title="specrel.graphics.simpgraph.STPlotter.draw_shaded_polygon" href="#specrel.graphics.simpgraph.STPlotter.draw_shaded_polygon"><code>STPlotter.draw_shaded_polygon()</code></a>.</p>
-<h2 id="kwargs">Kwargs</h2>
-<dl>
-<dt><strong><code>linewidth</code></strong></dt>
-<dd>Forced to be <code>None</code>.</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def draw_shaded_polygon(self, vertices, tag=None, **kwargs):
-    &#34;&#34;&#34;See `specrel.graphics.simpgraph.STPlotter.draw_shaded_polygon`.
-
-    Kwargs:
-        linewidth: Forced to be `None`.
-    &#34;&#34;&#34;
-    self._prepare_ax()
-    tvals, xvals = self._decouple_stvectors(vertices)
-    # Ignore the &#34;linewidth&#34; parameter
-    kwargs.pop(&#39;linewidth&#39;, None)
-    self.ax.fill(xvals, tvals, **kwargs)
-    # Put tag at the centroid
-    if vertices and tag:
-        self.ax.text(sum(xvals)/len(xvals), sum(tvals)/len(tvals), tag,
-            ha=&#39;center&#39;, va=&#39;center&#39;, bbox={&#39;boxstyle&#39;: &#39;round&#39;,
-                &#39;ec&#39;: &#39;black&#39;, &#39;fc&#39;: (1, 1, 1, 0.5)})
-    self._set_legend()</code></pre>
-</details>
-</dd>
-<dt id="specrel.graphics.simpgraph.WorldlinePlotter.set_labels"><code class="name flex">
-<span>def <span class="ident">set_labels</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>Set labels for the time and space axes. See
-<a title="specrel.graphics.graphrc" href="index.html#specrel.graphics.graphrc"><code>graphrc</code></a>.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def set_labels(self):
-    &#34;&#34;&#34;Set labels for the time and space axes. See
-    `specrel.graphics.graphrc`.
-    &#34;&#34;&#34;
-    self.ax.set_xlabel(graphrc[&#39;xlabel&#39;])
-    self.ax.set_ylabel(graphrc[&#39;tlabel&#39;])</code></pre>
-</details>
-</dd>
-</dl>
-<h3>Inherited members</h3>
-<ul class="hlist">
-<li><code><b><a title="specrel.graphics.simpgraph.STPlotter" href="#specrel.graphics.simpgraph.STPlotter">STPlotter</a></b></code>:
-<ul class="hlist">
-<li><code><a title="specrel.graphics.simpgraph.STPlotter.close" href="#specrel.graphics.simpgraph.FigureCreator.close">close</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STPlotter.save" href="#specrel.graphics.simpgraph.STPlotter.save">save</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STPlotter.set_lims" href="#specrel.graphics.simpgraph.STPlotter.set_lims">set_lims</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STPlotter.show" href="#specrel.graphics.simpgraph.STPlotter.show">show</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.animate" href="#specrel.graphics.simpanim.BaseAnimator.animate">animate</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.calc_frame_idx" href="#specrel.graphics.simpanim.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.calc_frame_val" href="#specrel.graphics.simpanim.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.clear" href="#specrel.graphics.simpanim.BaseAnimator.clear">clear</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.close" href="basegraph.html#specrel.graphics.basegraph.FigureCreator.close">close</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.draw_line_segment" href="basegraph.html#specrel.graphics.basegraph.STPlotter.draw_line_segment">draw_line_segment</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.draw_point" href="basegraph.html#specrel.graphics.basegraph.STPlotter.draw_point">draw_point</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.draw_shaded_polygon" href="basegraph.html#specrel.graphics.basegraph.STPlotter.draw_shaded_polygon">draw_shaded_polygon</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.get_frame_lim" href="#specrel.graphics.simpanim.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.init_func" href="#specrel.graphics.simpanim.BaseAnimator.init_func">init_func</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.resize" href="#specrel.graphics.simpanim.STAnimator.resize">resize</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.save" href="#specrel.graphics.simpanim.BaseAnimator.save">save</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.set_lims" href="basegraph.html#specrel.graphics.basegraph.STPlotter.set_lims">set_lims</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.show" href="#specrel.graphics.simpanim.BaseAnimator.show">show</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.update" href="#specrel.graphics.simpanim.BaseAnimator.update">update</a></code></li>
 </ul>
 </li>
 </ul>
@@ -3432,65 +2384,36 @@ relative to the axis sizes.</dd>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="specrel.graphics.simpgraph.BaseAnimator" href="#specrel.graphics.simpgraph.BaseAnimator">BaseAnimator</a></code></h4>
+<h4><code><a title="specrel.graphics.simpanim.BaseAnimator" href="#specrel.graphics.simpanim.BaseAnimator">BaseAnimator</a></code></h4>
 <ul class="two-column">
-<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.animate" href="#specrel.graphics.simpgraph.BaseAnimator.animate">animate</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.calc_frame_idx" href="#specrel.graphics.simpgraph.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.calc_frame_val" href="#specrel.graphics.simpgraph.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.clear" href="#specrel.graphics.simpgraph.BaseAnimator.clear">clear</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.get_frame_lim" href="#specrel.graphics.simpgraph.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.init_func" href="#specrel.graphics.simpgraph.BaseAnimator.init_func">init_func</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.save" href="#specrel.graphics.simpgraph.BaseAnimator.save">save</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.show" href="#specrel.graphics.simpgraph.BaseAnimator.show">show</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.BaseAnimator.update" href="#specrel.graphics.simpgraph.BaseAnimator.update">update</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.BaseAnimator.animate" href="#specrel.graphics.simpanim.BaseAnimator.animate">animate</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.BaseAnimator.calc_frame_idx" href="#specrel.graphics.simpanim.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.BaseAnimator.calc_frame_val" href="#specrel.graphics.simpanim.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.BaseAnimator.clear" href="#specrel.graphics.simpanim.BaseAnimator.clear">clear</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.BaseAnimator.get_frame_lim" href="#specrel.graphics.simpanim.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.BaseAnimator.init_func" href="#specrel.graphics.simpanim.BaseAnimator.init_func">init_func</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.BaseAnimator.save" href="#specrel.graphics.simpanim.BaseAnimator.save">save</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.BaseAnimator.show" href="#specrel.graphics.simpanim.BaseAnimator.show">show</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.BaseAnimator.update" href="#specrel.graphics.simpanim.BaseAnimator.update">update</a></code></li>
 </ul>
 </li>
 <li>
-<h4><code><a title="specrel.graphics.simpgraph.FigureCreator" href="#specrel.graphics.simpgraph.FigureCreator">FigureCreator</a></code></h4>
+<h4><code><a title="specrel.graphics.simpanim.ObjectAnimator" href="#specrel.graphics.simpanim.ObjectAnimator">ObjectAnimator</a></code></h4>
+</li>
+<li>
+<h4><code><a title="specrel.graphics.simpanim.STAnimator" href="#specrel.graphics.simpanim.STAnimator">STAnimator</a></code></h4>
 <ul class="">
-<li><code><a title="specrel.graphics.simpgraph.FigureCreator.close" href="#specrel.graphics.simpgraph.FigureCreator.close">close</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.resize" href="#specrel.graphics.simpanim.STAnimator.resize">resize</a></code></li>
 </ul>
 </li>
 <li>
-<h4><code><a title="specrel.graphics.simpgraph.ObjectAnimator" href="#specrel.graphics.simpgraph.ObjectAnimator">ObjectAnimator</a></code></h4>
+<h4><code><a title="specrel.graphics.simpanim.TimeAnimator" href="#specrel.graphics.simpanim.TimeAnimator">TimeAnimator</a></code></h4>
 </li>
 <li>
-<h4><code><a title="specrel.graphics.simpgraph.STAnimator" href="#specrel.graphics.simpgraph.STAnimator">STAnimator</a></code></h4>
-<ul class="">
-<li><code><a title="specrel.graphics.simpgraph.STAnimator.resize" href="#specrel.graphics.simpgraph.STAnimator.resize">resize</a></code></li>
-</ul>
+<h4><code><a title="specrel.graphics.simpanim.TransformAnimator" href="#specrel.graphics.simpanim.TransformAnimator">TransformAnimator</a></code></h4>
 </li>
 <li>
-<h4><code><a title="specrel.graphics.simpgraph.STPlotter" href="#specrel.graphics.simpgraph.STPlotter">STPlotter</a></code></h4>
-<ul class="two-column">
-<li><code><a title="specrel.graphics.simpgraph.STPlotter.draw_line_segment" href="#specrel.graphics.simpgraph.STPlotter.draw_line_segment">draw_line_segment</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STPlotter.draw_point" href="#specrel.graphics.simpgraph.STPlotter.draw_point">draw_point</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STPlotter.draw_shaded_polygon" href="#specrel.graphics.simpgraph.STPlotter.draw_shaded_polygon">draw_shaded_polygon</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STPlotter.save" href="#specrel.graphics.simpgraph.STPlotter.save">save</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STPlotter.set_lims" href="#specrel.graphics.simpgraph.STPlotter.set_lims">set_lims</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.STPlotter.show" href="#specrel.graphics.simpgraph.STPlotter.show">show</a></code></li>
-</ul>
-</li>
-<li>
-<h4><code><a title="specrel.graphics.simpgraph.SingleAxisFigureCreator" href="#specrel.graphics.simpgraph.SingleAxisFigureCreator">SingleAxisFigureCreator</a></code></h4>
-</li>
-<li>
-<h4><code><a title="specrel.graphics.simpgraph.TimeAnimator" href="#specrel.graphics.simpgraph.TimeAnimator">TimeAnimator</a></code></h4>
-</li>
-<li>
-<h4><code><a title="specrel.graphics.simpgraph.TransformAnimator" href="#specrel.graphics.simpgraph.TransformAnimator">TransformAnimator</a></code></h4>
-</li>
-<li>
-<h4><code><a title="specrel.graphics.simpgraph.WorldlineAnimator" href="#specrel.graphics.simpgraph.WorldlineAnimator">WorldlineAnimator</a></code></h4>
-</li>
-<li>
-<h4><code><a title="specrel.graphics.simpgraph.WorldlinePlotter" href="#specrel.graphics.simpgraph.WorldlinePlotter">WorldlinePlotter</a></code></h4>
-<ul class="">
-<li><code><a title="specrel.graphics.simpgraph.WorldlinePlotter.draw_line_segment" href="#specrel.graphics.simpgraph.WorldlinePlotter.draw_line_segment">draw_line_segment</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.WorldlinePlotter.draw_point" href="#specrel.graphics.simpgraph.WorldlinePlotter.draw_point">draw_point</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.WorldlinePlotter.draw_shaded_polygon" href="#specrel.graphics.simpgraph.WorldlinePlotter.draw_shaded_polygon">draw_shaded_polygon</a></code></li>
-<li><code><a title="specrel.graphics.simpgraph.WorldlinePlotter.set_labels" href="#specrel.graphics.simpgraph.WorldlinePlotter.set_labels">set_labels</a></code></li>
-</ul>
+<h4><code><a title="specrel.graphics.simpanim.WorldlineAnimator" href="#specrel.graphics.simpanim.WorldlineAnimator">WorldlineAnimator</a></code></h4>
 </li>
 </ul>
 </li>

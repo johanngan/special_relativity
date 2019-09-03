@@ -21,8 +21,9 @@ import matplotlib.pyplot as plt
 
 import specrel.geom as geom
 from specrel.graphics import graphrc
-import specrel.graphics.simpgraph as simpg
-import specrel.graphics.compgraph as compg
+import specrel.graphics.basegraph as bgraph
+import specrel.graphics.simpanim as sanim
+import specrel.graphics.companim as canim
 
 # Commonly used default values shared by multiple visualize functions
 visrc = {
@@ -87,9 +88,9 @@ def stplot(lorentz_transformable,
         xlim (tuple, optional): Position drawing limits. See
             `specrel.geom.LorentzTransformable.draw`.
         fig (matplotlib.figure.Figure, optional): Figure window. See
-            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+            `specrel.graphics.basegraph.SingleAxisFigureCreator`.
         ax (matplotlib.axes.Axes, optional): Plotting axes. See
-            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+            `specrel.graphics.basegraph.SingleAxisFigureCreator`.
         grid (bool, optional): Flag for whether or not to plot background grid
             lines.
         legend (bool, optional): Flag for whether or not to plot a legend.
@@ -105,10 +106,10 @@ def stplot(lorentz_transformable,
             object.
 
     Returns:
-        specrel.graphics.simpgraph.WorldlinePlotter:
+        specrel.graphics.basegraph.WorldlinePlotter:
             Plotter for the spacetime diagram of the object.
     """
-    plotter = simpg.WorldlinePlotter(
+    plotter = bgraph.WorldlinePlotter(
         fig=fig,
         ax=ax,
         grid=grid,
@@ -148,9 +149,9 @@ def stanimate(lorentz_transformable,
         xlim (tuple, optional): Position drawing limits. See
             `specrel.geom.LorentzTransformable.draw`.
         fig (matplotlib.figure.Figure, optional): Figure window. See
-            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+            `specrel.graphics.basegraph.SingleAxisFigureCreator`.
         ax (matplotlib.axes.Axes, optional): Plotting axes. See
-            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+            `specrel.graphics.basegraph.SingleAxisFigureCreator`.
         grid (bool, optional): Flag for whether or not to plot background grid
             lines.
         legend (bool, optional): Flag for whether or not to plot a legend.
@@ -171,10 +172,10 @@ def stanimate(lorentz_transformable,
             object.
 
     Returns:
-        specrel.graphics.simpgraph.ObjectAnimator:
+        specrel.graphics.simpanim.ObjectAnimator:
             Animator for the real space animation of the object.
     """
-    animator = simpg.ObjectAnimator(
+    animator = sanim.ObjectAnimator(
         fig=fig,
         ax=ax,
         grid=grid,
@@ -264,7 +265,7 @@ def stanimate_with_worldline(lorentz_transformable,
             object.
 
     Returns:
-        specrel.graphics.compgraph.MultiTimeAnimator:
+        specrel.graphics.companim.MultiTimeAnimator:
             Animator for the spacetime diagram + real space animation of the
             object.
     """
@@ -275,10 +276,10 @@ def stanimate_with_worldline(lorentz_transformable,
     tlim_anim = _override_tlim(tlim_anim, tlim)
     tlim_worldline = _override_tlim(tlim_worldline, tlim)
 
-    animator = compg.MultiTimeAnimator(
+    animator = canim.MultiTimeAnimator(
         [
             {
-                'animator': simpg.WorldlineAnimator,
+                'animator': sanim.WorldlineAnimator,
                 'animator_options':
                 {
                     'title': 'Spacetime Diagram',
@@ -295,7 +296,7 @@ def stanimate_with_worldline(lorentz_transformable,
                     **kwargs},
             },
             {
-                'animator': simpg.ObjectAnimator,
+                'animator': sanim.ObjectAnimator,
                 'animator_options': {
                     'grid': grid,
                     'legend': legend,
@@ -391,7 +392,7 @@ def compare_frames(lorentz_transformable,
 
     Returns:
         list:
-            List of `specrel.graphics.simpgraph.WorldlinePlotter` objects, one
+            List of `specrel.graphics.basegraph.WorldlinePlotter` objects, one
             for the object plotted in each reference frame.
     """
     transformables, vrels = _get_transformable_and_vrel_in_all_frames(
@@ -405,7 +406,7 @@ def compare_frames(lorentz_transformable,
 
     plotters = []
     for ax, transformable in zip(axs, transformables):
-        plotter = simpg.WorldlinePlotter(
+        plotter = bgraph.WorldlinePlotter(
             fig=fig,
             ax=ax,
             grid=grid,
@@ -479,7 +480,7 @@ def compare_frames_animated(lorentz_transformable,
             object.
 
     Returns:
-        specrel.graphics.compgraph.MultiTimeAnimator:
+        specrel.graphics.companim.MultiTimeAnimator:
             Animator for the object animated in real space in each of the
             different reference frames.
     """
@@ -495,10 +496,10 @@ def compare_frames_animated(lorentz_transformable,
     ax_titles = ['Scene in Lab Frame'] + \
         [f'Scene in Frame Moving at ${vrel:.3g}c$' for vrel in vrels]
     draw_options = {'tlim': tlim, 'xlim': xlim, **kwargs}
-    animator = compg.MultiTimeAnimator(
+    animator = canim.MultiTimeAnimator(
         [
             {
-                'animator': simpg.ObjectAnimator,
+                'animator': sanim.ObjectAnimator,
                 'animator_options': {
                     'grid': grid,
                     'legend': legend,
@@ -597,7 +598,7 @@ def compare_frames_animated_with_worldline(lorentz_transformable,
             object.
 
     Returns:
-        specrel.graphics.compgraph.MultiTimeAnimator:
+        specrel.graphics.companim.MultiTimeAnimator:
             Animator for the spacetime + real space animations of the object in
             each of the different reference frames.
     """
@@ -637,7 +638,7 @@ def compare_frames_animated_with_worldline(lorentz_transformable,
         transformables, ax_worldline_titles, ax_obj_titles):
         anim_objs += [
             {
-                'animator': simpg.WorldlineAnimator,
+                'animator': sanim.WorldlineAnimator,
                 'animator_options': {'title': ax_worldline_title,
                     **worldline_anim_opts},
                 'transformable': transformable,
@@ -645,7 +646,7 @@ def compare_frames_animated_with_worldline(lorentz_transformable,
                     **kwargs},
             },
             {
-                'animator': simpg.ObjectAnimator,
+                'animator': sanim.ObjectAnimator,
                 'animator_options': {'title': ax_obj_title,
                     **object_anim_opts},
                 'transformable': transformable,
@@ -654,7 +655,7 @@ def compare_frames_animated_with_worldline(lorentz_transformable,
             },
         ]
 
-    animator = compg.MultiTimeAnimator(
+    animator = canim.MultiTimeAnimator(
         anim_objs,
         fig=fig,
         axs=axs,
@@ -700,9 +701,9 @@ def animate_lt(lorentz_transformable,
         xlim (tuple, optional): Position drawing limits. See
             `specrel.geom.LorentzTransformable.draw`.
         fig (matplotlib.figure.Figure, optional): Figure window. See
-            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+            `specrel.graphics.basegraph.SingleAxisFigureCreator`.
         ax (matplotlib.axes.Axes, optional): Plotting axes. See
-            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+            `specrel.graphics.basegraph.SingleAxisFigureCreator`.
         grid (bool, optional): Flag for whether or not to plot background grid
             lines.
         legend (bool, optional): Flag for whether or not to plot a legend.
@@ -724,7 +725,7 @@ def animate_lt(lorentz_transformable,
             axis size is this value.
 
     Returns:
-        specrel.graphics.simpgraph.TransformAnimator:
+        specrel.graphics.simpanim.TransformAnimator:
             Animator for the transformation animation of the object from one
             reference frame to the other.
     """
@@ -736,11 +737,11 @@ def animate_lt(lorentz_transformable,
     elif tlim[1] is not None and time > tlim[1]:
         time = tlim[1]
 
-    animator = simpg.TransformAnimator(
+    animator = sanim.TransformAnimator(
         copy.deepcopy(lorentz_transformable),
         vrel,
         origin=origin,
-        stanimator=simpg.WorldlineAnimator,
+        stanimator=sanim.WorldlineAnimator,
         stanimator_options={
             'current_time_color': 'None',   # Transparent
             'grid': grid,
@@ -792,9 +793,9 @@ def animate_lt_realspace(lorentz_transformable,
         time (float, optional): Frame-local time value to fix during
             transformation animation.
         fig (matplotlib.figure.Figure, optional): Figure window. See
-            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+            `specrel.graphics.basegraph.SingleAxisFigureCreator`.
         ax (matplotlib.axes.Axes, optional): Plotting axes. See
-            `specrel.graphics.simpgraph.SingleAxisFigureCreator`.
+            `specrel.graphics.basegraph.SingleAxisFigureCreator`.
         grid (bool, optional): Flag for whether or not to plot background grid
             lines.
         legend (bool, optional): Flag for whether or not to plot a legend.
@@ -811,15 +812,15 @@ def animate_lt_realspace(lorentz_transformable,
         title (str, optional): Animation title.
 
     Returns:
-        specrel.graphics.simpgraph.TransformAnimator:
+        specrel.graphics.simpanim.TransformAnimator:
             Animator for the transformation animation of the object in real
             space from one reference frame to the other.
     """
-    animator = simpg.TransformAnimator(
+    animator = sanim.TransformAnimator(
         copy.deepcopy(lorentz_transformable),
         vrel,
         origin=origin,
-        stanimator=simpg.ObjectAnimator,
+        stanimator=sanim.ObjectAnimator,
         stanimator_options={
             'grid': grid,
             'legend': legend,
@@ -904,7 +905,7 @@ def animate_lt_worldline_and_realspace(lorentz_transformable,
             current time in animated spacetime plot.
 
     Returns:
-        specrel.graphics.compgraph.MultiTransformAnimator:
+        specrel.graphics.companim.MultiTransformAnimator:
             Animator for the transformation animation of the object in a
             spacetime diagram and real space from one reference frame to the
             other.
@@ -915,12 +916,12 @@ def animate_lt_worldline_and_realspace(lorentz_transformable,
 
     _check_axs_match_frames(axs, 2)
 
-    animator = compg.MultiTransformAnimator(
+    animator = canim.MultiTransformAnimator(
         [
             {
                 'animator_options':
                 {
-                    'stanimator': simpg.WorldlineAnimator,
+                    'stanimator': sanim.WorldlineAnimator,
                     'title': 'Spacetime Diagram',
                     'origin': origin,
                     'tlim': tlim,
@@ -942,7 +943,7 @@ def animate_lt_worldline_and_realspace(lorentz_transformable,
             {
                 'animator_options':
                 {
-                    'stanimator': simpg.ObjectAnimator,
+                    'stanimator': sanim.ObjectAnimator,
                     'title': 'Actual Scene',
                     'origin': origin,
                     'xlim': xlim,
