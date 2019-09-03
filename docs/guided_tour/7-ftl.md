@@ -3,7 +3,7 @@
 # 7. Faster-than-light Travel
 
 ### Features Introduced
-- Utility methods of `spacetime.MovingObject` and `geom.Line`
+- Utility methods of `spacetime.physical.MovingObject` and `geom.Line`
 
 ---
 

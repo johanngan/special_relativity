@@ -3,7 +3,7 @@
 # 9. Twin Paradox
 
 ### Features Introduced
-- More utility methods of `spacetime.MovingObject`
+- More utility methods of `spacetime.physical.MovingObject`
 - The `geom.STVector.gamma_factor` function
 
 ---
