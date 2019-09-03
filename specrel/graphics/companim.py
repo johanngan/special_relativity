@@ -37,7 +37,7 @@ class MultiAnimator(bgraph.FigureCreator, sanim.BaseAnimator):
         display_current_decimals=
             graphrc['anim.display_current_decimals'],
         title=graphrc['title'],
-        frame_lim=(0, 0)):
+        frame_lim=(None, None)):
 
         bgraph.FigureCreator.__init__(self)
         # Make a new figure if necessary
@@ -153,7 +153,7 @@ class MultiTimeAnimator(MultiAnimator, sanim.TimeAnimator):
         animations_params,
         fig=graphrc['fig'],
         axs=graphrc['axs'],
-        tlim=(0, 0),
+        tlim=(None, None),
         ct_per_sec=graphrc['anim.time.ct_per_sec'],
         instant_pause_time=graphrc['anim.time.instant_pause_time'],
         fps=graphrc['anim.fps'],
@@ -164,7 +164,10 @@ class MultiTimeAnimator(MultiAnimator, sanim.TimeAnimator):
 
         sanim.TimeAnimator.__init__(self, fig, ct_per_sec, instant_pause_time,
             fps, display_current_time, display_current_time_decimals)
-        frame_lim = (self.calc_frame_idx(tlim[0]), self.calc_frame_idx(tlim[1]))
+        frame_lim = (
+            None if tlim[0] is None else self.calc_frame_idx(tlim[0]),
+            None if tlim[1] is None else self.calc_frame_idx(tlim[1])
+        )
         MultiAnimator.__init__(self, len(animations_params), fig, axs,
             self.stepsize, fps, display_current_time,
             display_current_time_decimals, title, frame_lim)
@@ -267,7 +270,7 @@ class MultiTransformAnimator(MultiAnimator):
         nsteps = round(transition_duration * fps)
         super().__init__(len(animations_params), fig, axs, velocity / nsteps,
             fps, display_current_velocity, display_current_velocity_decimals,
-            title, (0, 0))
+            title, (None, None))
 
         # Set up animators
         for params, ax in zip(animations_params, self.axs):

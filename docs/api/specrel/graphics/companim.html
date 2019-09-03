@@ -64,7 +64,7 @@ class MultiAnimator(bgraph.FigureCreator, sanim.BaseAnimator):
         display_current_decimals=
             graphrc[&#39;anim.display_current_decimals&#39;],
         title=graphrc[&#39;title&#39;],
-        frame_lim=(0, 0)):
+        frame_lim=(None, None)):
 
         bgraph.FigureCreator.__init__(self)
         # Make a new figure if necessary
@@ -180,7 +180,7 @@ class MultiTimeAnimator(MultiAnimator, sanim.TimeAnimator):
         animations_params,
         fig=graphrc[&#39;fig&#39;],
         axs=graphrc[&#39;axs&#39;],
-        tlim=(0, 0),
+        tlim=(None, None),
         ct_per_sec=graphrc[&#39;anim.time.ct_per_sec&#39;],
         instant_pause_time=graphrc[&#39;anim.time.instant_pause_time&#39;],
         fps=graphrc[&#39;anim.fps&#39;],
@@ -191,7 +191,10 @@ class MultiTimeAnimator(MultiAnimator, sanim.TimeAnimator):
 
         sanim.TimeAnimator.__init__(self, fig, ct_per_sec, instant_pause_time,
             fps, display_current_time, display_current_time_decimals)
-        frame_lim = (self.calc_frame_idx(tlim[0]), self.calc_frame_idx(tlim[1]))
+        frame_lim = (
+            None if tlim[0] is None else self.calc_frame_idx(tlim[0]),
+            None if tlim[1] is None else self.calc_frame_idx(tlim[1])
+        )
         MultiAnimator.__init__(self, len(animations_params), fig, axs,
             self.stepsize, fps, display_current_time,
             display_current_time_decimals, title, frame_lim)
@@ -294,7 +297,7 @@ class MultiTransformAnimator(MultiAnimator):
         nsteps = round(transition_duration * fps)
         super().__init__(len(animations_params), fig, axs, velocity / nsteps,
             fps, display_current_velocity, display_current_velocity_decimals,
-            title, (0, 0))
+            title, (None, None))
 
         # Set up animators
         for params, ax in zip(animations_params, self.axs):
@@ -458,7 +461,7 @@ def concat_demuxer(input_files, output_file):
 <dl>
 <dt id="specrel.graphics.companim.MultiAnimator"><code class="flex name class">
 <span>class <span class="ident">MultiAnimator</span></span>
-<span>(</span><span>n_animations, fig=None, axs=None, stepsize=None, fps=50, display_current=True, display_current_decimals=3, title=None, frame_lim=(0, 0))</span>
+<span>(</span><span>n_animations, fig=None, axs=None, stepsize=None, fps=50, display_current=True, display_current_decimals=3, title=None, frame_lim=(None, None))</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Runs multiple animations simultaneously on different subplots.</p>
@@ -506,7 +509,7 @@ new set of axes is created under a new figure window.</dd>
         display_current_decimals=
             graphrc[&#39;anim.display_current_decimals&#39;],
         title=graphrc[&#39;title&#39;],
-        frame_lim=(0, 0)):
+        frame_lim=(None, None)):
 
         bgraph.FigureCreator.__init__(self)
         # Make a new figure if necessary
@@ -625,7 +628,7 @@ new set of axes is created under a new figure window.</dd>
 </dd>
 <dt id="specrel.graphics.companim.MultiTimeAnimator"><code class="flex name class">
 <span>class <span class="ident">MultiTimeAnimator</span></span>
-<span>(</span><span>animations_params, fig=None, axs=None, tlim=(0, 0), ct_per_sec=1, instant_pause_time=1, fps=50, display_current_time=True, display_current_time_decimals=3, title=None)</span>
+<span>(</span><span>animations_params, fig=None, axs=None, tlim=(None, None), ct_per_sec=1, instant_pause_time=1, fps=50, display_current_time=True, display_current_time_decimals=3, title=None)</span>
 </code></dt>
 <dd>
 <section class="desc"><p>Runs multiple time-evolution animations simultaneously on different
@@ -706,7 +709,7 @@ arguments for <code>animator</code>, <em>except</em> for the following:<ul>
         animations_params,
         fig=graphrc[&#39;fig&#39;],
         axs=graphrc[&#39;axs&#39;],
-        tlim=(0, 0),
+        tlim=(None, None),
         ct_per_sec=graphrc[&#39;anim.time.ct_per_sec&#39;],
         instant_pause_time=graphrc[&#39;anim.time.instant_pause_time&#39;],
         fps=graphrc[&#39;anim.fps&#39;],
@@ -717,7 +720,10 @@ arguments for <code>animator</code>, <em>except</em> for the following:<ul>
 
         sanim.TimeAnimator.__init__(self, fig, ct_per_sec, instant_pause_time,
             fps, display_current_time, display_current_time_decimals)
-        frame_lim = (self.calc_frame_idx(tlim[0]), self.calc_frame_idx(tlim[1]))
+        frame_lim = (
+            None if tlim[0] is None else self.calc_frame_idx(tlim[0]),
+            None if tlim[1] is None else self.calc_frame_idx(tlim[1])
+        )
         MultiAnimator.__init__(self, len(animations_params), fig, axs,
             self.stepsize, fps, display_current_time,
             display_current_time_decimals, title, frame_lim)
@@ -887,7 +893,7 @@ initialization, from the following list:<ul>
         nsteps = round(transition_duration * fps)
         super().__init__(len(animations_params), fig, axs, velocity / nsteps,
             fps, display_current_velocity, display_current_velocity_decimals,
-            title, (0, 0))
+            title, (None, None))
 
         # Set up animators
         for params, ax in zip(animations_params, self.axs):
