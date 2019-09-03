@@ -2,161 +2,14 @@
 
 from abc import ABC, abstractmethod
 import copy
-import math
 import warnings
 
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
 
 from specrel.graphics import graphrc
 import specrel.graphics.basegraph as bgraph
 
-class BaseAnimator(ABC):
-    """Base class for animators that animate over some changing control
-    variable, like time or velocity.
-
-    Args:
-        frame_lim (tuple, optional): Minimum and maximum frame index of the
-            animation. See `BaseAnimator.calc_frame_idx`.
-        others: See attributes.
-
-    Attributes:
-        display_current (bool): Flag for displaying the control variable value
-            of the current animation frame.
-        display_current_decimals (int): Number of decimals to display the
-            current control variable to.
-        fig (matplotlib.figure.Figure): Matplotlib figure window.
-        fps (float): Animation frames per second.
-        stepsize (float): Change in control variable value over one frame.
-        title (str): Animation title; static throughout all frames.
-    """
-    def __init__(self,
-        fig=graphrc['fig'],
-        stepsize=None,
-        fps=graphrc['anim.fps'],
-        display_current=graphrc['anim.display_current'],
-        display_current_decimals=graphrc['anim.display_current_decimals'],
-        title=graphrc['title'],
-        frame_lim=(0, 0)):
-
-        self.fig = fig
-        self.display_current = display_current
-        self.display_current_decimals = display_current_decimals
-        self.stepsize = stepsize
-        self.fps = fps
-        self.title = title
-        self._frame_lim = frame_lim
-        # Cached animation if already created previously
-        self._cached_anim = None
-
-    def clear(self):
-        """Clear persistent data from the last animation."""
-        self._frame_lim = (0, 0)
-        self._cached_anim = None
-
-    def calc_frame_idx(self, val):
-        """Snap a value to the closest corresponding frame. Frames are indexed
-        as multiples of the stepsize. Note that frame indexes can be either
-        positive or negative.
-
-        Args:
-            val (float): Value of the frame.
-
-        Returns:
-            int:
-                Closest frame index corresponding to `val`.
-        """
-        return round(val / self.stepsize)
-
-    def calc_frame_val(self, idx):
-        """Get the corresponding value of a frame at a specified index, rounded
-        to the same precision as the stepsize, but with one extra decimal place.
-
-        Args:
-            idx (int): Frame index.
-
-        Returns:
-            float:
-                Value of the frame.
-        """
-        # Round to the same order of magnitude (one smaller for safety) as the
-        # stepsize to ensure precision, but to mitigate floating-point error
-        def order_of_mag(x):
-            return int(math.floor(math.log10(abs(x))))
-        return round(idx * self.stepsize, 1-order_of_mag(self.stepsize))
-
-    @abstractmethod
-    def init_func(self):
-        """Initialization function for `matplotlib.animation.FuncAnimation`.
-
-        Returns:
-            matplotlib.artist.Artist
-
-        Raises:
-            NotImplementedError:
-                Abstract method.
-        """
-        raise NotImplementedError
-
-    @abstractmethod
-    def update(self, frame):
-        """Update the animation frame.
-
-        Args:
-            frame (int): Index of the frame to draw.
-
-        Returns:
-            matplotlib.artist.Artist
-
-        Raises:
-            NotImplementedError:
-                Abstract method.
-        """
-        raise NotImplementedError
-
-    def get_frame_lim(self):
-        """
-        Returns:
-            tuple:
-                The animation frame index limits.
-        """
-        return self._frame_lim
-
-    def _get_frame_list(self):
-        """Get a full list of all frame values to be played in the animation."""
-        frame_lim = self.get_frame_lim()
-        return list(range(frame_lim[0], frame_lim[1]+1))
-
-    def animate(self):
-        """Synthesize an animation. If an animation was already synthesized and
-        cached, return the cached animation.
-
-        Returns:
-            matplotlib.animation.FuncAnimation
-        """
-        # Only create a new animation if the cache is empty
-        if self._cached_anim is None:
-            self._cached_anim = FuncAnimation(self.fig, self.update,
-                init_func=self.init_func,
-                frames=self._get_frame_list(),
-                interval=1e3/self.fps,
-                repeat=False)
-        return self._cached_anim
-
-    def show(self):
-        """Play the animation in interactive mode."""
-        plt.show(self.animate())
-
-    def save(self, filename, **kwargs):
-        """Save the animation to a file.
-
-        Kwargs:
-            fps: Fixed to the animator's `fps` attribute.
-        """
-        kwargs.pop('fps', None) # FPS is fixed
-        self.animate().save(filename, fps=self.fps, **kwargs)
-
-class TimeAnimator(BaseAnimator):
+class TimeAnimator(bgraph.BaseAnimator):
     """Animator where the frame variable is time, i.e. depicts a sequence
     evolving in time.
 
@@ -166,11 +19,11 @@ class TimeAnimator(BaseAnimator):
         instant_pause_time (float, optional): Amount of pause time in seconds
             for instantaneous events (appear in a single instant of time).
         display_current_time (bool, optional): Same as `display_current` in
-            `specrel.graphics.simpanim.BaseAnimator`.
+            `specrel.graphics.basegraph.BaseAnimator`.
         display_current_time_decimals (int, optional): Same as
             `display_current_decimals` in
-            `specrel.graphics.simpanim.BaseAnimator`.
-        others: See `specrel.graphics.simpanim.BaseAnimator`.
+            `specrel.graphics.basegraph.BaseAnimator`.
+        others: See `specrel.graphics.basegraph.BaseAnimator`.
     """
     def __init__(self,
         fig=graphrc['fig'],
@@ -705,7 +558,7 @@ class ObjectAnimator(STAnimator):
                             line_tag = None
                     i += 2
 
-class TransformAnimator(BaseAnimator, bgraph.SingleAxisFigureCreator):
+class TransformAnimator(bgraph.BaseAnimator, bgraph.SingleAxisFigureCreator):
     """Animator where the frame variable is velocity, i.e. animates a spacetime
     transformation as the object is accelerated instantaneously.
 
@@ -738,10 +591,10 @@ class TransformAnimator(BaseAnimator, bgraph.SingleAxisFigureCreator):
         transition_duration (float, optional):
         fps (float, optional): Animation frames per second.
         display_current_velocity (bool, optional): Same as `display_current` in
-            `specrel.graphics.simpanim.BaseAnimator`.
+            `specrel.graphics.basegraph.BaseAnimator`.
         display_current_velocity_decimals (int, optional): Same as
             `display_current_decimals` in
-            `specrel.graphics.simpanim.BaseAnimator`.
+            `specrel.graphics.basegraph.BaseAnimator`.
         title (str, optional): Animation title.
 
     Attributes:
@@ -773,7 +626,7 @@ class TransformAnimator(BaseAnimator, bgraph.SingleAxisFigureCreator):
 
         bgraph.SingleAxisFigureCreator.__init__(self, fig, ax)
         nsteps = round(transition_duration * fps)
-        BaseAnimator.__init__(self, self.fig, velocity / nsteps, fps,
+        bgraph.BaseAnimator.__init__(self, self.fig, velocity / nsteps, fps,
             display_current_velocity, display_current_velocity_decimals, title,
             (0, nsteps))
         self.transformable = lorentz_transformable

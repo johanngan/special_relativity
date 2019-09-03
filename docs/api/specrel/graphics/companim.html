@@ -40,7 +40,7 @@ from specrel.graphics import graphrc
 import specrel.graphics.basegraph as bgraph
 import specrel.graphics.simpanim as sanim
 
-class MultiAnimator(bgraph.FigureCreator, sanim.BaseAnimator):
+class MultiAnimator(bgraph.FigureCreator, bgraph.BaseAnimator):
     &#34;&#34;&#34;Runs multiple animations simultaneously on different subplots.
 
     Args:
@@ -49,7 +49,7 @@ class MultiAnimator(bgraph.FigureCreator, sanim.BaseAnimator):
             new figure window is created.
         axs (list, optional): List of axes in row major format. If `None`, a
             new set of axes is created under a new figure window.
-        others: See `specrel.graphics.simpanim.BaseAnimator`.
+        others: See `specrel.graphics.basegraph.BaseAnimator`.
 
     Attributes:
         axs (list): List of axes to draw on in row major format.
@@ -74,7 +74,7 @@ class MultiAnimator(bgraph.FigureCreator, sanim.BaseAnimator):
         elif fig is None or axs is None:
             raise ValueError(&#39;Must give both figure and axes, or neither.&#39;)
         self.axs = axs
-        sanim.BaseAnimator.__init__(self, fig, stepsize, fps, display_current,
+        bgraph.BaseAnimator.__init__(self, fig, stepsize, fps, display_current,
             display_current_decimals, title, frame_lim)
 
         # Make sure there&#39;s at least one animation
@@ -326,11 +326,11 @@ class MultiTransformAnimator(MultiAnimator):
     def _val_text(self, val):
         return f&#39;$v = {{:.{self.display_current_decimals}f}}c$&#39;.format(val)
 
-class Rewinder(sanim.BaseAnimator):
+class Rewinder(bgraph.BaseAnimator):
     &#34;&#34;&#34;Animates the &#34;rewinding&#34; of an animator&#39;s animation.
 
     Args:
-        animator (specrel.graphics.simpanim.BaseAnimator): Animator to rewind.
+        animator (specrel.graphics.basegraph.BaseAnimator): Animator to rewind.
         rewind_rate (int, optional): See `rewind_rate` attribute.
         rewind_title (str, optional): Rewind animation title; overrides title of
             the original animation.
@@ -338,7 +338,7 @@ class Rewinder(sanim.BaseAnimator):
             beginning and end of the rewind animation.
 
     Attributes:
-        animator (specrel.graphics.simpanim.BaseAnimator): Animator to rewind.
+        animator (specrel.graphics.basegraph.BaseAnimator): Animator to rewind.
         end_pause_frames (int): Number of pause frame at the beginning and end
             of the rewind animation.
         rewind_rate (int): Speedup factor of the rewind animation relative to
@@ -476,7 +476,7 @@ new figure window is created.</dd>
 <dd>List of axes in row major format. If <code>None</code>, a
 new set of axes is created under a new figure window.</dd>
 <dt><strong><code>others</code></strong></dt>
-<dd>See <a title="specrel.graphics.simpanim.BaseAnimator" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator"><code>BaseAnimator</code></a>.</dd>
+<dd>See <a title="specrel.graphics.basegraph.BaseAnimator" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator"><code>BaseAnimator</code></a>.</dd>
 </dl>
 <h2 id="attributes">Attributes</h2>
 <dl>
@@ -485,7 +485,7 @@ new set of axes is created under a new figure window.</dd>
 </dl></section>
 <details class="source">
 <summary>Source code</summary>
-<pre><code class="python">class MultiAnimator(bgraph.FigureCreator, sanim.BaseAnimator):
+<pre><code class="python">class MultiAnimator(bgraph.FigureCreator, bgraph.BaseAnimator):
     &#34;&#34;&#34;Runs multiple animations simultaneously on different subplots.
 
     Args:
@@ -494,7 +494,7 @@ new set of axes is created under a new figure window.</dd>
             new figure window is created.
         axs (list, optional): List of axes in row major format. If `None`, a
             new set of axes is created under a new figure window.
-        others: See `specrel.graphics.simpanim.BaseAnimator`.
+        others: See `specrel.graphics.basegraph.BaseAnimator`.
 
     Attributes:
         axs (list): List of axes to draw on in row major format.
@@ -519,7 +519,7 @@ new set of axes is created under a new figure window.</dd>
         elif fig is None or axs is None:
             raise ValueError(&#39;Must give both figure and axes, or neither.&#39;)
         self.axs = axs
-        sanim.BaseAnimator.__init__(self, fig, stepsize, fps, display_current,
+        bgraph.BaseAnimator.__init__(self, fig, stepsize, fps, display_current,
             display_current_decimals, title, frame_lim)
 
         # Make sure there&#39;s at least one animation
@@ -592,7 +592,7 @@ new set of axes is created under a new figure window.</dd>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="specrel.graphics.basegraph.FigureCreator" href="basegraph.html#specrel.graphics.basegraph.FigureCreator">FigureCreator</a></li>
-<li><a title="specrel.graphics.simpanim.BaseAnimator" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator">BaseAnimator</a></li>
+<li><a title="specrel.graphics.basegraph.BaseAnimator" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator">BaseAnimator</a></li>
 <li>abc.ABC</li>
 </ul>
 <h3>Subclasses</h3>
@@ -607,21 +607,21 @@ new set of axes is created under a new figure window.</dd>
 <li><code><a title="specrel.graphics.basegraph.FigureCreator.close" href="basegraph.html#specrel.graphics.basegraph.FigureCreator.close">close</a></code></li>
 </ul>
 </li>
-<li><code><b><a title="specrel.graphics.simpanim.BaseAnimator" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator">BaseAnimator</a></b></code>:
+<li><code><b><a title="specrel.graphics.basegraph.BaseAnimator" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator">BaseAnimator</a></b></code>:
 <ul class="hlist">
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.clear" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.clear">clear</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.get_frame_lim" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.init_func" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.init_func">init_func</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.update" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.update">update</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.clear" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.clear">clear</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.get_frame_lim" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.init_func" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.init_func">init_func</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.update" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.update">update</a></code></li>
 </ul>
 </li>
-<li><code><b><a title="specrel.graphics.simpanim.BaseAnimator" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator">BaseAnimator</a></b></code>:
+<li><code><b><a title="specrel.graphics.basegraph.BaseAnimator" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator">BaseAnimator</a></b></code>:
 <ul class="hlist">
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.animate" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.animate">animate</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.calc_frame_idx" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.calc_frame_val" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.save" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.save">save</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.show" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.show">show</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.animate" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.animate">animate</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.calc_frame_idx" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.calc_frame_val" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.save" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.save">save</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.show" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.show">show</a></code></li>
 </ul>
 </li>
 </ul>
@@ -789,23 +789,23 @@ arguments for <code>animator</code>, <em>except</em> for the following:<ul>
 <li><a title="specrel.graphics.companim.MultiAnimator" href="#specrel.graphics.companim.MultiAnimator">MultiAnimator</a></li>
 <li><a title="specrel.graphics.basegraph.FigureCreator" href="basegraph.html#specrel.graphics.basegraph.FigureCreator">FigureCreator</a></li>
 <li><a title="specrel.graphics.simpanim.TimeAnimator" href="simpanim.html#specrel.graphics.simpanim.TimeAnimator">TimeAnimator</a></li>
-<li><a title="specrel.graphics.simpanim.BaseAnimator" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator">BaseAnimator</a></li>
+<li><a title="specrel.graphics.basegraph.BaseAnimator" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator">BaseAnimator</a></li>
 <li>abc.ABC</li>
 </ul>
 <h3>Inherited members</h3>
 <ul class="hlist">
 <li><code><b><a title="specrel.graphics.companim.MultiAnimator" href="#specrel.graphics.companim.MultiAnimator">MultiAnimator</a></b></code>:
 <ul class="hlist">
-<li><code><a title="specrel.graphics.companim.MultiAnimator.animate" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.animate">animate</a></code></li>
-<li><code><a title="specrel.graphics.companim.MultiAnimator.calc_frame_idx" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
-<li><code><a title="specrel.graphics.companim.MultiAnimator.calc_frame_val" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
-<li><code><a title="specrel.graphics.companim.MultiAnimator.clear" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.clear">clear</a></code></li>
+<li><code><a title="specrel.graphics.companim.MultiAnimator.animate" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.animate">animate</a></code></li>
+<li><code><a title="specrel.graphics.companim.MultiAnimator.calc_frame_idx" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
+<li><code><a title="specrel.graphics.companim.MultiAnimator.calc_frame_val" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
+<li><code><a title="specrel.graphics.companim.MultiAnimator.clear" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.clear">clear</a></code></li>
 <li><code><a title="specrel.graphics.companim.MultiAnimator.close" href="basegraph.html#specrel.graphics.basegraph.FigureCreator.close">close</a></code></li>
-<li><code><a title="specrel.graphics.companim.MultiAnimator.get_frame_lim" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
-<li><code><a title="specrel.graphics.companim.MultiAnimator.init_func" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.init_func">init_func</a></code></li>
-<li><code><a title="specrel.graphics.companim.MultiAnimator.save" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.save">save</a></code></li>
-<li><code><a title="specrel.graphics.companim.MultiAnimator.show" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.show">show</a></code></li>
-<li><code><a title="specrel.graphics.companim.MultiAnimator.update" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.update">update</a></code></li>
+<li><code><a title="specrel.graphics.companim.MultiAnimator.get_frame_lim" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
+<li><code><a title="specrel.graphics.companim.MultiAnimator.init_func" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.init_func">init_func</a></code></li>
+<li><code><a title="specrel.graphics.companim.MultiAnimator.save" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.save">save</a></code></li>
+<li><code><a title="specrel.graphics.companim.MultiAnimator.show" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.show">show</a></code></li>
+<li><code><a title="specrel.graphics.companim.MultiAnimator.update" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.update">update</a></code></li>
 </ul>
 </li>
 </ul>
@@ -926,23 +926,23 @@ initialization, from the following list:<ul>
 <ul class="hlist">
 <li><a title="specrel.graphics.companim.MultiAnimator" href="#specrel.graphics.companim.MultiAnimator">MultiAnimator</a></li>
 <li><a title="specrel.graphics.basegraph.FigureCreator" href="basegraph.html#specrel.graphics.basegraph.FigureCreator">FigureCreator</a></li>
-<li><a title="specrel.graphics.simpanim.BaseAnimator" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator">BaseAnimator</a></li>
+<li><a title="specrel.graphics.basegraph.BaseAnimator" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator">BaseAnimator</a></li>
 <li>abc.ABC</li>
 </ul>
 <h3>Inherited members</h3>
 <ul class="hlist">
 <li><code><b><a title="specrel.graphics.companim.MultiAnimator" href="#specrel.graphics.companim.MultiAnimator">MultiAnimator</a></b></code>:
 <ul class="hlist">
-<li><code><a title="specrel.graphics.companim.MultiAnimator.animate" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.animate">animate</a></code></li>
-<li><code><a title="specrel.graphics.companim.MultiAnimator.calc_frame_idx" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
-<li><code><a title="specrel.graphics.companim.MultiAnimator.calc_frame_val" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
-<li><code><a title="specrel.graphics.companim.MultiAnimator.clear" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.clear">clear</a></code></li>
+<li><code><a title="specrel.graphics.companim.MultiAnimator.animate" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.animate">animate</a></code></li>
+<li><code><a title="specrel.graphics.companim.MultiAnimator.calc_frame_idx" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
+<li><code><a title="specrel.graphics.companim.MultiAnimator.calc_frame_val" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
+<li><code><a title="specrel.graphics.companim.MultiAnimator.clear" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.clear">clear</a></code></li>
 <li><code><a title="specrel.graphics.companim.MultiAnimator.close" href="basegraph.html#specrel.graphics.basegraph.FigureCreator.close">close</a></code></li>
-<li><code><a title="specrel.graphics.companim.MultiAnimator.get_frame_lim" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
-<li><code><a title="specrel.graphics.companim.MultiAnimator.init_func" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.init_func">init_func</a></code></li>
-<li><code><a title="specrel.graphics.companim.MultiAnimator.save" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.save">save</a></code></li>
-<li><code><a title="specrel.graphics.companim.MultiAnimator.show" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.show">show</a></code></li>
-<li><code><a title="specrel.graphics.companim.MultiAnimator.update" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.update">update</a></code></li>
+<li><code><a title="specrel.graphics.companim.MultiAnimator.get_frame_lim" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
+<li><code><a title="specrel.graphics.companim.MultiAnimator.init_func" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.init_func">init_func</a></code></li>
+<li><code><a title="specrel.graphics.companim.MultiAnimator.save" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.save">save</a></code></li>
+<li><code><a title="specrel.graphics.companim.MultiAnimator.show" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.show">show</a></code></li>
+<li><code><a title="specrel.graphics.companim.MultiAnimator.update" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.update">update</a></code></li>
 </ul>
 </li>
 </ul>
@@ -955,7 +955,7 @@ initialization, from the following list:<ul>
 <section class="desc"><p>Animates the "rewinding" of an animator's animation.</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>animator</code></strong> :&ensp;<a title="specrel.graphics.simpanim.BaseAnimator" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator"><code>BaseAnimator</code></a></dt>
+<dt><strong><code>animator</code></strong> :&ensp;<a title="specrel.graphics.basegraph.BaseAnimator" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator"><code>BaseAnimator</code></a></dt>
 <dd>Animator to rewind.</dd>
 <dt><strong><code>rewind_rate</code></strong> :&ensp;<code>int</code>, optional</dt>
 <dd>See <code>rewind_rate</code> attribute.</dd>
@@ -968,7 +968,7 @@ beginning and end of the rewind animation.</dd>
 </dl>
 <h2 id="attributes">Attributes</h2>
 <dl>
-<dt><strong><code>animator</code></strong> :&ensp;<a title="specrel.graphics.simpanim.BaseAnimator" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator"><code>BaseAnimator</code></a></dt>
+<dt><strong><code>animator</code></strong> :&ensp;<a title="specrel.graphics.basegraph.BaseAnimator" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator"><code>BaseAnimator</code></a></dt>
 <dd>Animator to rewind.</dd>
 <dt><strong><code>end_pause_frames</code></strong> :&ensp;<code>int</code></dt>
 <dd>Number of pause frame at the beginning and end
@@ -979,11 +979,11 @@ the original.</dd>
 </dl></section>
 <details class="source">
 <summary>Source code</summary>
-<pre><code class="python">class Rewinder(sanim.BaseAnimator):
+<pre><code class="python">class Rewinder(bgraph.BaseAnimator):
     &#34;&#34;&#34;Animates the &#34;rewinding&#34; of an animator&#39;s animation.
 
     Args:
-        animator (specrel.graphics.simpanim.BaseAnimator): Animator to rewind.
+        animator (specrel.graphics.basegraph.BaseAnimator): Animator to rewind.
         rewind_rate (int, optional): See `rewind_rate` attribute.
         rewind_title (str, optional): Rewind animation title; overrides title of
             the original animation.
@@ -991,7 +991,7 @@ the original.</dd>
             beginning and end of the rewind animation.
 
     Attributes:
-        animator (specrel.graphics.simpanim.BaseAnimator): Animator to rewind.
+        animator (specrel.graphics.basegraph.BaseAnimator): Animator to rewind.
         end_pause_frames (int): Number of pause frame at the beginning and end
             of the rewind animation.
         rewind_rate (int): Speedup factor of the rewind animation relative to
@@ -1040,22 +1040,22 @@ the original.</dd>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
-<li><a title="specrel.graphics.simpanim.BaseAnimator" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator">BaseAnimator</a></li>
+<li><a title="specrel.graphics.basegraph.BaseAnimator" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator">BaseAnimator</a></li>
 <li>abc.ABC</li>
 </ul>
 <h3>Inherited members</h3>
 <ul class="hlist">
-<li><code><b><a title="specrel.graphics.simpanim.BaseAnimator" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator">BaseAnimator</a></b></code>:
+<li><code><b><a title="specrel.graphics.basegraph.BaseAnimator" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator">BaseAnimator</a></b></code>:
 <ul class="hlist">
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.animate" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.animate">animate</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.calc_frame_idx" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.calc_frame_val" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.clear" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.clear">clear</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.get_frame_lim" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.init_func" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.init_func">init_func</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.save" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.save">save</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.show" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.show">show</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.update" href="simpanim.html#specrel.graphics.simpanim.BaseAnimator.update">update</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.animate" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.animate">animate</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.calc_frame_idx" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.calc_frame_val" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.clear" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.clear">clear</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.get_frame_lim" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.init_func" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.init_func">init_func</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.save" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.save">save</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.show" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.show">show</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.update" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.update">update</a></code></li>
 </ul>
 </li>
 </ul>

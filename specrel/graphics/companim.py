@@ -13,7 +13,7 @@ from specrel.graphics import graphrc
 import specrel.graphics.basegraph as bgraph
 import specrel.graphics.simpanim as sanim
 
-class MultiAnimator(bgraph.FigureCreator, sanim.BaseAnimator):
+class MultiAnimator(bgraph.FigureCreator, bgraph.BaseAnimator):
     """Runs multiple animations simultaneously on different subplots.
 
     Args:
@@ -22,7 +22,7 @@ class MultiAnimator(bgraph.FigureCreator, sanim.BaseAnimator):
             new figure window is created.
         axs (list, optional): List of axes in row major format. If `None`, a
             new set of axes is created under a new figure window.
-        others: See `specrel.graphics.simpanim.BaseAnimator`.
+        others: See `specrel.graphics.basegraph.BaseAnimator`.
 
     Attributes:
         axs (list): List of axes to draw on in row major format.
@@ -47,7 +47,7 @@ class MultiAnimator(bgraph.FigureCreator, sanim.BaseAnimator):
         elif fig is None or axs is None:
             raise ValueError('Must give both figure and axes, or neither.')
         self.axs = axs
-        sanim.BaseAnimator.__init__(self, fig, stepsize, fps, display_current,
+        bgraph.BaseAnimator.__init__(self, fig, stepsize, fps, display_current,
             display_current_decimals, title, frame_lim)
 
         # Make sure there's at least one animation
@@ -299,11 +299,11 @@ class MultiTransformAnimator(MultiAnimator):
     def _val_text(self, val):
         return f'$v = {{:.{self.display_current_decimals}f}}c$'.format(val)
 
-class Rewinder(sanim.BaseAnimator):
+class Rewinder(bgraph.BaseAnimator):
     """Animates the "rewinding" of an animator's animation.
 
     Args:
-        animator (specrel.graphics.simpanim.BaseAnimator): Animator to rewind.
+        animator (specrel.graphics.basegraph.BaseAnimator): Animator to rewind.
         rewind_rate (int, optional): See `rewind_rate` attribute.
         rewind_title (str, optional): Rewind animation title; overrides title of
             the original animation.
@@ -311,7 +311,7 @@ class Rewinder(sanim.BaseAnimator):
             beginning and end of the rewind animation.
 
     Attributes:
-        animator (specrel.graphics.simpanim.BaseAnimator): Animator to rewind.
+        animator (specrel.graphics.basegraph.BaseAnimator): Animator to rewind.
         end_pause_frames (int): Number of pause frame at the beginning and end
             of the rewind animation.
         rewind_rate (int): Speedup factor of the rewind animation relative to

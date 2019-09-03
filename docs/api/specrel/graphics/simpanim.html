@@ -27,161 +27,14 @@
 
 from abc import ABC, abstractmethod
 import copy
-import math
 import warnings
 
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
 
 from specrel.graphics import graphrc
 import specrel.graphics.basegraph as bgraph
 
-class BaseAnimator(ABC):
-    &#34;&#34;&#34;Base class for animators that animate over some changing control
-    variable, like time or velocity.
-
-    Args:
-        frame_lim (tuple, optional): Minimum and maximum frame index of the
-            animation. See `BaseAnimator.calc_frame_idx`.
-        others: See attributes.
-
-    Attributes:
-        display_current (bool): Flag for displaying the control variable value
-            of the current animation frame.
-        display_current_decimals (int): Number of decimals to display the
-            current control variable to.
-        fig (matplotlib.figure.Figure): Matplotlib figure window.
-        fps (float): Animation frames per second.
-        stepsize (float): Change in control variable value over one frame.
-        title (str): Animation title; static throughout all frames.
-    &#34;&#34;&#34;
-    def __init__(self,
-        fig=graphrc[&#39;fig&#39;],
-        stepsize=None,
-        fps=graphrc[&#39;anim.fps&#39;],
-        display_current=graphrc[&#39;anim.display_current&#39;],
-        display_current_decimals=graphrc[&#39;anim.display_current_decimals&#39;],
-        title=graphrc[&#39;title&#39;],
-        frame_lim=(0, 0)):
-
-        self.fig = fig
-        self.display_current = display_current
-        self.display_current_decimals = display_current_decimals
-        self.stepsize = stepsize
-        self.fps = fps
-        self.title = title
-        self._frame_lim = frame_lim
-        # Cached animation if already created previously
-        self._cached_anim = None
-
-    def clear(self):
-        &#34;&#34;&#34;Clear persistent data from the last animation.&#34;&#34;&#34;
-        self._frame_lim = (0, 0)
-        self._cached_anim = None
-
-    def calc_frame_idx(self, val):
-        &#34;&#34;&#34;Snap a value to the closest corresponding frame. Frames are indexed
-        as multiples of the stepsize. Note that frame indexes can be either
-        positive or negative.
-
-        Args:
-            val (float): Value of the frame.
-
-        Returns:
-            int:
-                Closest frame index corresponding to `val`.
-        &#34;&#34;&#34;
-        return round(val / self.stepsize)
-
-    def calc_frame_val(self, idx):
-        &#34;&#34;&#34;Get the corresponding value of a frame at a specified index, rounded
-        to the same precision as the stepsize, but with one extra decimal place.
-
-        Args:
-            idx (int): Frame index.
-
-        Returns:
-            float:
-                Value of the frame.
-        &#34;&#34;&#34;
-        # Round to the same order of magnitude (one smaller for safety) as the
-        # stepsize to ensure precision, but to mitigate floating-point error
-        def order_of_mag(x):
-            return int(math.floor(math.log10(abs(x))))
-        return round(idx * self.stepsize, 1-order_of_mag(self.stepsize))
-
-    @abstractmethod
-    def init_func(self):
-        &#34;&#34;&#34;Initialization function for `matplotlib.animation.FuncAnimation`.
-
-        Returns:
-            matplotlib.artist.Artist
-
-        Raises:
-            NotImplementedError:
-                Abstract method.
-        &#34;&#34;&#34;
-        raise NotImplementedError
-
-    @abstractmethod
-    def update(self, frame):
-        &#34;&#34;&#34;Update the animation frame.
-
-        Args:
-            frame (int): Index of the frame to draw.
-
-        Returns:
-            matplotlib.artist.Artist
-
-        Raises:
-            NotImplementedError:
-                Abstract method.
-        &#34;&#34;&#34;
-        raise NotImplementedError
-
-    def get_frame_lim(self):
-        &#34;&#34;&#34;
-        Returns:
-            tuple:
-                The animation frame index limits.
-        &#34;&#34;&#34;
-        return self._frame_lim
-
-    def _get_frame_list(self):
-        &#34;&#34;&#34;Get a full list of all frame values to be played in the animation.&#34;&#34;&#34;
-        frame_lim = self.get_frame_lim()
-        return list(range(frame_lim[0], frame_lim[1]+1))
-
-    def animate(self):
-        &#34;&#34;&#34;Synthesize an animation. If an animation was already synthesized and
-        cached, return the cached animation.
-
-        Returns:
-            matplotlib.animation.FuncAnimation
-        &#34;&#34;&#34;
-        # Only create a new animation if the cache is empty
-        if self._cached_anim is None:
-            self._cached_anim = FuncAnimation(self.fig, self.update,
-                init_func=self.init_func,
-                frames=self._get_frame_list(),
-                interval=1e3/self.fps,
-                repeat=False)
-        return self._cached_anim
-
-    def show(self):
-        &#34;&#34;&#34;Play the animation in interactive mode.&#34;&#34;&#34;
-        plt.show(self.animate())
-
-    def save(self, filename, **kwargs):
-        &#34;&#34;&#34;Save the animation to a file.
-
-        Kwargs:
-            fps: Fixed to the animator&#39;s `fps` attribute.
-        &#34;&#34;&#34;
-        kwargs.pop(&#39;fps&#39;, None) # FPS is fixed
-        self.animate().save(filename, fps=self.fps, **kwargs)
-
-class TimeAnimator(BaseAnimator):
+class TimeAnimator(bgraph.BaseAnimator):
     &#34;&#34;&#34;Animator where the frame variable is time, i.e. depicts a sequence
     evolving in time.
 
@@ -191,11 +44,11 @@ class TimeAnimator(BaseAnimator):
         instant_pause_time (float, optional): Amount of pause time in seconds
             for instantaneous events (appear in a single instant of time).
         display_current_time (bool, optional): Same as `display_current` in
-            `specrel.graphics.simpanim.BaseAnimator`.
+            `specrel.graphics.basegraph.BaseAnimator`.
         display_current_time_decimals (int, optional): Same as
             `display_current_decimals` in
-            `specrel.graphics.simpanim.BaseAnimator`.
-        others: See `specrel.graphics.simpanim.BaseAnimator`.
+            `specrel.graphics.basegraph.BaseAnimator`.
+        others: See `specrel.graphics.basegraph.BaseAnimator`.
     &#34;&#34;&#34;
     def __init__(self,
         fig=graphrc[&#39;fig&#39;],
@@ -730,7 +583,7 @@ class ObjectAnimator(STAnimator):
                             line_tag = None
                     i += 2
 
-class TransformAnimator(BaseAnimator, bgraph.SingleAxisFigureCreator):
+class TransformAnimator(bgraph.BaseAnimator, bgraph.SingleAxisFigureCreator):
     &#34;&#34;&#34;Animator where the frame variable is velocity, i.e. animates a spacetime
     transformation as the object is accelerated instantaneously.
 
@@ -763,10 +616,10 @@ class TransformAnimator(BaseAnimator, bgraph.SingleAxisFigureCreator):
         transition_duration (float, optional):
         fps (float, optional): Animation frames per second.
         display_current_velocity (bool, optional): Same as `display_current` in
-            `specrel.graphics.simpanim.BaseAnimator`.
+            `specrel.graphics.basegraph.BaseAnimator`.
         display_current_velocity_decimals (int, optional): Same as
             `display_current_decimals` in
-            `specrel.graphics.simpanim.BaseAnimator`.
+            `specrel.graphics.basegraph.BaseAnimator`.
         title (str, optional): Animation title.
 
     Attributes:
@@ -798,7 +651,7 @@ class TransformAnimator(BaseAnimator, bgraph.SingleAxisFigureCreator):
 
         bgraph.SingleAxisFigureCreator.__init__(self, fig, ax)
         nsteps = round(transition_duration * fps)
-        BaseAnimator.__init__(self, self.fig, velocity / nsteps, fps,
+        bgraph.BaseAnimator.__init__(self, self.fig, velocity / nsteps, fps,
             display_current_velocity, display_current_velocity_decimals, title,
             (0, nsteps))
         self.transformable = lorentz_transformable
@@ -865,437 +718,6 @@ class TransformAnimator(BaseAnimator, bgraph.SingleAxisFigureCreator):
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="specrel.graphics.simpanim.BaseAnimator"><code class="flex name class">
-<span>class <span class="ident">BaseAnimator</span></span>
-<span>(</span><span>fig=None, stepsize=None, fps=50, display_current=True, display_current_decimals=3, title=None, frame_lim=(0, 0))</span>
-</code></dt>
-<dd>
-<section class="desc"><p>Base class for animators that animate over some changing control
-variable, like time or velocity.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>frame_lim</code></strong> :&ensp;<code>tuple</code>, optional</dt>
-<dd>Minimum and maximum frame index of the
-animation. See <a title="specrel.graphics.simpanim.BaseAnimator.calc_frame_idx" href="#specrel.graphics.simpanim.BaseAnimator.calc_frame_idx"><code>BaseAnimator.calc_frame_idx()</code></a>.</dd>
-<dt><strong><code>others</code></strong></dt>
-<dd>See attributes.</dd>
-</dl>
-<h2 id="attributes">Attributes</h2>
-<dl>
-<dt><strong><code>display_current</code></strong> :&ensp;<code>bool</code></dt>
-<dd>Flag for displaying the control variable value
-of the current animation frame.</dd>
-<dt><strong><code>display_current_decimals</code></strong> :&ensp;<code>int</code></dt>
-<dd>Number of decimals to display the
-current control variable to.</dd>
-<dt><strong><code>fig</code></strong> :&ensp;<code>matplotlib.figure.Figure</code></dt>
-<dd>Matplotlib figure window.</dd>
-<dt><strong><code>fps</code></strong> :&ensp;<code>float</code></dt>
-<dd>Animation frames per second.</dd>
-<dt><strong><code>stepsize</code></strong> :&ensp;<code>float</code></dt>
-<dd>Change in control variable value over one frame.</dd>
-<dt><strong><code>title</code></strong> :&ensp;<code>str</code></dt>
-<dd>Animation title; static throughout all frames.</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">class BaseAnimator(ABC):
-    &#34;&#34;&#34;Base class for animators that animate over some changing control
-    variable, like time or velocity.
-
-    Args:
-        frame_lim (tuple, optional): Minimum and maximum frame index of the
-            animation. See `BaseAnimator.calc_frame_idx`.
-        others: See attributes.
-
-    Attributes:
-        display_current (bool): Flag for displaying the control variable value
-            of the current animation frame.
-        display_current_decimals (int): Number of decimals to display the
-            current control variable to.
-        fig (matplotlib.figure.Figure): Matplotlib figure window.
-        fps (float): Animation frames per second.
-        stepsize (float): Change in control variable value over one frame.
-        title (str): Animation title; static throughout all frames.
-    &#34;&#34;&#34;
-    def __init__(self,
-        fig=graphrc[&#39;fig&#39;],
-        stepsize=None,
-        fps=graphrc[&#39;anim.fps&#39;],
-        display_current=graphrc[&#39;anim.display_current&#39;],
-        display_current_decimals=graphrc[&#39;anim.display_current_decimals&#39;],
-        title=graphrc[&#39;title&#39;],
-        frame_lim=(0, 0)):
-
-        self.fig = fig
-        self.display_current = display_current
-        self.display_current_decimals = display_current_decimals
-        self.stepsize = stepsize
-        self.fps = fps
-        self.title = title
-        self._frame_lim = frame_lim
-        # Cached animation if already created previously
-        self._cached_anim = None
-
-    def clear(self):
-        &#34;&#34;&#34;Clear persistent data from the last animation.&#34;&#34;&#34;
-        self._frame_lim = (0, 0)
-        self._cached_anim = None
-
-    def calc_frame_idx(self, val):
-        &#34;&#34;&#34;Snap a value to the closest corresponding frame. Frames are indexed
-        as multiples of the stepsize. Note that frame indexes can be either
-        positive or negative.
-
-        Args:
-            val (float): Value of the frame.
-
-        Returns:
-            int:
-                Closest frame index corresponding to `val`.
-        &#34;&#34;&#34;
-        return round(val / self.stepsize)
-
-    def calc_frame_val(self, idx):
-        &#34;&#34;&#34;Get the corresponding value of a frame at a specified index, rounded
-        to the same precision as the stepsize, but with one extra decimal place.
-
-        Args:
-            idx (int): Frame index.
-
-        Returns:
-            float:
-                Value of the frame.
-        &#34;&#34;&#34;
-        # Round to the same order of magnitude (one smaller for safety) as the
-        # stepsize to ensure precision, but to mitigate floating-point error
-        def order_of_mag(x):
-            return int(math.floor(math.log10(abs(x))))
-        return round(idx * self.stepsize, 1-order_of_mag(self.stepsize))
-
-    @abstractmethod
-    def init_func(self):
-        &#34;&#34;&#34;Initialization function for `matplotlib.animation.FuncAnimation`.
-
-        Returns:
-            matplotlib.artist.Artist
-
-        Raises:
-            NotImplementedError:
-                Abstract method.
-        &#34;&#34;&#34;
-        raise NotImplementedError
-
-    @abstractmethod
-    def update(self, frame):
-        &#34;&#34;&#34;Update the animation frame.
-
-        Args:
-            frame (int): Index of the frame to draw.
-
-        Returns:
-            matplotlib.artist.Artist
-
-        Raises:
-            NotImplementedError:
-                Abstract method.
-        &#34;&#34;&#34;
-        raise NotImplementedError
-
-    def get_frame_lim(self):
-        &#34;&#34;&#34;
-        Returns:
-            tuple:
-                The animation frame index limits.
-        &#34;&#34;&#34;
-        return self._frame_lim
-
-    def _get_frame_list(self):
-        &#34;&#34;&#34;Get a full list of all frame values to be played in the animation.&#34;&#34;&#34;
-        frame_lim = self.get_frame_lim()
-        return list(range(frame_lim[0], frame_lim[1]+1))
-
-    def animate(self):
-        &#34;&#34;&#34;Synthesize an animation. If an animation was already synthesized and
-        cached, return the cached animation.
-
-        Returns:
-            matplotlib.animation.FuncAnimation
-        &#34;&#34;&#34;
-        # Only create a new animation if the cache is empty
-        if self._cached_anim is None:
-            self._cached_anim = FuncAnimation(self.fig, self.update,
-                init_func=self.init_func,
-                frames=self._get_frame_list(),
-                interval=1e3/self.fps,
-                repeat=False)
-        return self._cached_anim
-
-    def show(self):
-        &#34;&#34;&#34;Play the animation in interactive mode.&#34;&#34;&#34;
-        plt.show(self.animate())
-
-    def save(self, filename, **kwargs):
-        &#34;&#34;&#34;Save the animation to a file.
-
-        Kwargs:
-            fps: Fixed to the animator&#39;s `fps` attribute.
-        &#34;&#34;&#34;
-        kwargs.pop(&#39;fps&#39;, None) # FPS is fixed
-        self.animate().save(filename, fps=self.fps, **kwargs)</code></pre>
-</details>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li>abc.ABC</li>
-</ul>
-<h3>Subclasses</h3>
-<ul class="hlist">
-<li><a title="specrel.graphics.simpanim.TimeAnimator" href="#specrel.graphics.simpanim.TimeAnimator">TimeAnimator</a></li>
-<li><a title="specrel.graphics.simpanim.TransformAnimator" href="#specrel.graphics.simpanim.TransformAnimator">TransformAnimator</a></li>
-<li><a title="specrel.graphics.companim.MultiAnimator" href="companim.html#specrel.graphics.companim.MultiAnimator">MultiAnimator</a></li>
-<li><a title="specrel.graphics.companim.Rewinder" href="companim.html#specrel.graphics.companim.Rewinder">Rewinder</a></li>
-</ul>
-<h3>Methods</h3>
-<dl>
-<dt id="specrel.graphics.simpanim.BaseAnimator.animate"><code class="name flex">
-<span>def <span class="ident">animate</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>Synthesize an animation. If an animation was already synthesized and
-cached, return the cached animation.</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>matplotlib.animation.FuncAnimation</code></dt>
-<dd>&nbsp;</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def animate(self):
-    &#34;&#34;&#34;Synthesize an animation. If an animation was already synthesized and
-    cached, return the cached animation.
-
-    Returns:
-        matplotlib.animation.FuncAnimation
-    &#34;&#34;&#34;
-    # Only create a new animation if the cache is empty
-    if self._cached_anim is None:
-        self._cached_anim = FuncAnimation(self.fig, self.update,
-            init_func=self.init_func,
-            frames=self._get_frame_list(),
-            interval=1e3/self.fps,
-            repeat=False)
-    return self._cached_anim</code></pre>
-</details>
-</dd>
-<dt id="specrel.graphics.simpanim.BaseAnimator.calc_frame_idx"><code class="name flex">
-<span>def <span class="ident">calc_frame_idx</span></span>(<span>self, val)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>Snap a value to the closest corresponding frame. Frames are indexed
-as multiples of the stepsize. Note that frame indexes can be either
-positive or negative.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>val</code></strong> :&ensp;<code>float</code></dt>
-<dd>Value of the frame.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>int</code>:</dt>
-<dd>Closest frame index corresponding to <code>val</code>.</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def calc_frame_idx(self, val):
-    &#34;&#34;&#34;Snap a value to the closest corresponding frame. Frames are indexed
-    as multiples of the stepsize. Note that frame indexes can be either
-    positive or negative.
-
-    Args:
-        val (float): Value of the frame.
-
-    Returns:
-        int:
-            Closest frame index corresponding to `val`.
-    &#34;&#34;&#34;
-    return round(val / self.stepsize)</code></pre>
-</details>
-</dd>
-<dt id="specrel.graphics.simpanim.BaseAnimator.calc_frame_val"><code class="name flex">
-<span>def <span class="ident">calc_frame_val</span></span>(<span>self, idx)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>Get the corresponding value of a frame at a specified index, rounded
-to the same precision as the stepsize, but with one extra decimal place.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>idx</code></strong> :&ensp;<code>int</code></dt>
-<dd>Frame index.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>float</code>:</dt>
-<dd>Value of the frame.</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def calc_frame_val(self, idx):
-    &#34;&#34;&#34;Get the corresponding value of a frame at a specified index, rounded
-    to the same precision as the stepsize, but with one extra decimal place.
-
-    Args:
-        idx (int): Frame index.
-
-    Returns:
-        float:
-            Value of the frame.
-    &#34;&#34;&#34;
-    # Round to the same order of magnitude (one smaller for safety) as the
-    # stepsize to ensure precision, but to mitigate floating-point error
-    def order_of_mag(x):
-        return int(math.floor(math.log10(abs(x))))
-    return round(idx * self.stepsize, 1-order_of_mag(self.stepsize))</code></pre>
-</details>
-</dd>
-<dt id="specrel.graphics.simpanim.BaseAnimator.clear"><code class="name flex">
-<span>def <span class="ident">clear</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>Clear persistent data from the last animation.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def clear(self):
-    &#34;&#34;&#34;Clear persistent data from the last animation.&#34;&#34;&#34;
-    self._frame_lim = (0, 0)
-    self._cached_anim = None</code></pre>
-</details>
-</dd>
-<dt id="specrel.graphics.simpanim.BaseAnimator.get_frame_lim"><code class="name flex">
-<span>def <span class="ident">get_frame_lim</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<section class="desc"><h2 id="returns">Returns</h2>
-<dl>
-<dt><code>tuple</code>:</dt>
-<dd>The animation frame index limits.</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def get_frame_lim(self):
-    &#34;&#34;&#34;
-    Returns:
-        tuple:
-            The animation frame index limits.
-    &#34;&#34;&#34;
-    return self._frame_lim</code></pre>
-</details>
-</dd>
-<dt id="specrel.graphics.simpanim.BaseAnimator.init_func"><code class="name flex">
-<span>def <span class="ident">init_func</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>Initialization function for <code>matplotlib.animation.FuncAnimation</code>.</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>matplotlib.artist.Artist</code></dt>
-<dd>&nbsp;</dd>
-</dl>
-<h2 id="raises">Raises</h2>
-<dl>
-<dt><code>NotImplementedError</code>:</dt>
-<dd>Abstract method.</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">@abstractmethod
-def init_func(self):
-    &#34;&#34;&#34;Initialization function for `matplotlib.animation.FuncAnimation`.
-
-    Returns:
-        matplotlib.artist.Artist
-
-    Raises:
-        NotImplementedError:
-            Abstract method.
-    &#34;&#34;&#34;
-    raise NotImplementedError</code></pre>
-</details>
-</dd>
-<dt id="specrel.graphics.simpanim.BaseAnimator.save"><code class="name flex">
-<span>def <span class="ident">save</span></span>(<span>self, filename, **kwargs)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>Save the animation to a file.</p>
-<h2 id="kwargs">Kwargs</h2>
-<dl>
-<dt><strong><code>fps</code></strong></dt>
-<dd>Fixed to the animator's <code>fps</code> attribute.</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def save(self, filename, **kwargs):
-    &#34;&#34;&#34;Save the animation to a file.
-
-    Kwargs:
-        fps: Fixed to the animator&#39;s `fps` attribute.
-    &#34;&#34;&#34;
-    kwargs.pop(&#39;fps&#39;, None) # FPS is fixed
-    self.animate().save(filename, fps=self.fps, **kwargs)</code></pre>
-</details>
-</dd>
-<dt id="specrel.graphics.simpanim.BaseAnimator.show"><code class="name flex">
-<span>def <span class="ident">show</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>Play the animation in interactive mode.</p></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def show(self):
-    &#34;&#34;&#34;Play the animation in interactive mode.&#34;&#34;&#34;
-    plt.show(self.animate())</code></pre>
-</details>
-</dd>
-<dt id="specrel.graphics.simpanim.BaseAnimator.update"><code class="name flex">
-<span>def <span class="ident">update</span></span>(<span>self, frame)</span>
-</code></dt>
-<dd>
-<section class="desc"><p>Update the animation frame.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>frame</code></strong> :&ensp;<code>int</code></dt>
-<dd>Index of the frame to draw.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>matplotlib.artist.Artist</code></dt>
-<dd>&nbsp;</dd>
-</dl>
-<h2 id="raises">Raises</h2>
-<dl>
-<dt><code>NotImplementedError</code>:</dt>
-<dd>Abstract method.</dd>
-</dl></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">@abstractmethod
-def update(self, frame):
-    &#34;&#34;&#34;Update the animation frame.
-
-    Args:
-        frame (int): Index of the frame to draw.
-
-    Returns:
-        matplotlib.artist.Artist
-
-    Raises:
-        NotImplementedError:
-            Abstract method.
-    &#34;&#34;&#34;
-    raise NotImplementedError</code></pre>
-</details>
-</dd>
-</dl>
-</dd>
 <dt id="specrel.graphics.simpanim.ObjectAnimator"><code class="flex name class">
 <span>class <span class="ident">ObjectAnimator</span></span>
 <span>(</span><span>fig=None, ax=None, grid=False, legend=False, legend_loc='upper right', ct_per_sec=1, instant_pause_time=1, fps=50, display_current_time=True, display_current_time_decimals=3, title=None, tag_height=0.025)</span>
@@ -1573,7 +995,7 @@ actual objects of any tag text that's drawn.</dd>
 <ul class="hlist">
 <li><a title="specrel.graphics.simpanim.STAnimator" href="#specrel.graphics.simpanim.STAnimator">STAnimator</a></li>
 <li><a title="specrel.graphics.simpanim.TimeAnimator" href="#specrel.graphics.simpanim.TimeAnimator">TimeAnimator</a></li>
-<li><a title="specrel.graphics.simpanim.BaseAnimator" href="#specrel.graphics.simpanim.BaseAnimator">BaseAnimator</a></li>
+<li><a title="specrel.graphics.basegraph.BaseAnimator" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator">BaseAnimator</a></li>
 <li><a title="specrel.graphics.basegraph.STPlotter" href="basegraph.html#specrel.graphics.basegraph.STPlotter">STPlotter</a></li>
 <li><a title="specrel.graphics.basegraph.SingleAxisFigureCreator" href="basegraph.html#specrel.graphics.basegraph.SingleAxisFigureCreator">SingleAxisFigureCreator</a></li>
 <li><a title="specrel.graphics.basegraph.FigureCreator" href="basegraph.html#specrel.graphics.basegraph.FigureCreator">FigureCreator</a></li>
@@ -1583,21 +1005,21 @@ actual objects of any tag text that's drawn.</dd>
 <ul class="hlist">
 <li><code><b><a title="specrel.graphics.simpanim.STAnimator" href="#specrel.graphics.simpanim.STAnimator">STAnimator</a></b></code>:
 <ul class="hlist">
-<li><code><a title="specrel.graphics.simpanim.STAnimator.animate" href="#specrel.graphics.simpanim.BaseAnimator.animate">animate</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.STAnimator.calc_frame_idx" href="#specrel.graphics.simpanim.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.STAnimator.calc_frame_val" href="#specrel.graphics.simpanim.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.STAnimator.clear" href="#specrel.graphics.simpanim.BaseAnimator.clear">clear</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.animate" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.animate">animate</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.calc_frame_idx" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.calc_frame_val" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.clear" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.clear">clear</a></code></li>
 <li><code><a title="specrel.graphics.simpanim.STAnimator.close" href="basegraph.html#specrel.graphics.basegraph.FigureCreator.close">close</a></code></li>
 <li><code><a title="specrel.graphics.simpanim.STAnimator.draw_line_segment" href="basegraph.html#specrel.graphics.basegraph.STPlotter.draw_line_segment">draw_line_segment</a></code></li>
 <li><code><a title="specrel.graphics.simpanim.STAnimator.draw_point" href="basegraph.html#specrel.graphics.basegraph.STPlotter.draw_point">draw_point</a></code></li>
 <li><code><a title="specrel.graphics.simpanim.STAnimator.draw_shaded_polygon" href="basegraph.html#specrel.graphics.basegraph.STPlotter.draw_shaded_polygon">draw_shaded_polygon</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.STAnimator.get_frame_lim" href="#specrel.graphics.simpanim.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.STAnimator.init_func" href="#specrel.graphics.simpanim.BaseAnimator.init_func">init_func</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.get_frame_lim" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.init_func" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.init_func">init_func</a></code></li>
 <li><code><a title="specrel.graphics.simpanim.STAnimator.resize" href="#specrel.graphics.simpanim.STAnimator.resize">resize</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.STAnimator.save" href="#specrel.graphics.simpanim.BaseAnimator.save">save</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.save" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.save">save</a></code></li>
 <li><code><a title="specrel.graphics.simpanim.STAnimator.set_lims" href="basegraph.html#specrel.graphics.basegraph.STPlotter.set_lims">set_lims</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.STAnimator.show" href="#specrel.graphics.simpanim.BaseAnimator.show">show</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.STAnimator.update" href="#specrel.graphics.simpanim.BaseAnimator.update">update</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.show" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.show">show</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.update" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.update">update</a></code></li>
 </ul>
 </li>
 </ul>
@@ -1782,7 +1204,7 @@ that should be called to draw that frame.</dd>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="specrel.graphics.simpanim.TimeAnimator" href="#specrel.graphics.simpanim.TimeAnimator">TimeAnimator</a></li>
-<li><a title="specrel.graphics.simpanim.BaseAnimator" href="#specrel.graphics.simpanim.BaseAnimator">BaseAnimator</a></li>
+<li><a title="specrel.graphics.basegraph.BaseAnimator" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator">BaseAnimator</a></li>
 <li><a title="specrel.graphics.basegraph.STPlotter" href="basegraph.html#specrel.graphics.basegraph.STPlotter">STPlotter</a></li>
 <li><a title="specrel.graphics.basegraph.SingleAxisFigureCreator" href="basegraph.html#specrel.graphics.basegraph.SingleAxisFigureCreator">SingleAxisFigureCreator</a></li>
 <li><a title="specrel.graphics.basegraph.FigureCreator" href="basegraph.html#specrel.graphics.basegraph.FigureCreator">FigureCreator</a></li>
@@ -1840,19 +1262,19 @@ time value.</p>
 <ul class="hlist">
 <li><code><b><a title="specrel.graphics.simpanim.TimeAnimator" href="#specrel.graphics.simpanim.TimeAnimator">TimeAnimator</a></b></code>:
 <ul class="hlist">
-<li><code><a title="specrel.graphics.simpanim.TimeAnimator.clear" href="#specrel.graphics.simpanim.BaseAnimator.clear">clear</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.TimeAnimator.clear" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.clear">clear</a></code></li>
 </ul>
 </li>
 <li><code><b><a title="specrel.graphics.simpanim.TimeAnimator" href="#specrel.graphics.simpanim.TimeAnimator">TimeAnimator</a></b></code>:
 <ul class="hlist">
-<li><code><a title="specrel.graphics.simpanim.TimeAnimator.animate" href="#specrel.graphics.simpanim.BaseAnimator.animate">animate</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.TimeAnimator.calc_frame_idx" href="#specrel.graphics.simpanim.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.TimeAnimator.calc_frame_val" href="#specrel.graphics.simpanim.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.TimeAnimator.get_frame_lim" href="#specrel.graphics.simpanim.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.TimeAnimator.init_func" href="#specrel.graphics.simpanim.BaseAnimator.init_func">init_func</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.TimeAnimator.save" href="#specrel.graphics.simpanim.BaseAnimator.save">save</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.TimeAnimator.show" href="#specrel.graphics.simpanim.BaseAnimator.show">show</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.TimeAnimator.update" href="#specrel.graphics.simpanim.BaseAnimator.update">update</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.TimeAnimator.animate" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.animate">animate</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.TimeAnimator.calc_frame_idx" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.TimeAnimator.calc_frame_val" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.TimeAnimator.get_frame_lim" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.TimeAnimator.init_func" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.init_func">init_func</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.TimeAnimator.save" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.save">save</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.TimeAnimator.show" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.show">show</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.TimeAnimator.update" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.update">update</a></code></li>
 </ul>
 </li>
 <li><code><b><a title="specrel.graphics.basegraph.STPlotter" href="basegraph.html#specrel.graphics.basegraph.STPlotter">STPlotter</a></b></code>:
@@ -1887,17 +1309,17 @@ for every second of real time.</dd>
 for instantaneous events (appear in a single instant of time).</dd>
 <dt><strong><code>display_current_time</code></strong> :&ensp;<code>bool</code>, optional</dt>
 <dd>Same as <code>display_current</code> in
-<a title="specrel.graphics.simpanim.BaseAnimator" href="#specrel.graphics.simpanim.BaseAnimator"><code>BaseAnimator</code></a>.</dd>
+<a title="specrel.graphics.basegraph.BaseAnimator" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator"><code>BaseAnimator</code></a>.</dd>
 <dt><strong><code>display_current_time_decimals</code></strong> :&ensp;<code>int</code>, optional</dt>
 <dd>Same as
 <code>display_current_decimals</code> in
-<a title="specrel.graphics.simpanim.BaseAnimator" href="#specrel.graphics.simpanim.BaseAnimator"><code>BaseAnimator</code></a>.</dd>
+<a title="specrel.graphics.basegraph.BaseAnimator" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator"><code>BaseAnimator</code></a>.</dd>
 <dt><strong><code>others</code></strong></dt>
-<dd>See <a title="specrel.graphics.simpanim.BaseAnimator" href="#specrel.graphics.simpanim.BaseAnimator"><code>BaseAnimator</code></a>.</dd>
+<dd>See <a title="specrel.graphics.basegraph.BaseAnimator" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator"><code>BaseAnimator</code></a>.</dd>
 </dl></section>
 <details class="source">
 <summary>Source code</summary>
-<pre><code class="python">class TimeAnimator(BaseAnimator):
+<pre><code class="python">class TimeAnimator(bgraph.BaseAnimator):
     &#34;&#34;&#34;Animator where the frame variable is time, i.e. depicts a sequence
     evolving in time.
 
@@ -1907,11 +1329,11 @@ for instantaneous events (appear in a single instant of time).</dd>
         instant_pause_time (float, optional): Amount of pause time in seconds
             for instantaneous events (appear in a single instant of time).
         display_current_time (bool, optional): Same as `display_current` in
-            `specrel.graphics.simpanim.BaseAnimator`.
+            `specrel.graphics.basegraph.BaseAnimator`.
         display_current_time_decimals (int, optional): Same as
             `display_current_decimals` in
-            `specrel.graphics.simpanim.BaseAnimator`.
-        others: See `specrel.graphics.simpanim.BaseAnimator`.
+            `specrel.graphics.basegraph.BaseAnimator`.
+        others: See `specrel.graphics.basegraph.BaseAnimator`.
     &#34;&#34;&#34;
     def __init__(self,
         fig=graphrc[&#39;fig&#39;],
@@ -1930,7 +1352,7 @@ for instantaneous events (appear in a single instant of time).</dd>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
-<li><a title="specrel.graphics.simpanim.BaseAnimator" href="#specrel.graphics.simpanim.BaseAnimator">BaseAnimator</a></li>
+<li><a title="specrel.graphics.basegraph.BaseAnimator" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator">BaseAnimator</a></li>
 <li>abc.ABC</li>
 </ul>
 <h3>Subclasses</h3>
@@ -1940,17 +1362,17 @@ for instantaneous events (appear in a single instant of time).</dd>
 </ul>
 <h3>Inherited members</h3>
 <ul class="hlist">
-<li><code><b><a title="specrel.graphics.simpanim.BaseAnimator" href="#specrel.graphics.simpanim.BaseAnimator">BaseAnimator</a></b></code>:
+<li><code><b><a title="specrel.graphics.basegraph.BaseAnimator" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator">BaseAnimator</a></b></code>:
 <ul class="hlist">
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.animate" href="#specrel.graphics.simpanim.BaseAnimator.animate">animate</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.calc_frame_idx" href="#specrel.graphics.simpanim.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.calc_frame_val" href="#specrel.graphics.simpanim.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.clear" href="#specrel.graphics.simpanim.BaseAnimator.clear">clear</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.get_frame_lim" href="#specrel.graphics.simpanim.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.init_func" href="#specrel.graphics.simpanim.BaseAnimator.init_func">init_func</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.save" href="#specrel.graphics.simpanim.BaseAnimator.save">save</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.show" href="#specrel.graphics.simpanim.BaseAnimator.show">show</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.update" href="#specrel.graphics.simpanim.BaseAnimator.update">update</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.animate" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.animate">animate</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.calc_frame_idx" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.calc_frame_val" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.clear" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.clear">clear</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.get_frame_lim" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.init_func" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.init_func">init_func</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.save" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.save">save</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.show" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.show">show</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.update" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.update">update</a></code></li>
 </ul>
 </li>
 </ul>
@@ -2006,11 +1428,11 @@ transformation animation.</dd>
 <dd>Animation frames per second.</dd>
 <dt><strong><code>display_current_velocity</code></strong> :&ensp;<code>bool</code>, optional</dt>
 <dd>Same as <code>display_current</code> in
-<a title="specrel.graphics.simpanim.BaseAnimator" href="#specrel.graphics.simpanim.BaseAnimator"><code>BaseAnimator</code></a>.</dd>
+<a title="specrel.graphics.basegraph.BaseAnimator" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator"><code>BaseAnimator</code></a>.</dd>
 <dt><strong><code>display_current_velocity_decimals</code></strong> :&ensp;<code>int</code>, optional</dt>
 <dd>Same as
 <code>display_current_decimals</code> in
-<a title="specrel.graphics.simpanim.BaseAnimator" href="#specrel.graphics.simpanim.BaseAnimator"><code>BaseAnimator</code></a>.</dd>
+<a title="specrel.graphics.basegraph.BaseAnimator" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator"><code>BaseAnimator</code></a>.</dd>
 <dt><strong><code>title</code></strong> :&ensp;<code>str</code>, optional</dt>
 <dd>Animation title.</dd>
 </dl>
@@ -2030,7 +1452,7 @@ transformation animation.</dd>
 </dl></section>
 <details class="source">
 <summary>Source code</summary>
-<pre><code class="python">class TransformAnimator(BaseAnimator, bgraph.SingleAxisFigureCreator):
+<pre><code class="python">class TransformAnimator(bgraph.BaseAnimator, bgraph.SingleAxisFigureCreator):
     &#34;&#34;&#34;Animator where the frame variable is velocity, i.e. animates a spacetime
     transformation as the object is accelerated instantaneously.
 
@@ -2063,10 +1485,10 @@ transformation animation.</dd>
         transition_duration (float, optional):
         fps (float, optional): Animation frames per second.
         display_current_velocity (bool, optional): Same as `display_current` in
-            `specrel.graphics.simpanim.BaseAnimator`.
+            `specrel.graphics.basegraph.BaseAnimator`.
         display_current_velocity_decimals (int, optional): Same as
             `display_current_decimals` in
-            `specrel.graphics.simpanim.BaseAnimator`.
+            `specrel.graphics.basegraph.BaseAnimator`.
         title (str, optional): Animation title.
 
     Attributes:
@@ -2098,7 +1520,7 @@ transformation animation.</dd>
 
         bgraph.SingleAxisFigureCreator.__init__(self, fig, ax)
         nsteps = round(transition_duration * fps)
-        BaseAnimator.__init__(self, self.fig, velocity / nsteps, fps,
+        bgraph.BaseAnimator.__init__(self, self.fig, velocity / nsteps, fps,
             display_current_velocity, display_current_velocity_decimals, title,
             (0, nsteps))
         self.transformable = lorentz_transformable
@@ -2157,24 +1579,24 @@ transformation animation.</dd>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
-<li><a title="specrel.graphics.simpanim.BaseAnimator" href="#specrel.graphics.simpanim.BaseAnimator">BaseAnimator</a></li>
+<li><a title="specrel.graphics.basegraph.BaseAnimator" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator">BaseAnimator</a></li>
 <li>abc.ABC</li>
 <li><a title="specrel.graphics.basegraph.SingleAxisFigureCreator" href="basegraph.html#specrel.graphics.basegraph.SingleAxisFigureCreator">SingleAxisFigureCreator</a></li>
 <li><a title="specrel.graphics.basegraph.FigureCreator" href="basegraph.html#specrel.graphics.basegraph.FigureCreator">FigureCreator</a></li>
 </ul>
 <h3>Inherited members</h3>
 <ul class="hlist">
-<li><code><b><a title="specrel.graphics.simpanim.BaseAnimator" href="#specrel.graphics.simpanim.BaseAnimator">BaseAnimator</a></b></code>:
+<li><code><b><a title="specrel.graphics.basegraph.BaseAnimator" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator">BaseAnimator</a></b></code>:
 <ul class="hlist">
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.animate" href="#specrel.graphics.simpanim.BaseAnimator.animate">animate</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.calc_frame_idx" href="#specrel.graphics.simpanim.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.calc_frame_val" href="#specrel.graphics.simpanim.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.clear" href="#specrel.graphics.simpanim.BaseAnimator.clear">clear</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.get_frame_lim" href="#specrel.graphics.simpanim.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.init_func" href="#specrel.graphics.simpanim.BaseAnimator.init_func">init_func</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.save" href="#specrel.graphics.simpanim.BaseAnimator.save">save</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.show" href="#specrel.graphics.simpanim.BaseAnimator.show">show</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.update" href="#specrel.graphics.simpanim.BaseAnimator.update">update</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.animate" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.animate">animate</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.calc_frame_idx" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.calc_frame_val" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.clear" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.clear">clear</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.get_frame_lim" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.init_func" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.init_func">init_func</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.save" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.save">save</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.show" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.show">show</a></code></li>
+<li><code><a title="specrel.graphics.basegraph.BaseAnimator.update" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.update">update</a></code></li>
 </ul>
 </li>
 <li><code><b><a title="specrel.graphics.basegraph.SingleAxisFigureCreator" href="basegraph.html#specrel.graphics.basegraph.SingleAxisFigureCreator">SingleAxisFigureCreator</a></b></code>:
@@ -2338,7 +1760,7 @@ time.</dd>
 <ul class="hlist">
 <li><a title="specrel.graphics.simpanim.STAnimator" href="#specrel.graphics.simpanim.STAnimator">STAnimator</a></li>
 <li><a title="specrel.graphics.simpanim.TimeAnimator" href="#specrel.graphics.simpanim.TimeAnimator">TimeAnimator</a></li>
-<li><a title="specrel.graphics.simpanim.BaseAnimator" href="#specrel.graphics.simpanim.BaseAnimator">BaseAnimator</a></li>
+<li><a title="specrel.graphics.basegraph.BaseAnimator" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator">BaseAnimator</a></li>
 <li><a title="specrel.graphics.basegraph.STPlotter" href="basegraph.html#specrel.graphics.basegraph.STPlotter">STPlotter</a></li>
 <li><a title="specrel.graphics.basegraph.SingleAxisFigureCreator" href="basegraph.html#specrel.graphics.basegraph.SingleAxisFigureCreator">SingleAxisFigureCreator</a></li>
 <li><a title="specrel.graphics.basegraph.FigureCreator" href="basegraph.html#specrel.graphics.basegraph.FigureCreator">FigureCreator</a></li>
@@ -2348,21 +1770,21 @@ time.</dd>
 <ul class="hlist">
 <li><code><b><a title="specrel.graphics.simpanim.STAnimator" href="#specrel.graphics.simpanim.STAnimator">STAnimator</a></b></code>:
 <ul class="hlist">
-<li><code><a title="specrel.graphics.simpanim.STAnimator.animate" href="#specrel.graphics.simpanim.BaseAnimator.animate">animate</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.STAnimator.calc_frame_idx" href="#specrel.graphics.simpanim.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.STAnimator.calc_frame_val" href="#specrel.graphics.simpanim.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.STAnimator.clear" href="#specrel.graphics.simpanim.BaseAnimator.clear">clear</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.animate" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.animate">animate</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.calc_frame_idx" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.calc_frame_val" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.clear" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.clear">clear</a></code></li>
 <li><code><a title="specrel.graphics.simpanim.STAnimator.close" href="basegraph.html#specrel.graphics.basegraph.FigureCreator.close">close</a></code></li>
 <li><code><a title="specrel.graphics.simpanim.STAnimator.draw_line_segment" href="basegraph.html#specrel.graphics.basegraph.STPlotter.draw_line_segment">draw_line_segment</a></code></li>
 <li><code><a title="specrel.graphics.simpanim.STAnimator.draw_point" href="basegraph.html#specrel.graphics.basegraph.STPlotter.draw_point">draw_point</a></code></li>
 <li><code><a title="specrel.graphics.simpanim.STAnimator.draw_shaded_polygon" href="basegraph.html#specrel.graphics.basegraph.STPlotter.draw_shaded_polygon">draw_shaded_polygon</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.STAnimator.get_frame_lim" href="#specrel.graphics.simpanim.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.STAnimator.init_func" href="#specrel.graphics.simpanim.BaseAnimator.init_func">init_func</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.get_frame_lim" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.init_func" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.init_func">init_func</a></code></li>
 <li><code><a title="specrel.graphics.simpanim.STAnimator.resize" href="#specrel.graphics.simpanim.STAnimator.resize">resize</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.STAnimator.save" href="#specrel.graphics.simpanim.BaseAnimator.save">save</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.save" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.save">save</a></code></li>
 <li><code><a title="specrel.graphics.simpanim.STAnimator.set_lims" href="basegraph.html#specrel.graphics.basegraph.STPlotter.set_lims">set_lims</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.STAnimator.show" href="#specrel.graphics.simpanim.BaseAnimator.show">show</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.STAnimator.update" href="#specrel.graphics.simpanim.BaseAnimator.update">update</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.show" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.show">show</a></code></li>
+<li><code><a title="specrel.graphics.simpanim.STAnimator.update" href="basegraph.html#specrel.graphics.basegraph.BaseAnimator.update">update</a></code></li>
 </ul>
 </li>
 </ul>
@@ -2383,20 +1805,6 @@ time.</dd>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
-<li>
-<h4><code><a title="specrel.graphics.simpanim.BaseAnimator" href="#specrel.graphics.simpanim.BaseAnimator">BaseAnimator</a></code></h4>
-<ul class="two-column">
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.animate" href="#specrel.graphics.simpanim.BaseAnimator.animate">animate</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.calc_frame_idx" href="#specrel.graphics.simpanim.BaseAnimator.calc_frame_idx">calc_frame_idx</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.calc_frame_val" href="#specrel.graphics.simpanim.BaseAnimator.calc_frame_val">calc_frame_val</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.clear" href="#specrel.graphics.simpanim.BaseAnimator.clear">clear</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.get_frame_lim" href="#specrel.graphics.simpanim.BaseAnimator.get_frame_lim">get_frame_lim</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.init_func" href="#specrel.graphics.simpanim.BaseAnimator.init_func">init_func</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.save" href="#specrel.graphics.simpanim.BaseAnimator.save">save</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.show" href="#specrel.graphics.simpanim.BaseAnimator.show">show</a></code></li>
-<li><code><a title="specrel.graphics.simpanim.BaseAnimator.update" href="#specrel.graphics.simpanim.BaseAnimator.update">update</a></code></li>
-</ul>
-</li>
 <li>
 <h4><code><a title="specrel.graphics.simpanim.ObjectAnimator" href="#specrel.graphics.simpanim.ObjectAnimator">ObjectAnimator</a></code></h4>
 </li>
