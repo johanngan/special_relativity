@@ -23,7 +23,81 @@
 <p>Core graphics-generation code for spacetime plots.</p>
 <details class="source">
 <summary>Source code</summary>
-<pre><code class="python">&#34;&#34;&#34;Core graphics-generation code for spacetime plots.&#34;&#34;&#34;</code></pre>
+<pre><code class="python">&#34;&#34;&#34;Core graphics-generation code for spacetime plots.&#34;&#34;&#34;
+
+graphrc = {
+    &#39;fig&#39;: None,
+    &#39;ax&#39;: None,
+    &#39;axs&#39;: None,
+    &#39;grid&#39;: False,
+    &#39;legend&#39;: False,
+    &#39;legend_loc&#39;: &#39;best&#39;,
+    &#39;title&#39;: None,
+    &#39;tlabel&#39;: &#39;Time (seconds)&#39;,
+    &#39;xlabel&#39;: &#39;Position (light-seconds)&#39;,
+    &#39;worldline.lim_padding&#39;: 0.1,
+    &#39;worldline.equal_lim_expand&#39;: 1,
+    &#39;anim.fps&#39;: 50,
+    &#39;anim.display_current&#39;: True,
+    &#39;anim.display_current_decimals&#39;: 3,
+    &#39;anim.time.ct_per_sec&#39;: 1,
+    &#39;anim.time.instant_pause_time&#39;: 1,
+    &#39;anim.transform.time&#39;: 0,
+    &#39;anim.transform.transition_duration&#39;: 2,
+    &#39;anim.worldline.current_time_style&#39;: &#39;--&#39;,
+    &#39;anim.worldline.current_time_color&#39;: &#39;red&#39;,
+}
+&#34;&#34;&#34;Default parameters shared by various classes and functions in
+`specrel.graphics`.
+
+## Items
+#### Top-level
+- **fig**: `None`
+    - Matplotlib figure to draw on.
+- **ax**: `None`
+    - Single Matplotlib axis to draw on.
+- **axs**: `None`
+    - List of Matplotlib axes to draw on.
+- **grid**: `False`
+    - Flag for whether or not to plot background grid lines.
+- **legend**: False
+    - Flag for whether or not to plot a legend.
+- **legend_loc**: &#39;best&#39;
+    - Legend location according to the Matplotlib `loc` parameter.
+- **title**: None
+    - Plot title.
+- **tlabel**: &#39;Time (seconds)&#39;
+    - Plot y-axis label (corresponding to the time axis).
+- **xlabel**: &#39;Position (light-seconds)&#39;
+    - Plot x-axis label (corresponding to the position axis).
+#### Worldline
+- **worldline.lim_padding**: 0.1
+    - Extra padding on spacetime diagram axis limits, relative to the axis
+        sizes.
+- **worldline.equal_lim_expand**: 1
+    - If the limits on an axis are specified to be equal, they will be expanded
+        symmetrically until the axis size is this value.
+#### Animators
+- **anim.fps**: 50
+    - Animation frames per second.
+- **anim.display_current**: True
+    - Flag for displaying the current &#34;control value&#34; (e.g. time or velocity)
+        in each animation frame.
+- **anim.display_current_decimals**: 3
+    - Number of decimals to display the current control value to.
+- **anim.time.ct_per_sec**: 1
+    - Amount of time to pass within an animation for every second of real time.
+- **anim.time.instant_pause_time**: 1
+    - Amount of animation pause time in seconds for instantaneous events.
+- **anim.transform.time**: 0
+    - Time value to fix while animating a Lorentz transformation.
+- **anim.transform.transition_duration**: 2
+    - Real-time duratio in seconds of a Lorentz transform animation.
+- **anim.worldline.current_time_style**: &#39;--&#39;
+    - Matplotlib linestyle for the line of current in animated spacetime plot.
+- **anim.worldline.current_time_color**: &#39;red&#39;
+    - Matplotlib color for the line of current time in animated spacetime plot.
+&#34;&#34;&#34;</code></pre>
 </details>
 </section>
 <section>
@@ -34,11 +108,6 @@
 <section class="desc"><p>Composite graphics that glue together one or more simple spacetime plots and
 animations in special relativity.</p></section>
 </dd>
-<dt><code class="name"><a title="specrel.graphics.graphrc" href="graphrc.html">specrel.graphics.graphrc</a></code></dt>
-<dd>
-<section class="desc"><p>Default parameters shared by various classes and functions in
-<a title="specrel.graphics" href="#specrel.graphics"><code>specrel.graphics</code></a>.</p></section>
-</dd>
 <dt><code class="name"><a title="specrel.graphics.simpgraph" href="simpgraph.html">specrel.graphics.simpgraph</a></code></dt>
 <dd>
 <section class="desc"><p>Simple (one set of axes) spacetime plots and animations in special
@@ -47,6 +116,107 @@ relativity.</p></section>
 </dl>
 </section>
 <section>
+<h2 class="section-title" id="header-variables">Global variables</h2>
+<dl>
+<dt id="specrel.graphics.graphrc"><code class="name">var <span class="ident">graphrc</span></code></dt>
+<dd>
+<section class="desc"><p>Default parameters shared by various classes and functions in
+<a title="specrel.graphics" href="#specrel.graphics"><code>specrel.graphics</code></a>.</p>
+<h2 id="items">Items</h2>
+<h4 id="top-level">Top-level</h4>
+<ul>
+<li><strong>fig</strong>: <code>None</code><ul>
+<li>Matplotlib figure to draw on.</li>
+</ul>
+</li>
+<li><strong>ax</strong>: <code>None</code><ul>
+<li>Single Matplotlib axis to draw on.</li>
+</ul>
+</li>
+<li><strong>axs</strong>: <code>None</code><ul>
+<li>List of Matplotlib axes to draw on.</li>
+</ul>
+</li>
+<li><strong>grid</strong>: <code>False</code><ul>
+<li>Flag for whether or not to plot background grid lines.</li>
+</ul>
+</li>
+<li><strong>legend</strong>: False<ul>
+<li>Flag for whether or not to plot a legend.</li>
+</ul>
+</li>
+<li><strong>legend_loc</strong>: 'best'<ul>
+<li>Legend location according to the Matplotlib <code>loc</code> parameter.</li>
+</ul>
+</li>
+<li><strong>title</strong>: None<ul>
+<li>Plot title.</li>
+</ul>
+</li>
+<li><strong>tlabel</strong>: 'Time (seconds)'<ul>
+<li>Plot y-axis label (corresponding to the time axis).</li>
+</ul>
+</li>
+<li><strong>xlabel</strong>: 'Position (light-seconds)'<ul>
+<li>Plot x-axis label (corresponding to the position axis).</li>
+</ul>
+</li>
+</ul>
+<h4 id="worldline">Worldline</h4>
+<ul>
+<li><strong>worldline.lim_padding</strong>: 0.1<ul>
+<li>Extra padding on spacetime diagram axis limits, relative to the axis
+sizes.</li>
+</ul>
+</li>
+<li><strong>worldline.equal_lim_expand</strong>: 1<ul>
+<li>If the limits on an axis are specified to be equal, they will be expanded
+symmetrically until the axis size is this value.</li>
+</ul>
+</li>
+</ul>
+<h4 id="animators">Animators</h4>
+<ul>
+<li><strong>anim.fps</strong>: 50<ul>
+<li>Animation frames per second.</li>
+</ul>
+</li>
+<li><strong>anim.display_current</strong>: True<ul>
+<li>Flag for displaying the current "control value" (e.g. time or velocity)
+in each animation frame.</li>
+</ul>
+</li>
+<li><strong>anim.display_current_decimals</strong>: 3<ul>
+<li>Number of decimals to display the current control value to.</li>
+</ul>
+</li>
+<li><strong>anim.time.ct_per_sec</strong>: 1<ul>
+<li>Amount of time to pass within an animation for every second of real time.</li>
+</ul>
+</li>
+<li><strong>anim.time.instant_pause_time</strong>: 1<ul>
+<li>Amount of animation pause time in seconds for instantaneous events.</li>
+</ul>
+</li>
+<li><strong>anim.transform.time</strong>: 0<ul>
+<li>Time value to fix while animating a Lorentz transformation.</li>
+</ul>
+</li>
+<li><strong>anim.transform.transition_duration</strong>: 2<ul>
+<li>Real-time duratio in seconds of a Lorentz transform animation.</li>
+</ul>
+</li>
+<li><strong>anim.worldline.current_time_style</strong>: '&ndash;'<ul>
+<li>Matplotlib linestyle for the line of current in animated spacetime plot.</li>
+</ul>
+</li>
+<li><strong>anim.worldline.current_time_color</strong>: 'red'<ul>
+<li>Matplotlib color for the line of current time in animated spacetime plot.</li>
+</ul>
+</li>
+</ul></section>
+</dd>
+</dl>
 </section>
 <section>
 </section>
@@ -67,8 +237,12 @@ relativity.</p></section>
 <li><h3><a href="#header-submodules">Sub-modules</a></h3>
 <ul>
 <li><code><a title="specrel.graphics.compgraph" href="compgraph.html">specrel.graphics.compgraph</a></code></li>
-<li><code><a title="specrel.graphics.graphrc" href="graphrc.html">specrel.graphics.graphrc</a></code></li>
 <li><code><a title="specrel.graphics.simpgraph" href="simpgraph.html">specrel.graphics.simpgraph</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-variables">Global variables</a></h3>
+<ul class="">
+<li><code><a title="specrel.graphics.graphrc" href="#specrel.graphics.graphrc">graphrc</a></code></li>
 </ul>
 </li>
 </ul>

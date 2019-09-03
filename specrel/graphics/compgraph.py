@@ -9,7 +9,7 @@ import subprocess
 
 import matplotlib.pyplot as plt
 
-from specrel.graphics.graphrc import graphrc
+from specrel.graphics import graphrc
 import specrel.graphics.simpgraph as simpg
 
 class MultiAnimator(simpg.FigureCreator, simpg.BaseAnimator):

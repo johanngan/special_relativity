@@ -10,7 +10,7 @@ import warnings
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
-from specrel.graphics.graphrc import graphrc
+from specrel.graphics import graphrc
 
 class FigureCreator:
     """Something that can create and own a figure.
