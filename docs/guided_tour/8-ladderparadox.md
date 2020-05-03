@@ -8,7 +8,7 @@
 
 ---
 
-The ladder paradox (also sometimes calld the barn-pole paradox) is a famous problem in special relativity. Say we have a ladder that's just a little longer than a garage, such that is doesn't quite fit. We know that moving objects become shorter, so if we accelerate the ladder to relativistic speeds, it should fit in the garage, at least from the perspective of an observer in the lab frame (where the garage isn't moving).
+The ladder paradox (also sometimes called the barn-pole paradox) is a famous problem in special relativity. Say we have a ladder that's just a little longer than a garage, such that is doesn't quite fit. We know that moving objects become shorter, so if we accelerate the ladder to relativistic speeds, it should fit in the garage, at least from the perspective of an observer in the lab frame (where the garage isn't moving).
 
 But say a friend decides to ride with the *ladder*. Then the friend will see the *garage* moving towards the ladder, and so the *garage* will be even shorter than before. If the ladder didn't fit before, it definitely wouldn't fit now.
 
