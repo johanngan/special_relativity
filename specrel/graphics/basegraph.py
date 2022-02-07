@@ -281,7 +281,8 @@ class BaseAnimator(ABC):
 
     def show(self):
         """Play the animation in interactive mode."""
-        plt.show(self.animate())
+        self.animate()
+        plt.show()
 
     def save(self, filename, **kwargs):
         """Save the animation to a file.
