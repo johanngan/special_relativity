@@ -417,7 +417,7 @@ class WorldlinePlotter(STPlotter):
         for artist in [ln for ln in self.ax.lines if len(ln.get_xdata()) > 1] \
             + self.ax.patches[:-1]:
             artist.set_clip_path(clipbox)
-        self.ax.patches.pop()
+        self.ax.patches[-1].remove()
 
     def show(self):
         plt.show()
