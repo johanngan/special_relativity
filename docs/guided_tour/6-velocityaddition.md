@@ -8,7 +8,7 @@
 
 ---
 
-Let's say a rocketship, moving at 80% the speed of light relative to an observer on Earth, launches a satellite, moving 80% the speed of light relative to relative to the rocketship. In other words, what happens when we "add" the velocities (80% speed of light) + (80% speed of light)? Will Earth observe a satellite travelling 160% the speed of light?
+Let's say a rocketship, moving at 80% the speed of light relative to an observer on Earth, launches a satellite, moving 80% the speed of light relative to the rocketship. In other words, what happens when we "add" the velocities (80% speed of light) + (80% speed of light)? Will Earth observe a satellite travelling 160% the speed of light?
 
 Let's find out. Start out with both the rocket and satellite moving together at 80% the speed of light. The Earth is stationary. Let's also add a light ray for reference.
 

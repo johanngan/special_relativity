@@ -29,7 +29,7 @@ Strange things are happening! Firstly, the meterstick moves to the right in the 
 
 Faster-than-light communication also allows for *violations of causality*. To see how, let's consider the following scenario.
 
-Somehow, faster-than-light communication technology has been developed, and two people are having a conversation through FTL messages. Person 1 is stationary, in what we'll call the "lab frame." Person 2 is moving at Person 1 starts with a joke: "The bartender says 'We don't serve tachyons in here.' A tachyon walks into a bar." Person 2 responds with: "Hahaha, good joke!"
+Somehow, faster-than-light communication technology has been developed, and two people are having a conversation through FTL messages. Person 1 is stationary, in what we'll call the "lab frame." Person 2 is moving at 80% the speed of light relative to Person 1. Person 1 starts with a joke: "The bartender says 'We don't serve tachyons in here.' A tachyon walks into a bar." Person 2 responds with: "Hahaha, good joke!"
 
 Let's set up the scenario. Using the power of hindsight, it's easiest to set up this system in a "median" frame, where both Person 1 and Person 2 are moving away from each other at equal speeds. Just trust me on the numbers here. For convenience, make use of the `Line` object's `intersect` method to save us from doing geometry. After everything is set, we can transform to Person 2's frame for plotting.
 

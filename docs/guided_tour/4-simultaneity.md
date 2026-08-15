@@ -11,7 +11,7 @@
 
 ---
 
-One of the first every physics student learns in special relativity is that the *simultaneity of events is relative*. That is, events that are simultaneous in one reference frame aren't always simultaneous in other frames. To see this, let's set up a scene with "simultaneous" point events.
+One of the first things every physics student learns in special relativity is that the *simultaneity of events is relative*. That is, events that are simultaneous in one reference frame aren't always simultaneous in other frames. To see this, let's set up a scene with "simultaneous" point events.
 
 ```python
 xvals = [-0.5, 0, 0.5]

@@ -57,7 +57,7 @@ anim.show()
 
 Notice how the change of color takes 3 seconds in the lab frame, and 5 seconds in the moving frame? That's **time dilation**. The same "event" (the signal fully changing from red to blue) appears to take longer when it's moving, so we say *time moves slower in moving frames*.
 
-Curiously, if we had started in "moving" frame with a 3-second color changing point at x = 0, and then transformed to the "lab" frame, we would say that time were dilated in the *lab frame*. So whose time is dilated? Is this not a paradox? I'll leave that to you to puzzle out. It has to do with the disagreement on what's "synchronized" between different frames.
+Curiously, if we had started in the "moving" frame with a 3-second color changing point at x = 0, and then transformed to the "lab" frame, we would say that time were dilated in the *lab frame*. So whose time is dilated? Is this not a paradox? I'll leave that to you to puzzle out. It has to do with the disagreement on what's "synchronized" between different frames.
 
 There's another equivalent way to view time dilation. Instead of looking at a single localized event, let's look at *the progression of time itself* across space. To do this, we can treat a time value as a horizontal line in a spacetime diagram. At t = 0, the "t = 0"-ness is experienced at every x value.
 
