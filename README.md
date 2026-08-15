@@ -1,4 +1,7 @@
 # Special Relativity
+[![PyPI version](https://img.shields.io/pypi/v/specrel)](https://pypi.org/project/specrel)
+![Tests](https://github.com/johanngan/special_relativity/actions/workflows/unittest.yml/badge.svg)
+[![GitHub](https://img.shields.io/github/license/johanngan/special_relativity)](LICENSE)
 
 The `specrel` package is a Python 3 sandbox tool for understanding basic concepts in special relativity. Easily set up relativistic systems, perform Lorentz transformations, and create plots and animations through a relatively (get it?) simple API.
 
@@ -27,7 +30,9 @@ The `specrel` package is a Python 3 sandbox tool for understanding basic concept
 - [FFmpeg](https://ffmpeg.org/) for video file writing (for saving animations)
 
 # Installation
-The `specrel` package is meant for simple and/or interactive use. To "install", first check the package dependencies. Then, simply place the `specrel` package directory wherever you want to use it, or manually add the containing directory to the Python path (for example, with `sys.path.append`).
+The `specrel` package is meant for simple and/or interactive use. To install, run `pip install specrel`. If you want to save animations, you'll also have to install FFmpeg on your system.
+
+If you don't want to use `pip`, you can also "install" the package directory manually by copying it to wherever you want to use it, or by adding the containing directory to the Python path (for example, with `sys.path.append`).
 
 # Usage
 - For a walkthrough of how to use this package, see the [guided tour](https://johanngan.github.io/special_relativity/guided_tour/).
