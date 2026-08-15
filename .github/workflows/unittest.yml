@@ -1,0 +1,22 @@
+name: Run Unit Tests
+
+on:
+  pull_request:
+    paths:
+      - 'specrel/**.py'
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+jobs:
+  unittest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+      - name: Install dependencies
+        run: pip3 install matplotlib
+      - name: Run unit tests
+        run: python3 -m unittest -v
