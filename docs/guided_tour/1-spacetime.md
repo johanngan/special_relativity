@@ -24,7 +24,7 @@ import specrel.spacetime.physical as phy
 import specrel.visualize as vis
 ```
 
-The simplest type of graphic is called a **spacetime diagram** (also known as a "Minkwoski diagram" or "worldline diagram"), which plots time on the vertical axis and position on the horizontal axis. Each horizontal slice of a spacetime plot represents where objects are at that instant in time.
+The simplest type of graphic is called a **spacetime diagram** (also known as a "Minkowski diagram" or "worldline diagram"), which plots time on the vertical axis and position on the horizontal axis. Each horizontal slice of a spacetime plot represents where objects are at that instant in time.
 
 To start simple, let's plot a simple grid. First, we need to create a spacetime grid object ranging from -5 to 5 on both axes. Time is plotted in seconds, while position is plotted in light-seconds.
 
@@ -67,7 +67,7 @@ Now, let's plot it with a background grid and a legend.
 tlim = (0, 2)
 xlim = (-2, 2)
 plotter = vis.stplot(event, title='An event in spacetime',
-    tlim=tlim, xlim=xlim, grid=include_grid, legend=include_legend)
+    tlim=tlim, xlim=xlim, grid=True, legend=True)
 plotter.save('1-spacetime_event.png')
 plotter.show()
 ```
